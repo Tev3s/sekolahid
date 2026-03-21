@@ -17,134 +17,174 @@
     </script>
     
     <style>
-        /* === CSS MODERN VIPERCELL v4.0 === */
+        /* === CSS PREMIUM VIPERCELL v4.1 (SOFT UI) === */
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
+
         :root {
-            --primary-color: #3b82f6; --primary-dark: #2563eb; --sidebar-bg: #1e293b;
-            --bg-color: #f3f4f6; --card-bg: #ffffff;
-            --text-dark: #1f2937; --text-muted: #6b7280;
-            --border-radius: 16px;
+            --primary-color: #3b82f6; --primary-dark: #2563eb; 
+            --sidebar-bg: #0f172a; /* Warna sidebar premium dark slate */
+            --bg-color: #f8fafc; /* Abu-abu sangat terang dan bersih */
+            --card-bg: #ffffff;
+            --text-dark: #1e293b; --text-muted: #64748b;
+            --border-radius: 20px; /* Lebih membulat (modern) */
             --success-color: #10b981; --warning-color: #f59e0b; --danger-color: #ef4444;
-            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+            --shadow-float: 0 20px 25px -5px rgba(59, 130, 246, 0.15), 0 10px 10px -5px rgba(59, 130, 246, 0.05);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; -webkit-tap-highlight-color: transparent; }
 
-        .view-section { display: none; animation: fadeIn 0.3s ease; }
+        .view-section { display: none; animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .view-section.active { display: block; }
 
         /* === GLOBAL FORMS & COMPONENTS === */
-        .form-group { margin-bottom: 15px; text-align: left; }
-        .form-group label { display: block; font-size: 13px; margin-bottom: 6px; font-weight: 600; color: var(--text-dark); }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px; outline: none; background: #f9fafb; transition: 0.2s; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-color); background: #fff; box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
-        .form-group input:disabled { background-color: #e5e7eb; color: #9ca3af; }
-        .btn-action { background-color: var(--primary-color); color: white; border: none; padding: 12px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; justify-content: center; align-items: center; gap: 8px; font-size: 14px; }
-        .btn-action:active { transform: scale(0.96); }
-        .btn-action.dark { background-color: var(--text-dark); }
-        .btn-action.success { background-color: var(--success-color); }
-        .btn-action.danger { background-color: var(--danger-color); }
-        .card { background-color: var(--card-bg); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 20px; }
-        .card h3 { font-size: 16px; margin-bottom: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; margin-bottom: 8px; font-weight: 700; color: var(--text-dark); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 16px; border: 1px solid #e2e8f0; border-radius: 14px; font-size: 14px; outline: none; background: #f8fafc; transition: all 0.3s ease; font-weight: 500; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-color); background: #fff; box-shadow: 0 0 0 4px rgba(59,130,246,0.15); }
+        .form-group input:disabled { background-color: #f1f5f9; color: #94a3b8; }
+        
+        .btn-action { background-color: var(--primary-color); color: white; border: none; padding: 14px 20px; border-radius: 14px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; display: inline-flex; justify-content: center; align-items: center; gap: 8px; font-size: 14px; box-shadow: var(--shadow-float); }
+        .btn-action:hover { transform: translateY(-2px); box-shadow: 0 25px 30px -5px rgba(59, 130, 246, 0.2); }
+        .btn-action:active { transform: translateY(1px) scale(0.98); box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1); }
+        .btn-action.dark { background-color: var(--text-dark); box-shadow: 0 20px 25px -5px rgba(30, 41, 59, 0.15); }
+        .btn-action.success { background-color: var(--success-color); box-shadow: 0 20px 25px -5px rgba(16, 185, 129, 0.15); }
+        .btn-action.danger { background-color: var(--danger-color); box-shadow: 0 20px 25px -5px rgba(239, 68, 68, 0.15); }
+        
+        .card { background-color: var(--card-bg); padding: 25px; border-radius: var(--border-radius); box-shadow: var(--shadow-soft); margin-bottom: 24px; border: 1px solid rgba(255,255,255,0.5); }
+        .card h3 { font-size: 16px; font-weight: 800; margin-bottom: 18px; border-bottom: 1px solid #f1f5f9; padding-bottom: 12px; display: flex; justify-content: space-between; align-items: center; color: var(--text-dark); }
         
         /* === MOBILE LAYOUT (LOGIN & SISWA) === */
-        .mobile-layout { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--bg-color); position: relative; padding-bottom: 80px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
-        .login-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; background: linear-gradient(135deg, var(--bg-color), #e0e7ff); }
-        .login-card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); width: 100%; text-align: center; }
-        .login-card h2 { margin-bottom: 5px; color: var(--primary-dark); font-size: 22px; }
+        .mobile-layout { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--bg-color); position: relative; padding-bottom: 100px; box-shadow: 0 0 40px rgba(0,0,0,0.03); }
+        .login-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; background: linear-gradient(135deg, #eff6ff, #e0e7ff); }
+        .login-card { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); padding: 35px 25px; border-radius: 24px; box-shadow: var(--shadow-soft); width: 100%; text-align: center; border: 1px solid white; }
+        .login-card h2 { margin-bottom: 5px; color: var(--text-dark); font-size: 24px; font-weight: 800; }
         
-        .header-mobile { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 30px 20px 40px 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
+        .header-mobile { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 35px 25px 45px 25px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: var(--shadow-float); }
         .header-top { display: flex; justify-content: space-between; align-items: center; }
-        .user-info h1 { font-size: 20px; font-weight: 600; }
-        .user-info p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
-        .profile-pic { width: 45px; height: 45px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: bold; font-size: 18px; cursor: pointer; }
-        .container-mobile { padding: 0 20px; margin-top: -20px; }
+        .user-info h1 { font-size: 22px; font-weight: 800; letter-spacing: -0.5px; }
+        .user-info p { font-size: 13px; opacity: 0.9; margin-top: 4px; font-weight: 500; }
+        .profile-pic { width: 48px; height: 48px; background-color: white; border-radius: 16px; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: 800; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        .container-mobile { padding: 0 20px; margin-top: -25px; }
         
-        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0;}
-        .menu-item { background-color: var(--card-bg); border-radius: 15px; padding: 15px 5px; text-align: center; box-shadow: var(--shadow); cursor: pointer; transition: 0.2s;}
-        .menu-item:active { transform: scale(0.95); background: #f3f4f6; }
-        .menu-icon { width: 40px; height: 40px; background-color: #e0e7ff; color: var(--primary-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 20px; }
-        .menu-item span { font-size: 11px; font-weight: 600; }
+        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 25px 0;}
+        .menu-item { background-color: var(--card-bg); border-radius: 18px; padding: 18px 5px; text-align: center; box-shadow: var(--shadow-soft); cursor: pointer; transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1); border: 1px solid transparent; }
+        .menu-item:hover { transform: translateY(-3px); box-shadow: var(--shadow-float); border-color: rgba(59,130,246,0.1); }
+        .menu-item:active { transform: scale(0.94); }
+        .menu-icon { width: 45px; height: 45px; background-color: #eff6ff; color: var(--primary-color); border-radius: 14px; display: flex; align-items: center; justify-content: center; margin: 0 auto 10px auto; font-size: 22px; transition: 0.3s; }
+        .menu-item:hover .menu-icon { background: var(--primary-color); color: white; }
+        .menu-item span { font-size: 11px; font-weight: 700; color: var(--text-dark); }
 
-        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background-color: white; display: flex; justify-content: space-around; padding: 15px 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 1000; }
-        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); cursor: pointer; font-size: 11px; font-weight: 600; gap: 4px;}
-        .nav-item.active { color: var(--primary-color); }
+        /* Kapsul Floating Nav Bawah Modern */
+        .bottom-nav { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 420px; background-color: rgba(255, 255, 255, 0.85); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); display: flex; justify-content: space-around; padding: 15px 10px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); border-radius: 30px; border: 1px solid rgba(255,255,255,0.5); z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); cursor: pointer; font-size: 11px; font-weight: 700; gap: 4px; transition: 0.3s ease; position: relative; }
+        .nav-item.active { color: var(--primary-color); transform: translateY(-2px); }
+        .nav-item.active::after { content: ''; position: absolute; bottom: -8px; width: 4px; height: 4px; background: var(--primary-color); border-radius: 50%; }
 
         /* === DESKTOP LAYOUT (ADMIN & GURU) === */
         .desktop-layout { display: flex; height: 100vh; background: var(--bg-color); overflow: hidden; }
         
-        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; transition: 0.3s; flex-shrink: 0; }
-        .sidebar-header { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
-        .sidebar-header h2 { font-size: 18px; color: white; margin-bottom: 5px; }
-        .sidebar-header p { font-size: 12px; color: #94a3b8; }
-        .sidebar-menu { flex: 1; padding: 20px 0; overflow-y: auto; }
-        .sidebar-link { padding: 15px 25px; display: flex; align-items: center; gap: 15px; color: #cbd5e1; text-decoration: none; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; border-left: 4px solid transparent; }
-        .sidebar-link:hover { background: rgba(255,255,255,0.05); color: white; }
-        .sidebar-link.active { background: rgba(255,255,255,0.1); color: white; border-left-color: var(--primary-color); }
-        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; transition: 0.3s; flex-shrink: 0; box-shadow: 4px 0 20px rgba(0,0,0,0.05); z-index: 20; }
+        .sidebar-header { padding: 30px 25px; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .sidebar-header h2 { font-size: 20px; font-weight: 800; color: white; margin-bottom: 5px; letter-spacing: -0.5px; }
+        .sidebar-header p { font-size: 12px; color: #94a3b8; font-weight: 500; }
+        .sidebar-menu { flex: 1; padding: 25px 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 8px; }
+        .sidebar-link { padding: 14px 20px; display: flex; align-items: center; gap: 15px; color: #94a3b8; text-decoration: none; cursor: pointer; font-size: 14px; font-weight: 600; transition: all 0.3s ease; border-radius: 14px; }
+        .sidebar-link:hover { background: rgba(255,255,255,0.05); color: white; transform: translateX(4px); }
+        .sidebar-link.active { background: var(--primary-color); color: white; box-shadow: var(--shadow-float); font-weight: 700; }
+        .sidebar-footer { padding: 20px; }
 
-        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
-        .topbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); z-index: 10; }
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; background: #f8fafc; }
+        .topbar { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(0,0,0,0.02); z-index: 10; border-bottom: 1px solid #f1f5f9; }
         .topbar-left { display: flex; align-items: center; gap: 15px; }
-        .menu-toggle { font-size: 24px; cursor: pointer; color: var(--text-dark); display: none; } /* Hidden on large screens, could be used for responsive desktop */
-        .content-area { flex: 1; padding: 30px; overflow-y: auto; }
+        .content-area { flex: 1; padding: 40px; overflow-y: auto; }
         
-        /* Desktop Grid System */
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
-        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
 
-        /* Desktop Tabs */
-        .admin-tab-content, .guru-tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .admin-tab-content, .guru-tab-content { display: none; animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
         .admin-tab-content.active, .guru-tab-content.active { display: block; }
 
-        /* === USER LISTS & AVATARS === */
+        /* === USER LISTS & TABS === */
+        .tab-container { display: flex; background: #f1f5f9; border-radius: 14px; padding: 6px; margin-bottom: 20px; border: 1px solid #e2e8f0; }
+        .tab-btn { flex: 1; padding: 10px; text-align: center; font-size: 13px; font-weight: 700; border: none; background: transparent; cursor: pointer; color: var(--text-muted); transition: 0.3s ease; border-radius: 10px; }
+        .tab-btn.active { background: white; color: var(--primary-color); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+        
         .user-list-wrapper { max-height: 400px; overflow-y: auto; padding-right: 10px; }
-        .user-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid #f3f4f6; background: white; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
-        .avatar { width: 40px; height: 40px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; text-transform: uppercase; flex-shrink: 0; }
+        .user-item { display: flex; align-items: center; gap: 15px; padding: 16px; border-bottom: 1px solid #f1f5f9; background: white; border-radius: 16px; margin-bottom: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.02); transition: 0.2s; border: 1px solid transparent; }
+        .user-item:hover { border-color: #e2e8f0; transform: translateY(-1px); box-shadow: var(--shadow-soft); }
+        .avatar { width: 42px; height: 42px; border-radius: 14px; color: white; display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; text-transform: uppercase; flex-shrink: 0; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
         .user-info-box { flex: 1; }
-        .user-info-box h4 { font-size: 14px; margin-bottom: 2px; color: var(--text-dark); }
-        .user-info-box p { font-size: 12px; color: var(--text-muted); }
-        .btn-edit { background: #f3f4f6; border: none; color: var(--primary-dark); font-size: 12px; font-weight: bold; cursor: pointer; padding: 8px 15px; border-radius: 8px; transition: 0.2s; }
-        .btn-confirm { background: #d1fae5; border: none; color: #059669; font-size: 12px; font-weight: bold; cursor: pointer; padding: 8px 15px; border-radius: 8px; transition: 0.2s; }
-        .badge { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
+        .user-info-box h4 { font-size: 14px; font-weight: 700; margin-bottom: 3px; color: var(--text-dark); }
+        .user-info-box p { font-size: 12px; color: var(--text-muted); font-weight: 500; }
+        .btn-edit { background: #f1f5f9; border: none; color: var(--primary-dark); font-size: 12px; font-weight: 700; cursor: pointer; padding: 8px 16px; border-radius: 10px; transition: 0.2s; }
+        .btn-confirm { background: #d1fae5; border: none; color: #059669; font-size: 12px; font-weight: 700; cursor: pointer; padding: 8px 16px; border-radius: 10px; transition: 0.2s; }
+        .badge { padding: 6px 12px; border-radius: 8px; font-size: 11px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
         .badge.pending { background-color: #fef3c7; color: #d97706; }
         .badge.success { background-color: #d1fae5; color: #059669; }
 
-        /* === MODALS & TOASTS === */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        /* === UNIFIED FEATURE VIEWS === */
+        .header-feature { background: rgba(255, 255, 255, 0.9); backdrop-filter: blur(10px); padding: 15px 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 4px 20px rgba(0,0,0,0.03); position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #f1f5f9; }
+        .btn-back { background: #f1f5f9; border: none; width: 40px; height: 40px; border-radius: 14px; font-size: 18px; font-weight: bold; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: 0.2s; color: var(--text-dark); }
+        .btn-back:active { transform: scale(0.9); }
+        .feature-title { font-weight: 800; font-size: 18px; color: var(--text-dark); }
+        .feature-content { padding: 25px 20px; }
+        .feature-panel { display: none; }
+        .feature-panel.active { display: block; animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+
+        .list-absen { display: flex; flex-direction: column; gap: 12px; margin-top: 15px; }
+        .absen-item { background: white; padding: 16px; border-radius: 16px; border-left: 5px solid var(--primary-color); box-shadow: var(--shadow-soft); display: flex; justify-content: space-between; align-items: center; font-weight: 700; font-size: 14px;}
+        
+        /* Preview Badge & Queue */
+        .admin-preview-badge { display: none; position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); background: var(--danger-color); color: white; padding: 14px 30px; border-radius: 30px; font-size: 14px; font-weight: 800; box-shadow: 0 10px 25px rgba(239, 68, 68, 0.4); z-index: 9999; cursor: pointer; align-items: center; gap: 8px; border: 2px solid white; animation: fadeSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1); }
+        .admin-preview-badge:active { transform: translateX(-50%) scale(0.95); }
+        .queue-badge { display: none; font-size: 11px; background: var(--warning-color); color: white; padding: 4px 10px; border-radius: 10px; margin-left: auto; font-weight: 800; animation: pulse 1.5s infinite; }
+
+        /* Modals & Toasts */
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-out; }
-        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; }
-        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
-        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--text-dark); color: white; padding: 12px 25px; border-radius: 30px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: bottom 0.3s; z-index: 3000; display: flex; align-items: center; gap: 10px; }
-        .toast.show { bottom: 30px; }
-        .toast.error { background: var(--danger-color); }
-        .toast.success { background: var(--success-color); }
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary-color); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
+        .modal-content { background: white; padding: 30px; border-radius: 24px; width: 90%; max-width: 400px; text-align: center; position: relative; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+        .close-modal { position: absolute; top: 20px; right: 20px; font-size: 24px; font-weight: bold; cursor: pointer; color: var(--text-muted); background: #f1f5f9; width: 35px; height: 35px; border-radius: 10px; display: flex; align-items: center; justify-content: center; transition: 0.2s; }
+        .close-modal:active { transform: scale(0.9); }
+        
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--text-dark); color: white; padding: 14px 28px; border-radius: 30px; font-size: 13px; font-weight: 700; box-shadow: 0 10px 25px rgba(0,0,0,0.2); transition: bottom 0.4s cubic-bezier(0.16, 1, 0.3, 1); z-index: 3000; display: flex; align-items: center; gap: 10px; }
+        .toast.show { bottom: 40px; }
+        .toast.error { background: var(--danger-color); box-shadow: 0 10px 25px rgba(239, 68, 68, 0.3); }
+        .toast.success { background: var(--success-color); box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3); }
+        .loader { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeSlideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        @keyframes pulse { 0% { opacity: 1; } 50% { opacity: 0.7; } 100% { opacity: 1; } }
 
-        /* Responsiveness inside Desktop */
+        .user-list-wrapper::-webkit-scrollbar { width: 5px; }
+        .user-list-wrapper::-webkit-scrollbar-track { background: transparent; }
+        .user-list-wrapper::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
         @media (max-width: 768px) {
             .desktop-layout { flex-direction: column; }
-            .sidebar { width: 100%; height: auto; display: none; } /* On smaller screens, admin might struggle, but instructed as desktop */
-            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+            .sidebar { width: 100%; height: auto; display: none; } 
+            .grid-2, .grid-3 { grid-template-columns: 1fr; gap: 15px; }
+            .content-area { padding: 20px; }
         }
     </style>
 </head>
 <body>
 
     <div id="toastNotif" class="toast"><span id="toastIcon">ℹ️</span><span id="toastMsg">Memproses...</span></div>
+    <div id="adminPreviewExit" class="admin-preview-badge" onclick="exitPreviewMode()">🚨 Keluar Mode Preview</div>
 
     <div id="view-login" class="view-section active mobile-layout">
         <div class="login-container">
             <div class="login-card">
                 <h2 class="dynamic-school-name">Portal Sekolah</h2>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px;">Sistem Informasi V4.0</p>
+                <p style="font-size: 14px; color: var(--text-muted); margin-bottom: 30px; font-weight: 500;">Sistem Informasi V4.1</p>
                 <div class="form-group"><label>Alamat Email</label><input type="email" id="loginIdentitas" placeholder="email@sekolah.com" autocomplete="off"></div>
-                <div class="form-group" style="margin-bottom: 5px;"><label>Kata Sandi</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+                <div class="form-group" style="margin-bottom: 8px;"><label>Kata Sandi</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
                 <span class="forgot-password" onclick="showModal('modalLupaSandi')">Lupa Sandi?</span>
-                <button class="btn-action" id="btnLoginSubmit" style="width: 100%;"><span id="loginText">Masuk ke Sistem</span><div class="loader" id="loginLoader"></div></button>
+                <button class="btn-action" id="btnLoginSubmit" style="width: 100%; padding: 16px;"><span id="loginText">Masuk ke Sistem</span><div class="loader" id="loginLoader"></div></button>
             </div>
         </div>
     </div>
@@ -152,7 +192,7 @@
     <div id="view-admin" class="view-section desktop-layout">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2 class="dynamic-school-name">Vipercell App</h2>
+                <h2 class="dynamic-school-name">Vipercell</h2>
                 <p>Panel Super Admin</p>
             </div>
             <nav class="sidebar-menu">
@@ -162,100 +202,111 @@
                 <div class="sidebar-link" onclick="switchAdminTab('admin-settings', this)">⚙️ Pengaturan Sistem</div>
             </nav>
             <div class="sidebar-footer">
-                <button class="btn-action danger btn-logout" style="width: 100%;">Keluar Sistem</button>
+                <button class="btn-action danger btn-logout" style="width: 100%;">🚪 Keluar Sistem</button>
             </div>
         </aside>
 
         <main class="main-content">
             <header class="topbar">
                 <div class="topbar-left">
-                    <span class="menu-toggle">☰</span>
-                    <h3 style="color: var(--text-dark); margin: 0;">Selamat Datang, Admin</h3>
+                    <h3 style="color: var(--text-dark); margin: 0; font-weight: 800; font-size: 20px;">Selamat Datang, Admin</h3>
                 </div>
-                <div class="profile-pic" style="background: var(--primary-color); color: white; width: 35px; height: 35px; font-size: 14px;">A</div>
+                <div class="profile-pic" style="background: var(--primary-color); color: white; width: 42px; height: 42px; font-size: 16px;">A</div>
             </header>
 
             <div class="content-area">
                 <div id="admin-dashboard" class="admin-tab-content active">
-                    <h2 style="margin-bottom: 20px;">Ringkasan Informasi Sekolah</h2>
+                    <h2 style="margin-bottom: 24px; font-weight: 800; color: var(--text-dark);">Ringkasan Analytics</h2>
                     <div class="grid-3">
-                        <div class="card" style="border-left: 4px solid var(--primary-color);">
+                        <div class="card" style="border-top: 4px solid var(--primary-color);">
                             <h3>Total Pengguna Aktif</h3>
-                            <h2 style="font-size: 30px; color: var(--primary-dark);" id="dashTotalUsers">0</h2>
+                            <h2 style="font-size: 36px; color: var(--primary-dark); font-weight: 800;" id="dashTotalUsers">0</h2>
                         </div>
-                        <div class="card" style="border-left: 4px solid var(--warning-color);">
+                        <div class="card" style="border-top: 4px solid var(--warning-color);">
                             <h3>Transaksi Pending</h3>
-                            <h2 style="font-size: 30px; color: var(--warning-color);" id="dashPendingSpp">0</h2>
+                            <h2 style="font-size: 36px; color: var(--warning-color); font-weight: 800;" id="dashPendingSpp">0</h2>
                         </div>
-                        <div class="card" style="border-left: 4px solid var(--success-color);">
-                            <h3>Status Server Firebase</h3>
-                            <h2 style="font-size: 20px; color: var(--success-color); margin-top: 10px;">Terhubung ✅</h2>
+                        <div class="card" style="border-top: 4px solid var(--success-color);">
+                            <h3>Status Server</h3>
+                            <h2 style="font-size: 22px; color: var(--success-color); margin-top: 10px; font-weight: 800;">Terhubung ✅</h2>
                         </div>
                     </div>
                     <div class="card">
-                        <h3>Pengumuman Akademik Berjalan</h3>
-                        <p id="dashJadwalText" style="white-space: pre-wrap; font-size: 14px; color: var(--text-dark); line-height: 1.6;">Memuat pengumuman...</p>
+                        <h3>Papan Pengumuman Berjalan</h3>
+                        <p id="dashJadwalText" style="white-space: pre-wrap; font-size: 14px; color: var(--text-muted); line-height: 1.8; font-weight: 500;">Memuat pengumuman...</p>
                     </div>
                 </div>
 
                 <div id="admin-users" class="admin-tab-content">
-                    <h2 style="margin-bottom: 20px;">Manajemen Siswa & Guru</h2>
+                    <h2 style="margin-bottom: 24px; font-weight: 800;">Manajemen Siswa & Guru</h2>
                     <div class="grid-2">
                         <div class="card">
-                            <h3>⚡ Buat Akun Cepat</h3>
-                            <div class="grid-2" style="gap: 10px; margin-bottom: 15px;">
+                            <h3>⚡ Buat Akun Cepat <span id="queueBadgeUI" class="queue-badge">⏳ Antrean: 0</span></h3>
+                            <div class="grid-2" style="gap: 15px; margin-bottom: 15px;">
                                 <div class="form-group" style="margin: 0;"><label>Peran</label><select id="newUserRole"><option value="siswa">Siswa</option><option value="guru">Guru</option></select></div>
                                 <div class="form-group" style="margin: 0;"><label>Nama Lengkap</label><input type="text" id="newUserName" placeholder="Masukkan nama" autocomplete="off"></div>
                             </div>
                             <div class="form-group"><label>Email Aktif</label><input type="email" id="newUserIdentitas" placeholder="contoh@gmail.com" autocomplete="off"></div>
-                            <div class="form-group"><label>Kata Sandi</label><input type="text" id="newUserPassword" value="123456"></div>
+                            <div class="form-group"><label>Kata Sandi</label><input type="text" id="newUserPassword" value="123456" placeholder="Tekan Enter untuk Simpan"></div>
                             <button class="btn-action" id="btnCreateUser" style="width: 100%;">Simpan Akun Baru</button>
                         </div>
                         <div class="card">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                                <h3 style="margin: 0; border: none;">Data Terdaftar</h3>
-                                <div style="display: flex; gap: 5px;">
-                                    <button class="btn-action dark" style="padding: 5px 10px; font-size: 12px;" onclick="renderUserListFilter('siswa')">Siswa</button>
-                                    <button class="btn-action dark" style="padding: 5px 10px; font-size: 12px;" onclick="renderUserListFilter('guru')">Guru</button>
+                                <h3 style="margin: 0; border: none; padding: 0;">Data Terdaftar</h3>
+                                <div class="tab-container" style="margin: 0; background: #f1f5f9; padding: 4px;">
+                                    <button class="tab-btn active" onclick="renderUserListFilter('siswa', this)" style="padding: 6px 12px; font-size: 11px;">Siswa</button>
+                                    <button class="tab-btn" onclick="renderUserListFilter('guru', this)" style="padding: 6px 12px; font-size: 11px;">Guru</button>
                                 </div>
                             </div>
-                            <input type="text" id="searchUser" class="form-group" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; margin-bottom: 10px;" placeholder="Cari nama atau email...">
+                            <input type="text" id="searchUser" class="form-group" style="width: 100%; padding: 12px; border-radius: 12px; border: 1px solid #e2e8f0; outline: none; margin-bottom: 15px; background: #f8fafc;" placeholder="Cari nama atau email...">
                             <div class="user-list-wrapper" id="adminUserListContainer">
-                                <p style="font-size: 13px; color: gray;">Pilih filter siswa/guru.</p>
+                                <p style="font-size: 13px; color: var(--text-muted);">Pilih filter siswa/guru.</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="admin-finance" class="admin-tab-content">
-                    <h2 style="margin-bottom: 20px;">Keuangan & Pembayaran SPP</h2>
+                    <h2 style="margin-bottom: 24px; font-weight: 800;">Keuangan & Pembayaran SPP</h2>
                     <div class="grid-2">
                         <div class="card">
-                            <h3>💳 Pengaturan String QRIS</h3>
-                            <p style="font-size: 12px; color: gray; margin-bottom: 10px;">String ini akan diubah otomatis menjadi Barcode di aplikasi Siswa.</p>
-                            <div class="form-group"><textarea id="adminInputQris" rows="4" placeholder="Tempelkan string QRIS M-Banking di sini..."></textarea></div>
+                            <h3>💳 Konfigurasi QRIS Pembayaran</h3>
+                            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 15px; line-height: 1.5;">String ini akan dikonversi otomatis menjadi Barcode di aplikasi HP Siswa.</p>
+                            <div class="form-group"><textarea id="adminInputQris" rows="5" placeholder="Tempelkan string QRIS M-Banking di sini..."></textarea></div>
                             <button class="btn-action dark" id="btnSaveQris">Perbarui QRIS</button>
                         </div>
                         <div class="card">
-                            <h3>Daftar Konfirmasi Transfer</h3>
+                            <h3>Daftar Konfirmasi Transfer Masuk</h3>
                             <div class="user-list-wrapper" id="listSppAdmin">
-                                <p style="font-size: 13px; color: gray;">Memuat transaksi...</p>
+                                <p style="font-size: 13px; color: var(--text-muted);">Memuat transaksi...</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
                 <div id="admin-settings" class="admin-tab-content">
-                    <h2 style="margin-bottom: 20px;">Pengaturan Aplikasi</h2>
-                    <div class="card">
-                        <h3>Identitas Aplikasi</h3>
-                        <div class="form-group"><label>Nama Sekolah / Instansi</label><input type="text" id="adminInputSchoolName" placeholder="Contoh: SMA Nusantara"></div>
-                        <button class="btn-action dark" id="btnSaveSchoolName">Simpan Nama</button>
+                    <h2 style="margin-bottom: 24px; font-weight: 800;">Pengaturan Sistem Lanjutan</h2>
+                    
+                    <div class="card" style="background: linear-gradient(135deg, #f8fafc, #f1f5f9); border: 1px dashed #cbd5e1;">
+                        <h3>👁️ Mode Pratinjau (Preview Engine)</h3>
+                        <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px; line-height: 1.6;">Masuk ke antarmuka Guru atau Siswa untuk memeriksa operasional sistem. Anda dapat kembali ke panel Admin kapan saja dengan menekan tombol merah darurat di layar.</p>
+                        <div style="display: flex; gap: 15px;">
+                            <button class="btn-action" onclick="startPreviewMode('view-guru')" style="background: var(--sidebar-bg); flex: 1; padding: 16px;">Preview Mode Guru</button>
+                            <button class="btn-action success" onclick="startPreviewMode('view-siswa')" style="flex: 1; padding: 16px;">Preview Mode Siswa</button>
+                        </div>
                     </div>
-                    <div class="card">
-                        <h3>Publikasi Jadwal & Pengumuman</h3>
-                        <div class="form-group"><textarea id="adminInputJadwalAdminTab" rows="5" placeholder="Ketik pengumuman di sini..."></textarea></div>
-                        <button class="btn-action dark" id="btnSaveJadwalAdminTab">Sebarkan ke Semua Pengguna</button>
+
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3>Identitas Aplikasi Web</h3>
+                            <div class="form-group"><label>Nama Sekolah / Instansi Utama</label><input type="text" id="adminInputSchoolName" placeholder="Contoh: SMA Nusantara Vipercell"></div>
+                            <button class="btn-action dark" id="btnSaveSchoolName">Simpan Nama Global</button>
+                        </div>
+                        <div class="card">
+                            <h3>Publikasi Papan Pengumuman</h3>
+                            <div class="form-group"><textarea id="adminInputJadwalAdminTab" rows="4" placeholder="Ketik pengumuman atau jadwal di sini..."></textarea></div>
+                            <button class="btn-action dark" id="btnSaveJadwalAdminTab">Broadcast ke Semua Pengguna</button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -265,47 +316,47 @@
     <div id="view-guru" class="view-section desktop-layout">
         <aside class="sidebar">
             <div class="sidebar-header">
-                <h2 class="dynamic-school-name">Vipercell App</h2>
-                <p>Panel Pengajar</p>
+                <h2 class="dynamic-school-name">Vipercell</h2>
+                <p>Panel Pengajar Profesional</p>
             </div>
             <nav class="sidebar-menu">
                 <div class="sidebar-link active" onclick="switchGuruTab('guru-dashboard', this)">🏠 Ringkasan Kelas</div>
-                <div class="sidebar-link" onclick="switchGuruTab('guru-absen', this)">📅 Pantau Absensi</div>
-                <div class="sidebar-link" onclick="switchGuruTab('guru-nilai', this)">📝 Input Nilai Rapor</div>
+                <div class="sidebar-link" onclick="switchGuruTab('guru-absen', this)">📅 Pantau Absensi Harian</div>
+                <div class="sidebar-link" onclick="switchGuruTab('guru-nilai', this)">📝 Input Nilai Transkrip</div>
             </nav>
             <div class="sidebar-footer">
-                <button class="btn-action danger btn-logout" style="width: 100%;">Keluar</button>
+                <button class="btn-action danger btn-logout" style="width: 100%;">🚪 Keluar Sesi</button>
             </div>
         </aside>
 
         <main class="main-content">
             <header class="topbar">
                 <div class="topbar-left">
-                    <h3 style="color: var(--text-dark); margin: 0;">Selamat Bertugas, <span id="guruNameDisplayHeader">Guru</span></h3>
+                    <h3 style="color: var(--text-dark); margin: 0; font-weight: 800; font-size: 20px;">Selamat Bertugas, <span id="guruNameDisplayHeader">Guru</span></h3>
                 </div>
             </header>
             <div class="content-area">
                 <div id="guru-dashboard" class="guru-tab-content active">
                     <div class="card">
-                        <h3>Pengumuman Sekolah</h3>
-                        <p id="guruJadwalText" style="white-space: pre-wrap; font-size: 14px; line-height: 1.6;">Memuat pengumuman...</p>
+                        <h3>Pengumuman Akademik</h3>
+                        <p id="guruJadwalText" style="white-space: pre-wrap; font-size: 14px; line-height: 1.8; font-weight: 500; color: var(--text-muted);">Memuat pengumuman...</p>
                     </div>
                 </div>
                 <div id="guru-absen" class="guru-tab-content">
                     <div class="card">
-                        <h3>Daftar Hadir Siswa (Hari Ini)</h3>
+                        <h3>Daftar Kehadiran Siswa Real-time (Hari Ini)</h3>
                         <div class="user-list-wrapper" id="listAbsenHariIniGuru">Memuat data...</div>
                     </div>
                 </div>
                 <div id="guru-nilai" class="guru-tab-content">
                     <div class="card" style="max-width: 600px;">
-                        <h3>Form Input Nilai</h3>
+                        <h3>Form Input Nilai Siswa</h3>
                         <div class="form-group"><label>Pilih Siswa</label><select id="inputNilaiSiswaGuru"><option value="">Memuat daftar...</option></select></div>
                         <div class="grid-2">
                             <div class="form-group"><label>Mata Pelajaran</label><input type="text" id="inputNilaiMapelGuru" placeholder="Contoh: Fisika"></div>
                             <div class="form-group"><label>Skor (0-100)</label><input type="number" id="inputNilaiSkorGuru" placeholder="90"></div>
                         </div>
-                        <button class="btn-action" id="btnSimpanNilaiGuru">Simpan Nilai</button>
+                        <button class="btn-action" id="btnSimpanNilaiGuru">Simpan ke Database Rapor</button>
                     </div>
                 </div>
             </div>
@@ -313,25 +364,25 @@
     </div>
 
     <div id="view-siswa" class="view-section mobile-layout">
-        <div id="siswa-subpage-absen" class="feature-panel" style="display:none; padding: 20px;">
-            <button class="btn-back" onclick="closeSiswaSubpage()" style="margin-bottom: 20px;">← Kembali</button>
+        <div id="siswa-subpage-absen" class="feature-panel" style="display:none; padding: 25px 20px;">
+            <button class="btn-back" onclick="closeSiswaSubpage()" style="margin-bottom: 25px;">← Kembali</button>
             <div class="card" style="text-align:center;">
-                <h3>Absensi Kehadiran</h3>
-                <p style="font-size:13px; margin-bottom:20px; color: gray;">Konfirmasi kehadiran Anda hari ini.</p>
-                <button class="btn-action success" id="btnHadirSiswa" style="padding: 15px; width: 100%;">Hadir Hari Ini</button>
+                <h3 style="justify-content:center; border:none; font-size:20px; padding:0;">Absensi Kehadiran</h3>
+                <p style="font-size:13px; margin-bottom:25px; color: var(--text-muted); font-weight: 500;">Konfirmasi kehadiran Anda ke sistem cloud hari ini.</p>
+                <button class="btn-action success" id="btnHadirSiswa" style="padding: 16px; width: 100%; font-size: 16px;">Hadir Hari Ini</button>
             </div>
         </div>
 
-        <div id="siswa-subpage-spp" class="feature-panel" style="display:none; padding: 20px;">
-            <button class="btn-back" onclick="closeSiswaSubpage()" style="margin-bottom: 20px;">← Kembali</button>
+        <div id="siswa-subpage-spp" class="feature-panel" style="display:none; padding: 25px 20px;">
+            <button class="btn-back" onclick="closeSiswaSubpage()" style="margin-bottom: 25px;">← Kembali</button>
             <div class="card" style="text-align: center;">
-                <h3>Tagihan Bulanan</h3>
-                <p style="font-size:12px; margin-bottom:15px; color: gray;">Scan QRIS untuk pembayaran SPP Rp 150.000</p>
-                <div style="background: #f3f4f6; padding: 15px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
-                    <img id="sppQrImageSiswa" src="" alt="QRIS" style="max-width: 200px; display: none;">
-                    <p id="sppQrFallbackSiswa" style="font-size: 12px;">Admin belum mengatur QRIS.</p>
+                <h3 style="justify-content:center; border:none; font-size:20px; padding:0;">Tagihan Bulanan</h3>
+                <p style="font-size:13px; margin-bottom:20px; color: var(--text-muted); font-weight:500;">Scan QRIS untuk pembayaran otomatis SPP Rp 150.000</p>
+                <div style="background: #f8fafc; padding: 20px; border-radius: 20px; display: inline-block; margin-bottom: 25px; border: 1px solid #e2e8f0;">
+                    <img id="sppQrImageSiswa" src="" alt="QRIS" style="max-width: 200px; display: none; border-radius: 10px;">
+                    <p id="sppQrFallbackSiswa" style="font-size: 13px; font-weight: 600;">Admin belum mengatur QRIS.</p>
                 </div>
-                <button class="btn-action success" id="btnKonfirmasiSppSiswa" style="width:100%;">Saya Sudah Transfer</button>
+                <button class="btn-action success" id="btnKonfirmasiSppSiswa" style="width:100%; padding: 16px;">Saya Sudah Transfer</button>
             </div>
             <div class="card">
                 <h3>Riwayat Pembayaran</h3>
@@ -342,66 +393,66 @@
         <div id="siswa-main-dashboard">
             <header class="header-mobile">
                 <div class="header-top">
-                    <div class="user-info"><p class="dynamic-school-name">Nama Sekolah</p><h1 id="siswaNameDisplayHeader">Siswa</h1></div>
-                    <div class="profile-pic" style="font-size: 14px;">S</div>
+                    <div class="user-info"><p class="dynamic-school-name" style="color: #e0e7ff;">Nama Sekolah</p><h1 id="siswaNameDisplayHeader">Siswa</h1></div>
+                    <div class="profile-pic" style="font-size: 18px;">S</div>
                 </div>
             </header>
             <main class="container-mobile">
-                <div class="card" style="margin-top: 20px; text-align: center; border-left: 4px solid var(--primary-color);">
-                    <h3 style="border: none; margin: 0; justify-content: center;">Tahun Ajaran Aktif</h3>
-                    <p style="font-size: 12px; color: gray;">Semester Genap</p>
+                <div class="card" style="margin-top: 25px; text-align: center; border-left: 5px solid var(--primary-color);">
+                    <h3 style="border: none; margin: 0; justify-content: center; font-size: 18px;">Tahun Ajaran Aktif</h3>
+                    <p style="font-size: 13px; color: var(--text-muted); font-weight: 600; margin-top: 5px;">Semester Genap 2026</p>
                 </div>
                 
-                <h3 style="font-size: 14px; margin-bottom: 10px; padding-left: 5px;">Menu Utama</h3>
+                <h3 style="font-size: 15px; margin: 10px 0; padding-left: 5px; font-weight: 800; color: var(--text-dark);">Menu Utama Akademik</h3>
                 <div class="menu-grid">
                     <div class="menu-item" onclick="openSiswaSubpage('siswa-subpage-absen')"><div class="menu-icon">📅</div><span>Absen</span></div>
                     <div class="menu-item" onclick="switchSiswaBottomNav('nav-nilai')"><div class="menu-icon">📝</div><span>Nilai</span></div>
-                    <div class="menu-item" onclick="openSiswaSubpage('siswa-subpage-spp')"><div class="menu-icon">💳</div><span>Bayar SPP</span></div>
+                    <div class="menu-item" onclick="openSiswaSubpage('siswa-subpage-spp')"><div class="menu-icon">💳</div><span>SPP</span></div>
                     <div class="menu-item" onclick="switchSiswaBottomNav('nav-jadwal')"><div class="menu-icon">⏰</div><span>Jadwal</span></div>
                 </div>
 
                 <div class="card">
                     <h3>Papan Informasi Terkini</h3>
-                    <p id="siswaJadwalText" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;">Memuat...</p>
+                    <p id="siswaJadwalText" style="font-size: 13px; color: var(--text-muted); line-height: 1.6; white-space: pre-wrap; font-weight: 500;">Memuat...</p>
                 </div>
             </main>
         </div>
 
-        <div id="siswa-tab-nilai" style="display:none; padding: 20px;">
-            <h2 style="margin-bottom: 20px; text-align: center;">Transkrip Rapor</h2>
+        <div id="siswa-tab-nilai" style="display:none; padding: 25px 20px;">
+            <h2 style="margin-bottom: 25px; text-align: center; font-weight: 800; color: var(--primary-dark);">Transkrip Rapor Resmi</h2>
             <div class="card">
                 <div class="user-list-wrapper" id="listNilaiSiswaMobile">
-                    <p style="font-size: 12px; color: gray; text-align: center;">Belum ada nilai.</p>
+                    <p style="font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 500;">Belum ada nilai yang diterbitkan.</p>
                 </div>
             </div>
         </div>
 
         <nav class="bottom-nav">
-            <div class="nav-item active" id="nav-home" onclick="switchSiswaBottomNav('nav-home')"><span style="font-size: 20px;">🏠</span>Beranda</div>
-            <div class="nav-item" id="nav-nilai" onclick="switchSiswaBottomNav('nav-nilai')"><span style="font-size: 20px;">📊</span>Rapor</div>
-            <div class="nav-item" id="nav-jadwal" onclick="switchSiswaBottomNav('nav-jadwal')"><span style="font-size: 20px;">🔔</span>Jadwal</div>
-            <div class="nav-item btn-logout" style="color: var(--danger-color);"><span style="font-size: 20px;">🚪</span>Keluar</div>
+            <div class="nav-item active" id="nav-home" onclick="switchSiswaBottomNav('nav-home')"><span style="font-size: 22px;">🏠</span>Beranda</div>
+            <div class="nav-item" id="nav-nilai" onclick="switchSiswaBottomNav('nav-nilai')"><span style="font-size: 22px;">📊</span>Rapor</div>
+            <div class="nav-item" id="nav-jadwal" onclick="switchSiswaBottomNav('nav-jadwal')"><span style="font-size: 22px;">🔔</span>Jadwal</div>
+            <div class="nav-item btn-logout" style="color: var(--danger-color);"><span style="font-size: 22px;">🚪</span>Keluar</div>
         </nav>
     </div>
 
     <div class="modal-overlay" id="modalLupaSandi">
         <div class="modal-content">
-            <span class="close-modal" onclick="hideModal('modalLupaSandi')">&times;</span>
-            <div style="font-size:40px; margin-bottom:10px;">🔐</div>
-            <h3 style="margin-bottom: 10px;">Pemulihan Sandi</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Silakan hubungi Admin Sekolah untuk mereset kata sandi Anda.</p>
-            <button class="btn-action" onclick="hideModal('modalLupaSandi')" style="width: 100%;">Tutup</button>
+            <span class="close-modal" onclick="hideModal('modalLupaSandi')">×</span>
+            <div style="font-size:45px; margin-bottom:15px; display:inline-block;">🔐</div>
+            <h3 style="margin-bottom: 12px; font-weight: 800; font-size:20px;">Pemulihan Sandi</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px; line-height: 1.6; font-weight: 500;">Sistem keamanan cloud memblokir perubahan mandiri. Silakan hubungi Admin Sekolah untuk mereset kata sandi Anda.</p>
+            <button class="btn-action" onclick="hideModal('modalLupaSandi')" style="width: 100%; padding: 14px;">Saya Mengerti</button>
         </div>
     </div>
 
     <div class="modal-overlay" id="modalEditUser">
         <div class="modal-content" style="text-align: left;">
-            <span class="close-modal" onclick="hideModal('modalEditUser')">&times;</span>
-            <h3 style="margin-bottom: 15px; text-align: center;">Edit Data Pengguna</h3>
+            <span class="close-modal" onclick="hideModal('modalEditUser')">×</span>
+            <h3 style="margin-bottom: 20px; text-align: center; font-weight: 800;">Edit Profil Pengguna</h3>
             <input type="hidden" id="editUserId">
-            <div class="form-group"><label>Nama Lengkap</label><input type="text" id="editUserName"></div>
-            <div class="form-group"><label>Email Login (Dikunci)</label><input type="email" id="editUserIdentitas" disabled></div>
-            <button class="btn-action success" id="btnSaveUserEdit" style="width: 100%;">Simpan Perubahan</button>
+            <div class="form-group"><label>Nama Lengkap (Bisa Diubah)</label><input type="text" id="editUserName"></div>
+            <div class="form-group"><label>Email Login (Terkunci Permanen)</label><input type="email" id="editUserIdentitas" disabled></div>
+            <button class="btn-action success" id="btnSaveUserEdit" style="width: 100%; padding: 14px; margin-top: 10px;">Simpan Perubahan</button>
         </div>
     </div>
 
@@ -418,6 +469,25 @@
         const ADMIN_EMAIL = "millerstoreid@gmail.com";
         let allUsersData = {}; let currentUserRole = '', currentUserName = '', currentUserUid = '';
         let activeQrisString = ""; let currentFilterRole = 'siswa';
+        window.adminActivePreview = null;
+
+        // === QUEUE ENGINE (KECEPATAN INPUT ADMIN) ===
+        const saveQueue = []; let isProcessingQueue = false;
+        function updateQueueUI() {
+            const badge = document.getElementById('queueBadgeUI');
+            if(saveQueue.length > 0) { badge.innerText = `⏳ Antrean: ${saveQueue.length}`; badge.style.display = 'inline-block'; } 
+            else { badge.style.display = 'none'; }
+        }
+        async function processSaveQueue() {
+            if(saveQueue.length === 0) { isProcessingQueue = false; updateQueueUI(); return; }
+            isProcessingQueue = true; const task = saveQueue[0];
+            try {
+                const userCredential = await createUserWithEmailAndPassword(secondaryAuth, task.email, task.password);
+                await set(ref(db, 'users/' + userCredential.user.uid), { nama: task.nama, role: task.role, email: task.email, waktuDibuat: new Date().toISOString() });
+                await signOut(secondaryAuth); showToast(`${task.nama} tersimpan!`, "success");
+            } catch (error) { showToast(`Gagal: ${task.email} (Terpakai/Format Salah)`, "error"); }
+            saveQueue.shift(); updateQueueUI(); processSaveQueue();
+        }
 
         // === UI UTILITIES ===
         window.showModal = (id) => document.getElementById(id).classList.add('active');
@@ -438,46 +508,45 @@
             toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
-        // --- DESKTOP TAB ROUTING (ADMIN & GURU) ---
+        window.startPreviewMode = (viewId) => {
+            if (currentUserRole !== 'admin') return;
+            window.adminActivePreview = viewId; switchView(viewId);
+            document.getElementById('adminPreviewExit').style.display = 'flex';
+            showToast(`Memasuki Mode ${viewId === 'view-guru' ? 'Guru' : 'Siswa'}`, 'info');
+        }
+        window.exitPreviewMode = () => {
+            window.adminActivePreview = null; switchView('view-admin');
+            document.getElementById('adminPreviewExit').style.display = 'none';
+        }
+
+        // Routing Desktop
         window.switchAdminTab = (tabId, element) => {
-            document.querySelectorAll('#view-admin .sidebar-link').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
-            if(tabId === 'admin-users') renderUserListFilter(currentFilterRole);
+            document.querySelectorAll('#view-admin .sidebar-link').forEach(el => el.classList.remove('active')); element.classList.add('active');
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active')); document.getElementById(tabId).classList.add('active');
+            if(tabId === 'admin-users') renderUserListFilter(currentFilterRole, document.querySelector('.tab-container .active') || document.getElementById('tabSiswaBtn'));
         };
-
         window.switchGuruTab = (tabId, element) => {
-            document.querySelectorAll('#view-guru .sidebar-link').forEach(el => el.classList.remove('active'));
-            element.classList.add('active');
-            document.querySelectorAll('.guru-tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active');
+            document.querySelectorAll('#view-guru .sidebar-link').forEach(el => el.classList.remove('active')); element.classList.add('active');
+            document.querySelectorAll('.guru-tab-content').forEach(el => el.classList.remove('active')); document.getElementById(tabId).classList.add('active');
         };
 
-        // --- MOBILE TAB ROUTING (SISWA) ---
+        // Routing Mobile Siswa
         window.openSiswaSubpage = (pageId) => {
-            document.getElementById('siswa-main-dashboard').style.display = 'none';
-            document.getElementById('siswa-tab-nilai').style.display = 'none';
-            document.getElementById(pageId).style.display = 'block';
+            document.getElementById('siswa-main-dashboard').style.display = 'none'; document.getElementById('siswa-tab-nilai').style.display = 'none';
+            document.getElementById(pageId).style.display = 'block'; window.scrollTo(0,0);
         };
-
         window.closeSiswaSubpage = () => {
             document.querySelectorAll('#view-siswa .feature-panel').forEach(el => el.style.display = 'none');
             document.getElementById('siswa-main-dashboard').style.display = 'block';
         };
-
         window.switchSiswaBottomNav = (navId) => {
-            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-            document.getElementById(navId).classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active')); document.getElementById(navId).classList.add('active');
             closeSiswaSubpage();
-
             if(navId === 'nav-home' || navId === 'nav-jadwal') {
-                document.getElementById('siswa-main-dashboard').style.display = 'block';
-                document.getElementById('siswa-tab-nilai').style.display = 'none';
+                document.getElementById('siswa-main-dashboard').style.display = 'block'; document.getElementById('siswa-tab-nilai').style.display = 'none';
                 if(navId === 'nav-jadwal') window.scrollTo(0, document.body.scrollHeight);
             } else if(navId === 'nav-nilai') {
-                document.getElementById('siswa-main-dashboard').style.display = 'none';
-                document.getElementById('siswa-tab-nilai').style.display = 'block';
+                document.getElementById('siswa-main-dashboard').style.display = 'none'; document.getElementById('siswa-tab-nilai').style.display = 'block';
             }
         };
 
@@ -492,14 +561,14 @@
             if(!email || !password) return showToast("Isi form dengan lengkap.", "error");
             document.getElementById('loginText').style.display = "none"; document.getElementById('loginLoader').style.display = "inline-block";
             try { await signInWithEmailAndPassword(auth, email, password); } 
-            catch (error) { document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none"; showToast("Login gagal.", "error"); }
+            catch (error) { document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none"; showToast("Login gagal. Cek Email/Sandi.", "error"); }
         });
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none";
                 currentUserUid = user.uid;
-                if (user.email === ADMIN_EMAIL) { currentUserRole = 'admin'; switchView('view-admin'); } 
+                if (user.email === ADMIN_EMAIL) { currentUserRole = 'admin'; window.exitPreviewMode(); } 
                 else {
                     const snapshot = await get(ref(db, 'users/' + user.uid));
                     if (snapshot.exists()) {
@@ -511,32 +580,35 @@
             } else switchView('view-login');
         });
 
-        // --- FITUR ADMIN: PEMBUATAN AKUN & MANAJEMEN PENGGUNA ---
-        document.getElementById('btnCreateUser').addEventListener('click', async () => {
+        // --- FITUR ADMIN: PEMBUATAN AKUN (DENGAN QUEUE) ---
+        document.getElementById('newUserPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') { e.preventDefault(); document.getElementById('btnCreateUser').click(); } });
+        document.getElementById('btnCreateUser').addEventListener('click', () => {
             const role = document.getElementById('newUserRole').value; const namaInput = document.getElementById('newUserName');
             const emailInput = document.getElementById('newUserIdentitas'); const password = document.getElementById('newUserPassword').value;
             const nama = namaInput.value.trim(); const email = emailInput.value.trim();
-            if(!nama || !email || password.length < 6) return showToast("Data tidak valid!", "error");
             
-            const btn = document.getElementById('btnCreateUser'); btn.innerText = "Menyimpan..."; btn.disabled = true;
-            try {
-                const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-                await set(ref(db, 'users/' + userCredential.user.uid), { nama: nama, role: role, email: email, waktuDibuat: new Date().toISOString() });
-                await signOut(secondaryAuth); showToast(`${nama} tersimpan!`, "success");
-                namaInput.value = ''; emailInput.value = ''; namaInput.focus();
-            } catch (error) { showToast("Email sudah terdaftar!", "error"); } 
-            finally { btn.innerText = "Simpan Akun Baru"; btn.disabled = false; }
+            if(!nama || !email || password.length < 6) return showToast("Data tidak valid/Sandi < 6!", "error");
+            
+            saveQueue.push({ nama, email, role, password }); updateQueueUI();
+            namaInput.value = ''; emailInput.value = ''; namaInput.focus();
+            if(!isProcessingQueue) processSaveQueue();
         });
 
+        // --- FITUR ADMIN: DAFTAR PENGGUNA ---
         onValue(ref(db, 'users'), (snapshot) => {
             allUsersData = snapshot.exists() ? snapshot.val() : {};
-            document.getElementById('dashTotalUsers').innerText = Object.keys(allUsersData).length;
-            if(currentUserRole === 'admin') renderUserListFilter(currentFilterRole);
+            if(document.getElementById('dashTotalUsers')) document.getElementById('dashTotalUsers').innerText = Object.keys(allUsersData).length;
+            if(currentUserRole === 'admin') renderUserListFilter(currentFilterRole, null);
             populateGuruDropdown();
         });
 
-        window.renderUserListFilter = (roleFilter) => {
+        window.renderUserListFilter = (roleFilter, btnElement) => {
             currentFilterRole = roleFilter;
+            if(btnElement) {
+                document.querySelectorAll('.tab-container .tab-btn').forEach(b => b.classList.remove('active'));
+                btnElement.classList.add('active');
+            }
+            
             const container = document.getElementById('adminUserListContainer'); container.innerHTML = '';
             const searchQuery = document.getElementById('searchUser').value.toLowerCase();
             let count = 0;
@@ -555,10 +627,10 @@
                     </div>`;
                 count++;
             });
-            if(count === 0) container.innerHTML = `<p style="font-size:12px; color:gray;">Tidak ada data ${roleFilter}.</p>`;
+            if(count === 0) container.innerHTML = `<p style="font-size:13px; color:var(--text-muted); text-align:center; padding: 20px;">Tidak ada data ${roleFilter}.</p>`;
         };
 
-        document.getElementById('searchUser').addEventListener('input', () => renderUserListFilter(currentFilterRole));
+        document.getElementById('searchUser').addEventListener('input', () => renderUserListFilter(currentFilterRole, null));
 
         window.bukaModalEditAdmin = (uid) => {
             const user = allUsersData[uid];
@@ -573,8 +645,9 @@
             catch (error) { showToast("Gagal update", "error"); }
         });
 
-        // --- SISTEM ABSEN (GURU & SISWA) ---
+        // --- SISTEM ABSEN ---
         document.getElementById('btnHadirSiswa').addEventListener('click', async () => {
+            if(currentUserRole === 'admin') return alert("Admin Preview: Logika absen berfungsi.");
             const today = new Date().toISOString().split('T')[0];
             await set(ref(db, `absensi/${today}/${currentUserUid}`), { nama: currentUserName, waktu: new Date().toLocaleTimeString() });
             showToast("Absen Tercatat!", "success"); document.getElementById('btnHadirSiswa').innerText = "✅ Anda Sudah Absen"; document.getElementById('btnHadirSiswa').disabled = true;
@@ -584,7 +657,7 @@
             const listGuru = document.getElementById('listAbsenHariIniGuru');
             if(listGuru) {
                 listGuru.innerHTML = '';
-                if(!snapshot.exists()) return listGuru.innerHTML = '<p style="font-size:13px; color:gray;">Belum ada siswa yang absen.</p>';
+                if(!snapshot.exists()) return listGuru.innerHTML = '<p style="font-size:13px; color:var(--text-muted);">Belum ada siswa yang absen hari ini.</p>';
                 const data = snapshot.val();
                 Object.keys(data).forEach(key => listGuru.innerHTML += `<div class="user-item"><div class="user-info-box"><h4>${data[key].nama}</h4></div><span class="badge success">${data[key].waktu}</span></div>`);
             }
@@ -601,15 +674,15 @@
             const uidSiswa = document.getElementById('inputNilaiSiswaGuru').value; const mapel = document.getElementById('inputNilaiMapelGuru').value.trim(); const skor = document.getElementById('inputNilaiSkorGuru').value;
             if(!uidSiswa || !mapel || !skor) return showToast("Isi data nilai dengan lengkap", "error");
             try { await set(ref(db, `nilai/${uidSiswa}/${mapel}`), skor); showToast("Nilai disimpan!", "success"); document.getElementById('inputNilaiMapelGuru').value = ''; document.getElementById('inputNilaiSkorGuru').value = ''; } 
-            catch (err) { showToast("Gagal menyimpan nilai", "error"); }
+            catch (err) { showToast("Gagal menyimpan", "error"); }
         });
 
         function loadNilaiSiswaMobile() {
             onValue(ref(db, `nilai/${currentUserUid}`), (snapshot) => {
                 const list = document.getElementById('listNilaiSiswaMobile'); if(!list) return; list.innerHTML = '';
-                if(!snapshot.exists()) return list.innerHTML = '<p style="font-size: 13px; color: gray; text-align: center;">Belum ada nilai dirilis.</p>';
+                if(!snapshot.exists()) return list.innerHTML = '<p style="font-size: 13px; color: var(--text-muted); text-align: center; font-weight: 500;">Belum ada nilai diterbitkan.</p>';
                 const data = snapshot.val();
-                Object.keys(data).forEach(mapel => list.innerHTML += `<div class="user-item"><div class="user-info-box"><h4>${mapel}</h4></div><span style="font-weight:bold; color:var(--primary-dark); font-size: 18px;">${data[mapel]}</span></div>`);
+                Object.keys(data).forEach(mapel => list.innerHTML += `<div class="user-item"><div class="user-info-box"><h4 style="font-size:15px;">${mapel}</h4></div><span style="font-weight:800; color:var(--primary-dark); font-size: 20px;">${data[mapel]}</span></div>`);
             });
         }
 
@@ -617,7 +690,6 @@
         onValue(ref(db, 'settings/qris'), (snapshot) => {
             activeQrisString = snapshot.val() || "";
             if(document.getElementById('adminInputQris')) document.getElementById('adminInputQris').value = activeQrisString;
-            
             const img = document.getElementById('sppQrImageSiswa'); const fallback = document.getElementById('sppQrFallbackSiswa');
             if(img && fallback) {
                 if(activeQrisString) { img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(activeQrisString)}`; img.style.display = "block"; fallback.style.display = "none"; } 
@@ -637,25 +709,20 @@
         });
 
         window.adminKonfirmasiSPP = async (trxKey) => {
-            try { await update(ref(db, `transactions/spp/${trxKey}`), { status: "Lunas" }); showToast("Lunas!", "success"); } 
-            catch (err) { showToast("Gagal", "error"); }
+            try { await update(ref(db, `transactions/spp/${trxKey}`), { status: "Lunas" }); showToast("Lunas!", "success"); } catch (err) { showToast("Gagal", "error"); }
         };
 
         onValue(ref(db, 'transactions/spp'), (snapshot) => {
-            const listAdmin = document.getElementById('listSppAdmin'); const listSiswa = document.getElementById('listSppSiswaMobile');
-            let pendingCount = 0;
+            const listAdmin = document.getElementById('listSppAdmin'); const listSiswa = document.getElementById('listSppSiswaMobile'); let pendingCount = 0;
             if(listAdmin) listAdmin.innerHTML = ''; if(listSiswa) listSiswa.innerHTML = '';
-            
             if(!snapshot.exists()) {
-                if(listAdmin) listAdmin.innerHTML = '<p style="font-size: 13px; color: gray;">Belum ada transaksi.</p>';
-                if(listSiswa) listSiswa.innerHTML = '<p style="font-size: 13px; color: gray;">Belum ada riwayat.</p>'; return;
+                if(listAdmin) listAdmin.innerHTML = '<p style="font-size: 13px; color: var(--text-muted);">Belum ada transaksi.</p>';
+                if(listSiswa) listSiswa.innerHTML = '<p style="font-size: 13px; color: var(--text-muted); text-align:center;">Belum ada riwayat.</p>'; return;
             }
-
             const data = snapshot.val();
             Object.keys(data).reverse().forEach(key => {
                 const trx = data[key]; const dateObj = trx.waktu ? new Date(trx.waktu) : new Date(); const dateStr = `${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()}`;
                 if(trx.status === 'Pending') pendingCount++;
-
                 if(listAdmin) {
                     listAdmin.innerHTML += `
                         <div class="user-item">
@@ -663,9 +730,7 @@
                             ${trx.status === 'Pending' ? `<button class="btn-confirm" onclick="adminKonfirmasiSPP('${key}')">Konfirmasi</button>` : `<span class="badge success">Lunas</span>`}
                         </div>`;
                 }
-                if(listSiswa && trx.uid === currentUserUid) {
-                    listSiswa.innerHTML += `<div class="user-item"><div class="user-info-box"><h4>SPP Bulanan</h4><p>${dateStr}</p></div><span class="badge ${trx.status === 'Pending' ? 'pending' : 'success'}">${trx.status}</span></div>`;
-                }
+                if(listSiswa && trx.uid === currentUserUid) listSiswa.innerHTML += `<div class="user-item"><div class="user-info-box"><h4>SPP Bulanan</h4><p>${dateStr}</p></div><span class="badge ${trx.status === 'Pending' ? 'pending' : 'success'}">${trx.status}</span></div>`;
             });
             if(document.getElementById('dashPendingSpp')) document.getElementById('dashPendingSpp').innerText = pendingCount;
         });
@@ -681,7 +746,6 @@
                 const data = snapshot.val(); const name = data.schoolName || "SMA Nusantara Vipercell";
                 document.querySelectorAll('.dynamic-school-name').forEach(el => { if(el.tagName === 'TITLE') document.title = name; else el.innerText = name; });
                 if(document.getElementById('adminInputSchoolName')) document.getElementById('adminInputSchoolName').value = name;
-                
                 if(data.jadwal) {
                     if(document.getElementById('adminInputJadwalAdminTab')) document.getElementById('adminInputJadwalAdminTab').value = data.jadwal;
                     if(document.getElementById('dashJadwalText')) document.getElementById('dashJadwalText').innerText = data.jadwal;
@@ -696,10 +760,8 @@
             if(newName) { await set(ref(db, 'settings/schoolName'), newName); showToast("Tersimpan!", "success"); }
         });
 
-        // Trigger load mobile siswa data periodically if active
         setInterval(() => { if(currentUserRole === 'siswa') loadNilaiSiswaMobile(); }, 5000);
 
-        // Logout
         document.querySelectorAll('.btn-logout').forEach(btn => {
             btn.addEventListener('click', () => { signOut(auth).then(() => { document.getElementById('loginIdentitas').value = ''; document.getElementById('loginPassword').value = ''; }); });
         });
