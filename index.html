@@ -17,9 +17,9 @@
     </script>
     
     <style>
-        /* === CSS MODERN VIPERCELL v3.1 === */
+        /* === CSS MODERN VIPERCELL v4.0 === */
         :root {
-            --primary-color: #3b82f6; --primary-dark: #2563eb;
+            --primary-color: #3b82f6; --primary-dark: #2563eb; --sidebar-bg: #1e293b;
             --bg-color: #f3f4f6; --card-bg: #ffffff;
             --text-dark: #1f2937; --text-muted: #6b7280;
             --border-radius: 16px;
@@ -28,283 +28,369 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
-        body { background-color: var(--bg-color); color: var(--text-dark); max-width: 768px; margin: 0 auto; position: relative; min-height: 100vh; }
+        body { background-color: var(--bg-color); color: var(--text-dark); overflow-x: hidden; }
 
-        .view-section { display: none; animation: fadeIn 0.3s ease; padding-bottom: 80px; }
+        .view-section { display: none; animation: fadeIn 0.3s ease; }
         .view-section.active { display: block; }
 
-        /* Login & Header */
+        /* === GLOBAL FORMS & COMPONENTS === */
+        .form-group { margin-bottom: 15px; text-align: left; }
+        .form-group label { display: block; font-size: 13px; margin-bottom: 6px; font-weight: 600; color: var(--text-dark); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px; outline: none; background: #f9fafb; transition: 0.2s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-color); background: #fff; box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
+        .form-group input:disabled { background-color: #e5e7eb; color: #9ca3af; }
+        .btn-action { background-color: var(--primary-color); color: white; border: none; padding: 12px 15px; border-radius: 10px; font-weight: bold; cursor: pointer; transition: 0.2s; display: inline-flex; justify-content: center; align-items: center; gap: 8px; font-size: 14px; }
+        .btn-action:active { transform: scale(0.96); }
+        .btn-action.dark { background-color: var(--text-dark); }
+        .btn-action.success { background-color: var(--success-color); }
+        .btn-action.danger { background-color: var(--danger-color); }
+        .card { background-color: var(--card-bg); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 20px; }
+        .card h3 { font-size: 16px; margin-bottom: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* === MOBILE LAYOUT (LOGIN & SISWA) === */
+        .mobile-layout { max-width: 480px; margin: 0 auto; min-height: 100vh; background: var(--bg-color); position: relative; padding-bottom: 80px; box-shadow: 0 0 20px rgba(0,0,0,0.05); }
         .login-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; background: linear-gradient(135deg, var(--bg-color), #e0e7ff); }
-        .login-card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); width: 100%; max-width: 400px; text-align: center; }
+        .login-card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); width: 100%; text-align: center; }
         .login-card h2 { margin-bottom: 5px; color: var(--primary-dark); font-size: 22px; }
-        .header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 30px 20px 50px 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
+        
+        .header-mobile { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 30px 20px 40px 20px; border-bottom-left-radius: 30px; border-bottom-right-radius: 30px; }
         .header-top { display: flex; justify-content: space-between; align-items: center; }
         .user-info h1 { font-size: 20px; font-weight: 600; }
         .user-info p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
         .profile-pic { width: 45px; height: 45px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: bold; font-size: 18px; cursor: pointer; }
-
-        /* Forms & Buttons */
-        .form-group { margin-bottom: 12px; text-align: left; }
-        .form-group label { display: block; font-size: 12px; margin-bottom: 4px; font-weight: 600; color: var(--text-dark); }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 14px; outline: none; background: #f9fafb; transition: 0.2s; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-color); background: #fff; box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
-        .form-group input:disabled { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
-        .btn-action { background-color: var(--primary-color); color: white; border: none; padding: 14px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-top: 5px; display: flex; justify-content: center; align-items: center; gap: 8px; font-size: 14px;}
-        .btn-action:active { transform: scale(0.96); }
-        .btn-action.dark { background-color: var(--text-dark); }
-        .btn-action.success { background-color: var(--success-color); }
-        .forgot-password { display: block; text-align: right; font-size: 12px; color: var(--primary-color); font-weight: 600; cursor: pointer; margin-top: -5px; margin-bottom: 15px; }
-
-        /* Cards & Grids */
-        .container { padding: 0 20px; margin-top: -30px; }
-        .card { background-color: var(--card-bg); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 15px; }
-        .card h3 { font-size: 15px; margin-bottom: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        .container-mobile { padding: 0 20px; margin-top: -20px; }
         
         .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0;}
-        .menu-item { background-color: var(--card-bg); border-radius: 12px; padding: 15px 5px; text-align: center; box-shadow: var(--shadow); cursor: pointer; position: relative; transition: 0.2s;}
+        .menu-item { background-color: var(--card-bg); border-radius: 15px; padding: 15px 5px; text-align: center; box-shadow: var(--shadow); cursor: pointer; transition: 0.2s;}
         .menu-item:active { transform: scale(0.95); background: #f3f4f6; }
-        .menu-icon { width: 35px; height: 35px; background-color: #e0e7ff; color: var(--primary-color); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 18px; }
+        .menu-icon { width: 40px; height: 40px; background-color: #e0e7ff; color: var(--primary-color); border-radius: 12px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 20px; }
         .menu-item span { font-size: 11px; font-weight: 600; }
 
-        /* Tabs & Lists */
-        .tab-container { display: flex; background: #e5e7eb; border-radius: 10px; padding: 4px; margin-bottom: 15px; }
-        .tab-btn { flex: 1; padding: 10px; text-align: center; font-size: 12px; font-weight: 600; border: none; background: transparent; cursor: pointer; color: var(--text-muted); transition: 0.3s ease; border-radius: 8px; }
-        .tab-btn.active { background: white; color: var(--primary-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
-        
-        .list-container { display: none; flex-direction: column; max-height: 350px; overflow-y: auto; padding-right: 5px; }
-        .list-container.active { display: flex; }
-        .search-box { width: 100%; padding: 10px 15px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; margin-bottom: 15px; outline: none; }
-        
-        .user-item { display: flex; align-items: center; gap: 12px; padding: 12px 5px; border-bottom: 1px solid #f3f4f6; animation: fadeIn 0.3s ease; }
-        .avatar { width: 38px; height: 38px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; text-transform: uppercase; flex-shrink: 0; }
-        .user-info-box { flex: 1; }
-        .user-info-box h4 { font-size: 13px; margin-bottom: 2px; color: var(--text-dark); }
-        .user-info-box p { font-size: 11px; color: var(--text-muted); }
-        .btn-edit { background: #f3f4f6; border: none; color: var(--primary-dark); font-size: 11px; font-weight: bold; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: 0.2s; }
-        .btn-confirm { background: #d1fae5; border: none; color: #059669; font-size: 11px; font-weight: bold; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: 0.2s; }
-        
-        /* Unified Feature Views */
-        .header-feature { background: var(--card-bg); padding: 15px 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
-        .btn-back { background: #f3f4f6; border: none; width: 35px; height: 35px; border-radius: 10px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        .feature-title { font-weight: 600; font-size: 16px; color: var(--text-dark); }
-        .feature-content { padding: 20px; }
-        .feature-panel { display: none; }
-        .feature-panel.active { display: block; animation: fadeIn 0.3s ease; }
+        .bottom-nav { position: fixed; bottom: 0; left: 50%; transform: translateX(-50%); width: 100%; max-width: 480px; background-color: white; display: flex; justify-content: space-around; padding: 15px 10px; box-shadow: 0 -2px 10px rgba(0,0,0,0.05); border-top-left-radius: 20px; border-top-right-radius: 20px; z-index: 1000; }
+        .nav-item { display: flex; flex-direction: column; align-items: center; color: var(--text-muted); cursor: pointer; font-size: 11px; font-weight: 600; gap: 4px;}
+        .nav-item.active { color: var(--primary-color); }
 
-        .list-absen { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
-        .absen-item { background: white; padding: 12px; border-radius: 10px; border-left: 4px solid var(--primary-color); box-shadow: var(--shadow); display: flex; justify-content: space-between; align-items: center;}
+        /* === DESKTOP LAYOUT (ADMIN & GURU) === */
+        .desktop-layout { display: flex; height: 100vh; background: var(--bg-color); overflow: hidden; }
         
-        /* SPP Status Badge */
-        .badge { padding: 4px 8px; border-radius: 6px; font-size: 10px; font-weight: bold; text-transform: uppercase; }
+        .sidebar { width: 260px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; transition: 0.3s; flex-shrink: 0; }
+        .sidebar-header { padding: 25px 20px; border-bottom: 1px solid rgba(255,255,255,0.1); }
+        .sidebar-header h2 { font-size: 18px; color: white; margin-bottom: 5px; }
+        .sidebar-header p { font-size: 12px; color: #94a3b8; }
+        .sidebar-menu { flex: 1; padding: 20px 0; overflow-y: auto; }
+        .sidebar-link { padding: 15px 25px; display: flex; align-items: center; gap: 15px; color: #cbd5e1; text-decoration: none; cursor: pointer; font-size: 14px; font-weight: 500; transition: 0.2s; border-left: 4px solid transparent; }
+        .sidebar-link:hover { background: rgba(255,255,255,0.05); color: white; }
+        .sidebar-link.active { background: rgba(255,255,255,0.1); color: white; border-left-color: var(--primary-color); }
+        .sidebar-footer { padding: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+        .topbar { background: white; padding: 15px 30px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 2px 5px rgba(0,0,0,0.02); z-index: 10; }
+        .topbar-left { display: flex; align-items: center; gap: 15px; }
+        .menu-toggle { font-size: 24px; cursor: pointer; color: var(--text-dark); display: none; } /* Hidden on large screens, could be used for responsive desktop */
+        .content-area { flex: 1; padding: 30px; overflow-y: auto; }
+        
+        /* Desktop Grid System */
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+
+        /* Desktop Tabs */
+        .admin-tab-content, .guru-tab-content { display: none; animation: fadeIn 0.3s ease; }
+        .admin-tab-content.active, .guru-tab-content.active { display: block; }
+
+        /* === USER LISTS & AVATARS === */
+        .user-list-wrapper { max-height: 400px; overflow-y: auto; padding-right: 10px; }
+        .user-item { display: flex; align-items: center; gap: 15px; padding: 15px; border-bottom: 1px solid #f3f4f6; background: white; border-radius: 12px; margin-bottom: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.02); }
+        .avatar { width: 40px; height: 40px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 15px; text-transform: uppercase; flex-shrink: 0; }
+        .user-info-box { flex: 1; }
+        .user-info-box h4 { font-size: 14px; margin-bottom: 2px; color: var(--text-dark); }
+        .user-info-box p { font-size: 12px; color: var(--text-muted); }
+        .btn-edit { background: #f3f4f6; border: none; color: var(--primary-dark); font-size: 12px; font-weight: bold; cursor: pointer; padding: 8px 15px; border-radius: 8px; transition: 0.2s; }
+        .btn-confirm { background: #d1fae5; border: none; color: #059669; font-size: 12px; font-weight: bold; cursor: pointer; padding: 8px 15px; border-radius: 8px; transition: 0.2s; }
+        .badge { padding: 5px 10px; border-radius: 6px; font-size: 11px; font-weight: bold; text-transform: uppercase; }
         .badge.pending { background-color: #fef3c7; color: #d97706; }
         .badge.success { background-color: #d1fae5; color: #059669; }
 
-        /* Preview Badge Admin */
-        .admin-preview-badge { display: none; position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); background: var(--danger-color); color: white; padding: 12px 25px; border-radius: 30px; font-size: 13px; font-weight: bold; box-shadow: 0 4px 15px rgba(0,0,0,0.3); z-index: 9999; cursor: pointer; align-items: center; gap: 8px; border: 2px solid white; animation: slideUp 0.3s ease; }
-
-        /* Modals & Toast */
+        /* === MODALS & TOASTS === */
         .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
         .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-out; }
-        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; position: relative; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; text-align: center; position: relative; }
         .close-modal { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
-        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--text-dark); color: white; padding: 10px 20px; border-radius: 30px; font-size: 12px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: bottom 0.3s; z-index: 3000; display: flex; align-items: center; gap: 8px; }
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--text-dark); color: white; padding: 12px 25px; border-radius: 30px; font-size: 13px; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.2); transition: bottom 0.3s; z-index: 3000; display: flex; align-items: center; gap: 10px; }
         .toast.show { bottom: 30px; }
         .toast.error { background: var(--danger-color); }
         .toast.success { background: var(--success-color); }
         .loader { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary-color); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
 
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes slideUp { from { bottom: -50px; } to { bottom: 20px; } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Responsiveness inside Desktop */
+        @media (max-width: 768px) {
+            .desktop-layout { flex-direction: column; }
+            .sidebar { width: 100%; height: auto; display: none; } /* On smaller screens, admin might struggle, but instructed as desktop */
+            .grid-2, .grid-3 { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
 
     <div id="toastNotif" class="toast"><span id="toastIcon">ℹ️</span><span id="toastMsg">Memproses...</span></div>
-    <div id="adminPreviewExit" class="admin-preview-badge" onclick="exitPreviewMode()">🚨 Keluar Mode Preview</div>
 
-    <div id="view-login" class="view-section active">
+    <div id="view-login" class="view-section active mobile-layout">
         <div class="login-container">
             <div class="login-card">
                 <h2 class="dynamic-school-name">Portal Sekolah</h2>
-                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px;">Masuk menggunakan email terdaftar.</p>
-                <div class="form-group"><label>Alamat Email</label><input type="email" id="loginIdentitas" placeholder="contoh@sekolah.com" autocomplete="off"></div>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px;">Sistem Informasi V4.0</p>
+                <div class="form-group"><label>Alamat Email</label><input type="email" id="loginIdentitas" placeholder="email@sekolah.com" autocomplete="off"></div>
                 <div class="form-group" style="margin-bottom: 5px;"><label>Kata Sandi</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
                 <span class="forgot-password" onclick="showModal('modalLupaSandi')">Lupa Sandi?</span>
-                <button class="btn-action" id="btnLoginSubmit"><span id="loginText">Masuk Sekarang</span><div class="loader" id="loginLoader"></div></button>
+                <button class="btn-action" id="btnLoginSubmit" style="width: 100%;"><span id="loginText">Masuk ke Sistem</span><div class="loader" id="loginLoader"></div></button>
             </div>
         </div>
     </div>
 
-    <div id="view-admin" class="view-section">
-        <header class="header">
-            <div class="header-top">
-                <div class="user-info"><p>Super Admin</p><h1 class="dynamic-school-name">Sistem Sekolah</h1></div>
-                <div class="profile-pic btn-logout" title="Keluar">⚙️</div>
+    <div id="view-admin" class="view-section desktop-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="dynamic-school-name">Vipercell App</h2>
+                <p>Panel Super Admin</p>
             </div>
-        </header>
-        <main class="container">
-            <div class="card" style="display: flex; gap: 10px; padding: 15px;">
-                <button class="btn-action" onclick="startPreviewMode('view-guru')" style="margin: 0; background: var(--primary-dark); font-size: 12px;">👁️ Preview Guru</button>
-                <button class="btn-action" onclick="startPreviewMode('view-siswa')" style="margin: 0; background: var(--success-color); font-size: 12px;">👁️ Preview Siswa</button>
+            <nav class="sidebar-menu">
+                <div class="sidebar-link active" onclick="switchAdminTab('admin-dashboard', this)">🏠 Dashboard Utama</div>
+                <div class="sidebar-link" onclick="switchAdminTab('admin-users', this)">👥 Manajemen Pengguna</div>
+                <div class="sidebar-link" onclick="switchAdminTab('admin-finance', this)">💳 Keuangan & SPP</div>
+                <div class="sidebar-link" onclick="switchAdminTab('admin-settings', this)">⚙️ Pengaturan Sistem</div>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-action danger btn-logout" style="width: 100%;">Keluar Sistem</button>
             </div>
+        </aside>
 
-            <div class="card">
-                <h3>⚡ Tambah Akun Baru</h3>
-                <div style="display: flex; gap: 10px;">
-                    <div class="form-group" style="flex: 1;"><label>Peran</label><select id="newUserRole"><option value="siswa">Siswa</option><option value="guru">Guru</option></select></div>
-                    <div class="form-group" style="flex: 2;"><label>Nama Lengkap</label><input type="text" id="newUserName" placeholder="Masukkan nama" autocomplete="off"></div>
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <span class="menu-toggle">☰</span>
+                    <h3 style="color: var(--text-dark); margin: 0;">Selamat Datang, Admin</h3>
                 </div>
-                <div class="form-group"><label>Email Aktif</label><input type="email" id="newUserIdentitas" placeholder="contoh@gmail.com" autocomplete="off"></div>
-                <div class="form-group"><label>Kata Sandi</label><input type="text" id="newUserPassword" value="123456" placeholder="Minimal 6 karakter"></div>
-                <button class="btn-action" id="btnCreateUser">Simpan Akun Baru</button>
-            </div>
+                <div class="profile-pic" style="background: var(--primary-color); color: white; width: 35px; height: 35px; font-size: 14px;">A</div>
+            </header>
 
-            <div class="card">
-                <h3>👥 Data Pengguna</h3>
-                <input type="text" id="searchUser" class="search-box" placeholder="Cari nama atau email...">
-                <div class="tab-container">
-                    <button class="tab-btn active" id="tabSiswaBtn" onclick="switchTab('siswa')">Siswa (0)</button>
-                    <button class="tab-btn" id="tabGuruBtn" onclick="switchTab('guru')">Guru (0)</button>
-                </div>
-                <div class="list-container active" id="listSiswaContainer"></div>
-                <div class="list-container" id="listGuruContainer"></div>
-            </div>
-
-            <div class="card">
-                <h3>💳 Pengaturan SPP & QRIS</h3>
-                <div class="form-group"><label>String QRIS Aktif</label><textarea id="adminInputQris" rows="2" placeholder="Tempelkan string QRIS di sini..."></textarea></div>
-                <button class="btn-action dark" id="btnSaveQris" style="margin-bottom: 20px;">Simpan QRIS</button>
-                
-                <h4 style="font-size: 13px; margin-bottom: 10px; color: var(--text-dark); display: flex; justify-content: space-between;">
-                    <span>Transaksi SPP Masuk:</span>
-                </h4>
-                <div class="list-container active" id="listSppAdmin" style="max-height: 250px;">
-                    <p style="font-size: 12px; color: gray;">Memuat transaksi...</p>
-                </div>
-            </div>
-
-            <div class="card">
-                <h3>📅 Pengumuman Sekolah</h3>
-                <div class="form-group"><textarea id="adminInputJadwal" rows="3" placeholder="Ketik pengumuman jadwal di sini..."></textarea></div>
-                <button class="btn-action dark" id="btnSaveJadwal">Sebarkan Jadwal</button>
-            </div>
-            
-            <div class="card" style="margin-bottom: 40px;">
-                <h3>⚙️ Identitas Web</h3>
-                <div class="form-group" style="display:flex; gap:10px;">
-                    <input type="text" id="adminInputSchoolName" placeholder="Nama sekolah...">
-                    <button class="btn-action dark" id="btnSaveSchoolName" style="width: auto; margin:0; padding: 0 15px;">Simpan</button>
-                </div>
-            </div>
-        </main>
-    </div>
-
-    <div id="view-guru" class="view-section">
-        <header class="header">
-            <div class="header-top">
-                <div class="user-info"><p class="dynamic-school-name">Nama Sekolah</p><h1 id="guruNameDisplay">Guru</h1></div>
-                <div class="profile-pic btn-logout" title="Keluar">Keluar</div>
-            </div>
-        </header>
-        <main class="container">
-            <div class="menu-grid">
-                <div class="menu-item" onclick="openFeature('guru-absen', 'Data Kehadiran')"><div class="menu-icon">📅</div><span>Cek Absen</span></div>
-                <div class="menu-item" onclick="openFeature('guru-nilai', 'Input Nilai Siswa')"><div class="menu-icon">📝</div><span>Input Nilai</span></div>
-                <div class="menu-item" onclick="openFeature('umum-jadwal', 'Jadwal Akademik')"><div class="menu-icon">⏰</div><span>Jadwal</span></div>
-            </div>
-            <div class="card" style="text-align: center; margin-top: 10px;">
-                <h3>Status Sistem</h3><p style="font-size: 13px; color: var(--success-color); font-weight: bold;">Seluruh Layanan Aktif</p>
-            </div>
-        </main>
-    </div>
-
-    <div id="view-siswa" class="view-section">
-        <header class="header">
-            <div class="header-top">
-                <div class="user-info"><p class="dynamic-school-name">Nama Sekolah</p><h1 id="siswaNameDisplay">Siswa</h1></div>
-                <div class="profile-pic btn-logout" title="Keluar">Keluar</div>
-            </div>
-        </header>
-        <main class="container">
-            <div class="menu-grid">
-                <div class="menu-item" onclick="openFeature('siswa-absen', 'Absensi Harian')"><div class="menu-icon">📅</div><span>Isi Absen</span></div>
-                <div class="menu-item" onclick="openFeature('siswa-nilai', 'Rapor Nilai')"><div class="menu-icon">📝</div><span>Lihat Nilai</span></div>
-                <div class="menu-item" onclick="openFeature('siswa-spp', 'Pembayaran SPP')"><div class="menu-icon">💳</div><span>Bayar SPP</span></div>
-                <div class="menu-item" onclick="openFeature('umum-jadwal', 'Jadwal Akademik')"><div class="menu-icon">⏰</div><span>Jadwal</span></div>
-            </div>
-            <div class="card" id="siswaRiwayatSppCard" style="display: none;">
-                <h3>Riwayat SPP Saya</h3>
-                <div class="list-container active" id="listSppSiswa" style="max-height: 150px;"></div>
-            </div>
-        </main>
-    </div>
-
-    <div id="view-feature" class="view-section">
-        <div class="header-feature">
-            <button class="btn-back" onclick="goBackToDashboard()">←</button>
-            <div class="feature-title" id="featureTitle">Fitur</div>
-        </div>
-        <div class="feature-content">
-            
-            <div id="panel-siswa-absen" class="feature-panel">
-                <div class="card" style="text-align:center;">
-                    <h3 style="justify-content: center; border: none; font-size: 18px;">Absensi Kehadiran</h3>
-                    <p style="font-size:13px; margin-bottom:20px; color: gray;">Tekan tombol di bawah ini untuk mencatat kehadiran Anda ke sistem hari ini.</p>
-                    <button class="btn-action success" id="btnHadirSiswa" style="padding: 15px; font-size: 16px;">Hadir Hari Ini</button>
-                </div>
-            </div>
-
-            <div id="panel-guru-absen" class="feature-panel">
-                <div class="card">
-                    <h3>Siswa Hadir Hari Ini</h3>
-                    <div class="list-absen" id="listAbsenHariIni">Memuat data...</div>
-                </div>
-            </div>
-
-            <div id="panel-guru-nilai" class="feature-panel">
-                <div class="card">
-                    <h3>Pemberian Nilai</h3>
-                    <div class="form-group"><label>Pilih Siswa</label><select id="inputNilaiSiswa"><option value="">Memuat daftar...</option></select></div>
-                    <div class="form-group"><label>Mata Pelajaran</label><input type="text" id="inputNilaiMapel" placeholder="Contoh: Matematika"></div>
-                    <div class="form-group"><label>Skor Nilai (0-100)</label><input type="number" id="inputNilaiSkor" placeholder="85"></div>
-                    <button class="btn-action" id="btnSimpanNilai">Simpan Nilai ke Rapor</button>
-                </div>
-            </div>
-
-            <div id="panel-siswa-nilai" class="feature-panel">
-                <div class="card">
-                    <h3>Transkrip Nilai Saya</h3>
-                    <div class="list-absen" id="listNilaiSiswa"><p style="font-size: 12px; color: gray; text-align: center;">Belum ada nilai.</p></div>
-                </div>
-            </div>
-
-            <div id="panel-siswa-spp" class="feature-panel">
-                <div class="card" style="text-align: center;">
-                    <h3 style="justify-content: center; border: none; font-size: 18px;">Tagihan SPP: Rp 150.000</h3>
-                    <p style="font-size:12px; margin-bottom:15px; color: gray;">Scan QRIS di bawah ini menggunakan M-Banking atau E-Wallet (Gopay, Dana, Ovo).</p>
-                    <div style="background: #f3f4f6; padding: 15px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
-                        <img id="sppQrImage" src="" alt="QRIS" style="max-width: 200px; display: none;">
-                        <p id="sppQrFallback" style="font-size: 12px;">Admin belum mengatur QRIS.</p>
+            <div class="content-area">
+                <div id="admin-dashboard" class="admin-tab-content active">
+                    <h2 style="margin-bottom: 20px;">Ringkasan Informasi Sekolah</h2>
+                    <div class="grid-3">
+                        <div class="card" style="border-left: 4px solid var(--primary-color);">
+                            <h3>Total Pengguna Aktif</h3>
+                            <h2 style="font-size: 30px; color: var(--primary-dark);" id="dashTotalUsers">0</h2>
+                        </div>
+                        <div class="card" style="border-left: 4px solid var(--warning-color);">
+                            <h3>Transaksi Pending</h3>
+                            <h2 style="font-size: 30px; color: var(--warning-color);" id="dashPendingSpp">0</h2>
+                        </div>
+                        <div class="card" style="border-left: 4px solid var(--success-color);">
+                            <h3>Status Server Firebase</h3>
+                            <h2 style="font-size: 20px; color: var(--success-color); margin-top: 10px;">Terhubung ✅</h2>
+                        </div>
                     </div>
-                    <button class="btn-action success" id="btnKonfirmasiSpp">Saya Sudah Transfer</button>
+                    <div class="card">
+                        <h3>Pengumuman Akademik Berjalan</h3>
+                        <p id="dashJadwalText" style="white-space: pre-wrap; font-size: 14px; color: var(--text-dark); line-height: 1.6;">Memuat pengumuman...</p>
+                    </div>
+                </div>
+
+                <div id="admin-users" class="admin-tab-content">
+                    <h2 style="margin-bottom: 20px;">Manajemen Siswa & Guru</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3>⚡ Buat Akun Cepat</h3>
+                            <div class="grid-2" style="gap: 10px; margin-bottom: 15px;">
+                                <div class="form-group" style="margin: 0;"><label>Peran</label><select id="newUserRole"><option value="siswa">Siswa</option><option value="guru">Guru</option></select></div>
+                                <div class="form-group" style="margin: 0;"><label>Nama Lengkap</label><input type="text" id="newUserName" placeholder="Masukkan nama" autocomplete="off"></div>
+                            </div>
+                            <div class="form-group"><label>Email Aktif</label><input type="email" id="newUserIdentitas" placeholder="contoh@gmail.com" autocomplete="off"></div>
+                            <div class="form-group"><label>Kata Sandi</label><input type="text" id="newUserPassword" value="123456"></div>
+                            <button class="btn-action" id="btnCreateUser" style="width: 100%;">Simpan Akun Baru</button>
+                        </div>
+                        <div class="card">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                                <h3 style="margin: 0; border: none;">Data Terdaftar</h3>
+                                <div style="display: flex; gap: 5px;">
+                                    <button class="btn-action dark" style="padding: 5px 10px; font-size: 12px;" onclick="renderUserListFilter('siswa')">Siswa</button>
+                                    <button class="btn-action dark" style="padding: 5px 10px; font-size: 12px;" onclick="renderUserListFilter('guru')">Guru</button>
+                                </div>
+                            </div>
+                            <input type="text" id="searchUser" class="form-group" style="width: 100%; padding: 10px; border-radius: 8px; border: 1px solid #ccc; outline: none; margin-bottom: 10px;" placeholder="Cari nama atau email...">
+                            <div class="user-list-wrapper" id="adminUserListContainer">
+                                <p style="font-size: 13px; color: gray;">Pilih filter siswa/guru.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-finance" class="admin-tab-content">
+                    <h2 style="margin-bottom: 20px;">Keuangan & Pembayaran SPP</h2>
+                    <div class="grid-2">
+                        <div class="card">
+                            <h3>💳 Pengaturan String QRIS</h3>
+                            <p style="font-size: 12px; color: gray; margin-bottom: 10px;">String ini akan diubah otomatis menjadi Barcode di aplikasi Siswa.</p>
+                            <div class="form-group"><textarea id="adminInputQris" rows="4" placeholder="Tempelkan string QRIS M-Banking di sini..."></textarea></div>
+                            <button class="btn-action dark" id="btnSaveQris">Perbarui QRIS</button>
+                        </div>
+                        <div class="card">
+                            <h3>Daftar Konfirmasi Transfer</h3>
+                            <div class="user-list-wrapper" id="listSppAdmin">
+                                <p style="font-size: 13px; color: gray;">Memuat transaksi...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="admin-settings" class="admin-tab-content">
+                    <h2 style="margin-bottom: 20px;">Pengaturan Aplikasi</h2>
+                    <div class="card">
+                        <h3>Identitas Aplikasi</h3>
+                        <div class="form-group"><label>Nama Sekolah / Instansi</label><input type="text" id="adminInputSchoolName" placeholder="Contoh: SMA Nusantara"></div>
+                        <button class="btn-action dark" id="btnSaveSchoolName">Simpan Nama</button>
+                    </div>
+                    <div class="card">
+                        <h3>Publikasi Jadwal & Pengumuman</h3>
+                        <div class="form-group"><textarea id="adminInputJadwalAdminTab" rows="5" placeholder="Ketik pengumuman di sini..."></textarea></div>
+                        <button class="btn-action dark" id="btnSaveJadwalAdminTab">Sebarkan ke Semua Pengguna</button>
+                    </div>
                 </div>
             </div>
+        </main>
+    </div>
 
-            <div id="panel-umum-jadwal" class="feature-panel">
-                <div class="card" id="jadwalTextLengkap" style="white-space: pre-wrap; font-size:14px; line-height:1.6; color: var(--text-dark);">Memuat jadwal...</div>
+    <div id="view-guru" class="view-section desktop-layout">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2 class="dynamic-school-name">Vipercell App</h2>
+                <p>Panel Pengajar</p>
             </div>
+            <nav class="sidebar-menu">
+                <div class="sidebar-link active" onclick="switchGuruTab('guru-dashboard', this)">🏠 Ringkasan Kelas</div>
+                <div class="sidebar-link" onclick="switchGuruTab('guru-absen', this)">📅 Pantau Absensi</div>
+                <div class="sidebar-link" onclick="switchGuruTab('guru-nilai', this)">📝 Input Nilai Rapor</div>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="btn-action danger btn-logout" style="width: 100%;">Keluar</button>
+            </div>
+        </aside>
 
+        <main class="main-content">
+            <header class="topbar">
+                <div class="topbar-left">
+                    <h3 style="color: var(--text-dark); margin: 0;">Selamat Bertugas, <span id="guruNameDisplayHeader">Guru</span></h3>
+                </div>
+            </header>
+            <div class="content-area">
+                <div id="guru-dashboard" class="guru-tab-content active">
+                    <div class="card">
+                        <h3>Pengumuman Sekolah</h3>
+                        <p id="guruJadwalText" style="white-space: pre-wrap; font-size: 14px; line-height: 1.6;">Memuat pengumuman...</p>
+                    </div>
+                </div>
+                <div id="guru-absen" class="guru-tab-content">
+                    <div class="card">
+                        <h3>Daftar Hadir Siswa (Hari Ini)</h3>
+                        <div class="user-list-wrapper" id="listAbsenHariIniGuru">Memuat data...</div>
+                    </div>
+                </div>
+                <div id="guru-nilai" class="guru-tab-content">
+                    <div class="card" style="max-width: 600px;">
+                        <h3>Form Input Nilai</h3>
+                        <div class="form-group"><label>Pilih Siswa</label><select id="inputNilaiSiswaGuru"><option value="">Memuat daftar...</option></select></div>
+                        <div class="grid-2">
+                            <div class="form-group"><label>Mata Pelajaran</label><input type="text" id="inputNilaiMapelGuru" placeholder="Contoh: Fisika"></div>
+                            <div class="form-group"><label>Skor (0-100)</label><input type="number" id="inputNilaiSkorGuru" placeholder="90"></div>
+                        </div>
+                        <button class="btn-action" id="btnSimpanNilaiGuru">Simpan Nilai</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="view-siswa" class="view-section mobile-layout">
+        <div id="siswa-subpage-absen" class="feature-panel" style="display:none; padding: 20px;">
+            <button class="btn-back" onclick="closeSiswaSubpage()" style="margin-bottom: 20px;">← Kembali</button>
+            <div class="card" style="text-align:center;">
+                <h3>Absensi Kehadiran</h3>
+                <p style="font-size:13px; margin-bottom:20px; color: gray;">Konfirmasi kehadiran Anda hari ini.</p>
+                <button class="btn-action success" id="btnHadirSiswa" style="padding: 15px; width: 100%;">Hadir Hari Ini</button>
+            </div>
         </div>
+
+        <div id="siswa-subpage-spp" class="feature-panel" style="display:none; padding: 20px;">
+            <button class="btn-back" onclick="closeSiswaSubpage()" style="margin-bottom: 20px;">← Kembali</button>
+            <div class="card" style="text-align: center;">
+                <h3>Tagihan Bulanan</h3>
+                <p style="font-size:12px; margin-bottom:15px; color: gray;">Scan QRIS untuk pembayaran SPP Rp 150.000</p>
+                <div style="background: #f3f4f6; padding: 15px; border-radius: 12px; display: inline-block; margin-bottom: 20px;">
+                    <img id="sppQrImageSiswa" src="" alt="QRIS" style="max-width: 200px; display: none;">
+                    <p id="sppQrFallbackSiswa" style="font-size: 12px;">Admin belum mengatur QRIS.</p>
+                </div>
+                <button class="btn-action success" id="btnKonfirmasiSppSiswa" style="width:100%;">Saya Sudah Transfer</button>
+            </div>
+            <div class="card">
+                <h3>Riwayat Pembayaran</h3>
+                <div class="user-list-wrapper" id="listSppSiswaMobile"></div>
+            </div>
+        </div>
+
+        <div id="siswa-main-dashboard">
+            <header class="header-mobile">
+                <div class="header-top">
+                    <div class="user-info"><p class="dynamic-school-name">Nama Sekolah</p><h1 id="siswaNameDisplayHeader">Siswa</h1></div>
+                    <div class="profile-pic" style="font-size: 14px;">S</div>
+                </div>
+            </header>
+            <main class="container-mobile">
+                <div class="card" style="margin-top: 20px; text-align: center; border-left: 4px solid var(--primary-color);">
+                    <h3 style="border: none; margin: 0; justify-content: center;">Tahun Ajaran Aktif</h3>
+                    <p style="font-size: 12px; color: gray;">Semester Genap</p>
+                </div>
+                
+                <h3 style="font-size: 14px; margin-bottom: 10px; padding-left: 5px;">Menu Utama</h3>
+                <div class="menu-grid">
+                    <div class="menu-item" onclick="openSiswaSubpage('siswa-subpage-absen')"><div class="menu-icon">📅</div><span>Absen</span></div>
+                    <div class="menu-item" onclick="switchSiswaBottomNav('nav-nilai')"><div class="menu-icon">📝</div><span>Nilai</span></div>
+                    <div class="menu-item" onclick="openSiswaSubpage('siswa-subpage-spp')"><div class="menu-icon">💳</div><span>Bayar SPP</span></div>
+                    <div class="menu-item" onclick="switchSiswaBottomNav('nav-jadwal')"><div class="menu-icon">⏰</div><span>Jadwal</span></div>
+                </div>
+
+                <div class="card">
+                    <h3>Papan Informasi Terkini</h3>
+                    <p id="siswaJadwalText" style="font-size: 13px; color: var(--text-dark); line-height: 1.5; white-space: pre-wrap;">Memuat...</p>
+                </div>
+            </main>
+        </div>
+
+        <div id="siswa-tab-nilai" style="display:none; padding: 20px;">
+            <h2 style="margin-bottom: 20px; text-align: center;">Transkrip Rapor</h2>
+            <div class="card">
+                <div class="user-list-wrapper" id="listNilaiSiswaMobile">
+                    <p style="font-size: 12px; color: gray; text-align: center;">Belum ada nilai.</p>
+                </div>
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" id="nav-home" onclick="switchSiswaBottomNav('nav-home')"><span style="font-size: 20px;">🏠</span>Beranda</div>
+            <div class="nav-item" id="nav-nilai" onclick="switchSiswaBottomNav('nav-nilai')"><span style="font-size: 20px;">📊</span>Rapor</div>
+            <div class="nav-item" id="nav-jadwal" onclick="switchSiswaBottomNav('nav-jadwal')"><span style="font-size: 20px;">🔔</span>Jadwal</div>
+            <div class="nav-item btn-logout" style="color: var(--danger-color);"><span style="font-size: 20px;">🚪</span>Keluar</div>
+        </nav>
     </div>
 
     <div class="modal-overlay" id="modalLupaSandi">
         <div class="modal-content">
             <span class="close-modal" onclick="hideModal('modalLupaSandi')">&times;</span>
-            <div class="modal-icon" style="font-size:30px; margin-bottom:10px;">🔐</div>
+            <div style="font-size:40px; margin-bottom:10px;">🔐</div>
             <h3 style="margin-bottom: 10px;">Pemulihan Sandi</h3>
-            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Silakan hubungi Admin Sekolah untuk mereset kata sandi email Anda.</p>
-            <button class="btn-action" onclick="hideModal('modalLupaSandi')">Tutup</button>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Silakan hubungi Admin Sekolah untuk mereset kata sandi Anda.</p>
+            <button class="btn-action" onclick="hideModal('modalLupaSandi')" style="width: 100%;">Tutup</button>
         </div>
     </div>
 
@@ -313,9 +399,9 @@
             <span class="close-modal" onclick="hideModal('modalEditUser')">&times;</span>
             <h3 style="margin-bottom: 15px; text-align: center;">Edit Data Pengguna</h3>
             <input type="hidden" id="editUserId">
-            <div class="form-group"><label>Nama Lengkap</label><input type="text" id="editUserName" placeholder="Nama baru..."></div>
-            <div class="form-group"><label>Email Login (Kunci)</label><input type="email" id="editUserIdentitas" disabled></div>
-            <button class="btn-action success" id="btnSaveUserEdit">Simpan Perubahan</button>
+            <div class="form-group"><label>Nama Lengkap</label><input type="text" id="editUserName"></div>
+            <div class="form-group"><label>Email Login (Dikunci)</label><input type="email" id="editUserIdentitas" disabled></div>
+            <button class="btn-action success" id="btnSaveUserEdit" style="width: 100%;">Simpan Perubahan</button>
         </div>
     </div>
 
@@ -325,16 +411,13 @@
         import { getDatabase, ref, set, get, update, onValue, push, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
 
         const app = initializeApp(window.SCHOOL_CONFIG);
-        const auth = getAuth(app);
-        const db = getDatabase(app);
+        const auth = getAuth(app); const db = getDatabase(app);
         const secondaryApp = initializeApp(window.SCHOOL_CONFIG, "Secondary");
         const secondaryAuth = initializeAuth(secondaryApp, { persistence: inMemoryPersistence });
 
         const ADMIN_EMAIL = "millerstoreid@gmail.com";
-        let allUsersData = {};
-        let currentUserRole = '', currentUserName = '', currentUserUid = '';
-        window.adminActivePreview = null;
-        let activeQrisString = "";
+        let allUsersData = {}; let currentUserRole = '', currentUserName = '', currentUserUid = '';
+        let activeQrisString = ""; let currentFilterRole = 'siswa';
 
         // === UI UTILITIES ===
         window.showModal = (id) => document.getElementById(id).classList.add('active');
@@ -351,31 +434,50 @@
             document.getElementById('toastMsg').innerText = message;
             if(type === 'error') { toast.classList.add('error'); document.getElementById('toastIcon').innerText = "❌"; }
             else if(type === 'success') { toast.classList.add('success'); document.getElementById('toastIcon').innerText = "✅"; }
-            else { document.getElementById('toastIcon').innerText = "⏳"; }
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), type === 'info' ? 1500 : 3000);
+            else { document.getElementById('toastIcon').innerText = "✅"; }
+            toast.classList.add('show'); setTimeout(() => toast.classList.remove('show'), 2000);
         }
 
-        window.startPreviewMode = (viewId) => {
-            if (currentUserRole !== 'admin') return;
-            window.adminActivePreview = viewId; switchView(viewId);
-            document.getElementById('adminPreviewExit').style.display = 'flex';
-        }
+        // --- DESKTOP TAB ROUTING (ADMIN & GURU) ---
+        window.switchAdminTab = (tabId, element) => {
+            document.querySelectorAll('#view-admin .sidebar-link').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.admin-tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+            if(tabId === 'admin-users') renderUserListFilter(currentFilterRole);
+        };
 
-        window.exitPreviewMode = () => {
-            window.adminActivePreview = null; switchView('view-admin');
-            document.getElementById('adminPreviewExit').style.display = 'none';
-        }
+        window.switchGuruTab = (tabId, element) => {
+            document.querySelectorAll('#view-guru .sidebar-link').forEach(el => el.classList.remove('active'));
+            element.classList.add('active');
+            document.querySelectorAll('.guru-tab-content').forEach(el => el.classList.remove('active'));
+            document.getElementById(tabId).classList.add('active');
+        };
 
-        window.switchTab = (role) => {
-            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.list-container').forEach(list => list.classList.remove('active'));
-            if(role === 'siswa') {
-                document.getElementById('tabSiswaBtn').classList.add('active');
-                document.getElementById('listSiswaContainer').classList.add('active');
-            } else {
-                document.getElementById('tabGuruBtn').classList.add('active');
-                document.getElementById('listGuruContainer').classList.add('active');
+        // --- MOBILE TAB ROUTING (SISWA) ---
+        window.openSiswaSubpage = (pageId) => {
+            document.getElementById('siswa-main-dashboard').style.display = 'none';
+            document.getElementById('siswa-tab-nilai').style.display = 'none';
+            document.getElementById(pageId).style.display = 'block';
+        };
+
+        window.closeSiswaSubpage = () => {
+            document.querySelectorAll('#view-siswa .feature-panel').forEach(el => el.style.display = 'none');
+            document.getElementById('siswa-main-dashboard').style.display = 'block';
+        };
+
+        window.switchSiswaBottomNav = (navId) => {
+            document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+            document.getElementById(navId).classList.add('active');
+            closeSiswaSubpage();
+
+            if(navId === 'nav-home' || navId === 'nav-jadwal') {
+                document.getElementById('siswa-main-dashboard').style.display = 'block';
+                document.getElementById('siswa-tab-nilai').style.display = 'none';
+                if(navId === 'nav-jadwal') window.scrollTo(0, document.body.scrollHeight);
+            } else if(navId === 'nav-nilai') {
+                document.getElementById('siswa-main-dashboard').style.display = 'none';
+                document.getElementById('siswa-tab-nilai').style.display = 'block';
             }
         };
 
@@ -386,98 +488,83 @@
 
         // --- SISTEM LOGIN ---
         document.getElementById('btnLoginSubmit').addEventListener('click', async () => {
-            const email = document.getElementById('loginIdentitas').value.trim();
-            const password = document.getElementById('loginPassword').value;
-            if(!email || !password) return alert("Isi form dengan lengkap.");
+            const email = document.getElementById('loginIdentitas').value.trim(); const password = document.getElementById('loginPassword').value;
+            if(!email || !password) return showToast("Isi form dengan lengkap.", "error");
             document.getElementById('loginText').style.display = "none"; document.getElementById('loginLoader').style.display = "inline-block";
             try { await signInWithEmailAndPassword(auth, email, password); } 
-            catch (error) { document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none"; alert("Login gagal."); }
+            catch (error) { document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none"; showToast("Login gagal.", "error"); }
         });
 
         onAuthStateChanged(auth, async (user) => {
             if (user) {
                 document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none";
                 currentUserUid = user.uid;
-                if (user.email === ADMIN_EMAIL) { currentUserRole = 'admin'; window.exitPreviewMode(); } 
+                if (user.email === ADMIN_EMAIL) { currentUserRole = 'admin'; switchView('view-admin'); } 
                 else {
                     const snapshot = await get(ref(db, 'users/' + user.uid));
                     if (snapshot.exists()) {
-                        const userData = snapshot.val();
-                        currentUserRole = userData.role; currentUserName = userData.nama;
-                        if (userData.role === 'guru') { document.getElementById('guruNameDisplay').innerText = userData.nama; switchView('view-guru'); } 
-                        else { document.getElementById('siswaNameDisplay').innerText = userData.nama; switchView('view-siswa'); document.getElementById('siswaRiwayatSppCard').style.display = 'block'; }
+                        const userData = snapshot.val(); currentUserRole = userData.role; currentUserName = userData.nama;
+                        if (userData.role === 'guru') { document.getElementById('guruNameDisplayHeader').innerText = userData.nama; switchView('view-guru'); } 
+                        else { document.getElementById('siswaNameDisplayHeader').innerText = userData.nama; switchView('view-siswa'); }
                     } else signOut(auth);
                 }
             } else switchView('view-login');
         });
 
-        // --- FITUR ADMIN: PEMBUATAN AKUN ---
+        // --- FITUR ADMIN: PEMBUATAN AKUN & MANAJEMEN PENGGUNA ---
         document.getElementById('btnCreateUser').addEventListener('click', async () => {
-            const role = document.getElementById('newUserRole').value;
-            const namaInput = document.getElementById('newUserName');
-            const emailInput = document.getElementById('newUserIdentitas');
-            const password = document.getElementById('newUserPassword').value;
-
+            const role = document.getElementById('newUserRole').value; const namaInput = document.getElementById('newUserName');
+            const emailInput = document.getElementById('newUserIdentitas'); const password = document.getElementById('newUserPassword').value;
             const nama = namaInput.value.trim(); const email = emailInput.value.trim();
-            if(!nama || !email || password.length < 6) return showToast("Data tidak valid/Sandi < 6!", "error");
+            if(!nama || !email || password.length < 6) return showToast("Data tidak valid!", "error");
             
-            const btn = document.getElementById('btnCreateUser');
-            btn.innerText = "Menyimpan..."; btn.disabled = true;
-
+            const btn = document.getElementById('btnCreateUser'); btn.innerText = "Menyimpan..."; btn.disabled = true;
             try {
                 const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
-                await set(ref(db, 'users/' + userCredential.user.uid), {
-                    nama: nama, role: role, email: email, waktuDibuat: new Date().toISOString()
-                });
-                await signOut(secondaryAuth);
-                showToast(`${nama} tersimpan!`, "success");
+                await set(ref(db, 'users/' + userCredential.user.uid), { nama: nama, role: role, email: email, waktuDibuat: new Date().toISOString() });
+                await signOut(secondaryAuth); showToast(`${nama} tersimpan!`, "success");
                 namaInput.value = ''; emailInput.value = ''; namaInput.focus();
-            } catch (error) {
-                showToast(error.code === 'auth/email-already-in-use' ? "Email sudah terdaftar!" : "Gagal menyimpan", "error");
-            } finally {
-                btn.innerText = "Simpan Akun Baru"; btn.disabled = false;
-            }
+            } catch (error) { showToast("Email sudah terdaftar!", "error"); } 
+            finally { btn.innerText = "Simpan Akun Baru"; btn.disabled = false; }
         });
 
-        // Shortcut keyboard tetap aktif
-        document.getElementById('newUserPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') { e.preventDefault(); document.getElementById('btnCreateUser').click(); } });
-
-        // --- FITUR ADMIN: DAFTAR PENGGUNA ---
         onValue(ref(db, 'users'), (snapshot) => {
             allUsersData = snapshot.exists() ? snapshot.val() : {};
-            renderUserList(); populateGuruDropdown();
+            document.getElementById('dashTotalUsers').innerText = Object.keys(allUsersData).length;
+            if(currentUserRole === 'admin') renderUserListFilter(currentFilterRole);
+            populateGuruDropdown();
         });
 
-        function renderUserList(searchQuery = "") {
-            const containerSiswa = document.getElementById('listSiswaContainer'); const containerGuru = document.getElementById('listGuruContainer');
-            containerSiswa.innerHTML = ''; containerGuru.innerHTML = ''; let countSiswa = 0, countGuru = 0;
+        window.renderUserListFilter = (roleFilter) => {
+            currentFilterRole = roleFilter;
+            const container = document.getElementById('adminUserListContainer'); container.innerHTML = '';
+            const searchQuery = document.getElementById('searchUser').value.toLowerCase();
+            let count = 0;
 
             Object.keys(allUsersData).forEach(uid => {
                 const user = allUsersData[uid];
+                if(user.role !== roleFilter) return;
                 if(searchQuery && !user.nama.toLowerCase().includes(searchQuery) && !user.email.includes(searchQuery)) return;
 
                 const initial = user.nama.charAt(0).toUpperCase(); const bgColor = getAvatarColor(user.nama);
-                const div = document.createElement('div'); div.className = 'user-item';
-                div.innerHTML = `
-                    <div class="avatar" style="background-color: ${bgColor}">${initial}</div>
-                    <div class="user-info-box"><h4>${user.nama}</h4><p>${user.email}</p></div>
-                    <button class="btn-edit" data-uid="${uid}">Edit</button>
-                `;
-                if(user.role === 'siswa') { containerSiswa.appendChild(div); countSiswa++; } 
-                else { containerGuru.appendChild(div); countGuru++; }
+                container.innerHTML += `
+                    <div class="user-item">
+                        <div class="avatar" style="background-color: ${bgColor}">${initial}</div>
+                        <div class="user-info-box"><h4>${user.nama}</h4><p>${user.email}</p></div>
+                        <button class="btn-edit" onclick="bukaModalEditAdmin('${uid}')">Edit</button>
+                    </div>`;
+                count++;
             });
+            if(count === 0) container.innerHTML = `<p style="font-size:12px; color:gray;">Tidak ada data ${roleFilter}.</p>`;
+        };
 
-            document.getElementById('tabSiswaBtn').innerText = `Siswa (${countSiswa})`; document.getElementById('tabGuruBtn').innerText = `Guru (${countGuru})`;
+        document.getElementById('searchUser').addEventListener('input', () => renderUserListFilter(currentFilterRole));
 
-            document.querySelectorAll('.btn-edit').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const uid = e.target.getAttribute('data-uid'); const user = allUsersData[uid];
-                    document.getElementById('editUserId').value = uid; document.getElementById('editUserName').value = user.nama;
-                    document.getElementById('editUserIdentitas').value = user.email; window.showModal('modalEditUser');
-                });
-            });
-        }
-        document.getElementById('searchUser').addEventListener('input', (e) => renderUserList(e.target.value.toLowerCase()));
+        window.bukaModalEditAdmin = (uid) => {
+            const user = allUsersData[uid];
+            document.getElementById('editUserId').value = uid; document.getElementById('editUserName').value = user.nama;
+            document.getElementById('editUserIdentitas').value = user.email; window.showModal('modalEditUser');
+        };
 
         document.getElementById('btnSaveUserEdit').addEventListener('click', async () => {
             const uid = document.getElementById('editUserId').value; const newName = document.getElementById('editUserName').value.trim();
@@ -486,155 +573,107 @@
             catch (error) { showToast("Gagal update", "error"); }
         });
 
-        // --- SISTEM UNIFIED FEATURES (ABSEN, NILAI, SPP, JADWAL) ---
-        window.goBackToDashboard = () => {
-            if(currentUserRole === 'admin') {
-                if(window.adminActivePreview) switchView(window.adminActivePreview); else switchView('view-admin');
-            } else if(currentUserRole === 'guru') switchView('view-guru'); 
-            else switchView('view-siswa');
-        }
-
-        window.openFeature = (panelId, titleText) => {
-            switchView('view-feature');
-            document.getElementById('featureTitle').innerText = titleText;
-            document.querySelectorAll('.feature-panel').forEach(p => p.classList.remove('active'));
-            document.getElementById(`panel-${panelId}`).classList.add('active');
-
-            if(panelId === 'guru-absen') loadAbsenGuru();
-            else if(panelId === 'siswa-nilai') loadNilaiSiswa();
-            else if(panelId === 'siswa-spp') setupSppSiswa();
-        }
-
-        // Absen Siswa
+        // --- SISTEM ABSEN (GURU & SISWA) ---
         document.getElementById('btnHadirSiswa').addEventListener('click', async () => {
-            if(currentUserRole === 'admin') return alert("Admin Preview: Logika absen berfungsi.");
             const today = new Date().toISOString().split('T')[0];
             await set(ref(db, `absensi/${today}/${currentUserUid}`), { nama: currentUserName, waktu: new Date().toLocaleTimeString() });
-            showToast("Absen Tercatat!", "success"); document.getElementById('btnHadirSiswa').innerText = "✅ Sudah Absen"; document.getElementById('btnHadirSiswa').disabled = true;
+            showToast("Absen Tercatat!", "success"); document.getElementById('btnHadirSiswa').innerText = "✅ Anda Sudah Absen"; document.getElementById('btnHadirSiswa').disabled = true;
         });
 
-        // Absen Guru
-        function loadAbsenGuru() {
-            const today = new Date().toISOString().split('T')[0];
-            onValue(ref(db, `absensi/${today}`), (snapshot) => {
-                const list = document.getElementById('listAbsenHariIni'); list.innerHTML = '';
-                if(!snapshot.exists()) return list.innerHTML = '<p style="font-size:12px; color:gray;">Belum ada siswa yang absen hari ini.</p>';
+        onValue(ref(db, `absensi/${new Date().toISOString().split('T')[0]}`), (snapshot) => {
+            const listGuru = document.getElementById('listAbsenHariIniGuru');
+            if(listGuru) {
+                listGuru.innerHTML = '';
+                if(!snapshot.exists()) return listGuru.innerHTML = '<p style="font-size:13px; color:gray;">Belum ada siswa yang absen.</p>';
                 const data = snapshot.val();
-                Object.keys(data).forEach(key => list.innerHTML += `<div class="absen-item"><span>${data[key].nama}</span><span style="font-size:12px; font-weight:bold; color:var(--primary-dark);">${data[key].waktu}</span></div>`);
-            });
-        }
+                Object.keys(data).forEach(key => listGuru.innerHTML += `<div class="user-item"><div class="user-info-box"><h4>${data[key].nama}</h4></div><span class="badge success">${data[key].waktu}</span></div>`);
+            }
+        });
 
-        // Input Nilai Guru
+        // --- SISTEM NILAI ---
         function populateGuruDropdown() {
-            const select = document.getElementById('inputNilaiSiswa');
+            const select = document.getElementById('inputNilaiSiswaGuru'); if(!select) return;
             select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-            Object.keys(allUsersData).forEach(uid => {
-                if(allUsersData[uid].role === 'siswa') select.innerHTML += `<option value="${uid}">${allUsersData[uid].nama}</option>`;
-            });
+            Object.keys(allUsersData).forEach(uid => { if(allUsersData[uid].role === 'siswa') select.innerHTML += `<option value="${uid}">${allUsersData[uid].nama}</option>`; });
         }
 
-        document.getElementById('btnSimpanNilai').addEventListener('click', async () => {
-            if(currentUserRole === 'admin' && !window.adminActivePreview) return;
-            const uidSiswa = document.getElementById('inputNilaiSiswa').value;
-            const mapel = document.getElementById('inputNilaiMapel').value.trim();
-            const skor = document.getElementById('inputNilaiSkor').value;
+        document.getElementById('btnSimpanNilaiGuru')?.addEventListener('click', async () => {
+            const uidSiswa = document.getElementById('inputNilaiSiswaGuru').value; const mapel = document.getElementById('inputNilaiMapelGuru').value.trim(); const skor = document.getElementById('inputNilaiSkorGuru').value;
             if(!uidSiswa || !mapel || !skor) return showToast("Isi data nilai dengan lengkap", "error");
-            try { await set(ref(db, `nilai/${uidSiswa}/${mapel}`), skor); showToast("Nilai berhasil dimasukkan!", "success"); document.getElementById('inputNilaiMapel').value = ''; document.getElementById('inputNilaiSkor').value = ''; } 
+            try { await set(ref(db, `nilai/${uidSiswa}/${mapel}`), skor); showToast("Nilai disimpan!", "success"); document.getElementById('inputNilaiMapelGuru').value = ''; document.getElementById('inputNilaiSkorGuru').value = ''; } 
             catch (err) { showToast("Gagal menyimpan nilai", "error"); }
         });
 
-        // Lihat Nilai Siswa
-        function loadNilaiSiswa() {
-            const targetUid = (currentUserRole === 'admin') ? "contoh_uid" : currentUserUid;
-            onValue(ref(db, `nilai/${targetUid}`), (snapshot) => {
-                const list = document.getElementById('listNilaiSiswa'); list.innerHTML = '';
-                if(!snapshot.exists()) return list.innerHTML = '<p style="font-size: 12px; color: gray; text-align: center;">Belum ada nilai yang diinput oleh Guru.</p>';
+        function loadNilaiSiswaMobile() {
+            onValue(ref(db, `nilai/${currentUserUid}`), (snapshot) => {
+                const list = document.getElementById('listNilaiSiswaMobile'); if(!list) return; list.innerHTML = '';
+                if(!snapshot.exists()) return list.innerHTML = '<p style="font-size: 13px; color: gray; text-align: center;">Belum ada nilai dirilis.</p>';
                 const data = snapshot.val();
-                Object.keys(data).forEach(mapel => list.innerHTML += `<div class="absen-item"><span>${mapel}</span><span style="font-weight:bold; color:var(--primary-dark); font-size: 16px;">${data[mapel]}</span></div>`);
+                Object.keys(data).forEach(mapel => list.innerHTML += `<div class="user-item"><div class="user-info-box"><h4>${mapel}</h4></div><span style="font-weight:bold; color:var(--primary-dark); font-size: 18px;">${data[mapel]}</span></div>`);
             });
         }
 
-        // === SISTEM QRIS & SPP ADMIN KUASA PENUH ===
+        // --- SISTEM KEUANGAN & SPP ---
         onValue(ref(db, 'settings/qris'), (snapshot) => {
             activeQrisString = snapshot.val() || "";
             if(document.getElementById('adminInputQris')) document.getElementById('adminInputQris').value = activeQrisString;
+            
+            const img = document.getElementById('sppQrImageSiswa'); const fallback = document.getElementById('sppQrFallbackSiswa');
+            if(img && fallback) {
+                if(activeQrisString) { img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(activeQrisString)}`; img.style.display = "block"; fallback.style.display = "none"; } 
+                else { img.style.display = "none"; fallback.style.display = "block"; }
+            }
         });
 
-        document.getElementById('btnSaveQris').addEventListener('click', async () => {
+        document.getElementById('btnSaveQris')?.addEventListener('click', async () => {
             const qris = document.getElementById('adminInputQris').value.trim();
-            if(!qris) return showToast("String kosong!", "error");
-            await set(ref(db, 'settings/qris'), qris); showToast("QRIS Diperbarui!", "success");
+            if(!qris) return; await set(ref(db, 'settings/qris'), qris); showToast("QRIS Diperbarui!", "success");
         });
 
-        function setupSppSiswa() {
-            const img = document.getElementById('sppQrImage'); const fallback = document.getElementById('sppQrFallback');
-            if(activeQrisString) { img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(activeQrisString)}`; img.style.display = "block"; fallback.style.display = "none"; } 
-            else { img.style.display = "none"; fallback.style.display = "block"; }
-        }
-
-        document.getElementById('btnKonfirmasiSpp').addEventListener('click', async () => {
+        document.getElementById('btnKonfirmasiSppSiswa')?.addEventListener('click', async () => {
             if(!activeQrisString) return showToast("QRIS belum tersedia.", "error");
-            if(currentUserRole === 'admin') return alert("Admin Preview: Tombol berfungsi.");
-            try {
-                const newTrxRef = push(ref(db, 'transactions/spp'));
-                await set(newTrxRef, { namaSiswa: currentUserName, uid: currentUserUid, status: "Pending", waktu: serverTimestamp() });
-                showToast("Berhasil Dilaporkan!", "success"); goBackToDashboard();
-            } catch (err) { showToast("Gagal melaporkan.", "error"); }
+            try { await set(push(ref(db, 'transactions/spp')), { namaSiswa: currentUserName, uid: currentUserUid, status: "Pending", waktu: serverTimestamp() }); showToast("Dilaporkan!", "success"); closeSiswaSubpage(); } 
+            catch (err) { showToast("Gagal melaporkan.", "error"); }
         });
 
-        // FUNGSI BARU: Admin Mengonfirmasi SPP menjadi Lunas
         window.adminKonfirmasiSPP = async (trxKey) => {
-            try {
-                await update(ref(db, `transactions/spp/${trxKey}`), { status: "Lunas" });
-                showToast("Pembayaran Lunas!", "success");
-            } catch (err) { showToast("Gagal konfirmasi", "error"); }
+            try { await update(ref(db, `transactions/spp/${trxKey}`), { status: "Lunas" }); showToast("Lunas!", "success"); } 
+            catch (err) { showToast("Gagal", "error"); }
         };
 
-        // Riwayat SPP List
         onValue(ref(db, 'transactions/spp'), (snapshot) => {
-            const listAdmin = document.getElementById('listSppAdmin'); const listSiswa = document.getElementById('listSppSiswa');
-            listAdmin.innerHTML = ''; if(listSiswa) listSiswa.innerHTML = '';
+            const listAdmin = document.getElementById('listSppAdmin'); const listSiswa = document.getElementById('listSppSiswaMobile');
+            let pendingCount = 0;
+            if(listAdmin) listAdmin.innerHTML = ''; if(listSiswa) listSiswa.innerHTML = '';
             
             if(!snapshot.exists()) {
-                listAdmin.innerHTML = '<p style="font-size: 12px; color: gray;">Belum ada transaksi masuk.</p>';
-                if(listSiswa) listSiswa.innerHTML = '<p style="font-size: 12px; color: gray;">Belum ada riwayat SPP.</p>'; return;
+                if(listAdmin) listAdmin.innerHTML = '<p style="font-size: 13px; color: gray;">Belum ada transaksi.</p>';
+                if(listSiswa) listSiswa.innerHTML = '<p style="font-size: 13px; color: gray;">Belum ada riwayat.</p>'; return;
             }
 
             const data = snapshot.val();
             Object.keys(data).reverse().forEach(key => {
-                const trx = data[key];
-                const dateObj = trx.waktu ? new Date(trx.waktu) : new Date();
-                const dateStr = `${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()}`;
-                
-                // Jika Admin, tampilkan tombol Konfirmasi jika Pending
-                let statusHtmlAdmin = trx.status === 'Pending' 
-                    ? `<button class="btn-confirm" onclick="adminKonfirmasiSPP('${key}')">Konfirmasi</button>`
-                    : `<span class="badge success">Lunas</span>`;
-                
-                // Tampilan untuk Siswa
-                let statusHtmlSiswa = `<span class="badge ${trx.status === 'Pending' ? 'pending' : 'success'}">${trx.status}</span>`;
+                const trx = data[key]; const dateObj = trx.waktu ? new Date(trx.waktu) : new Date(); const dateStr = `${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()}`;
+                if(trx.status === 'Pending') pendingCount++;
 
-                listAdmin.innerHTML += `
-                    <div class="user-item">
-                        <div class="user-info-box"><h4>${trx.namaSiswa}</h4><p>${dateStr}</p></div>
-                        ${statusHtmlAdmin}
-                    </div>`;
-                
-                if(trx.uid === currentUserUid && listSiswa) {
-                    listSiswa.innerHTML += `
+                if(listAdmin) {
+                    listAdmin.innerHTML += `
                         <div class="user-item">
                             <div class="user-info-box"><h4>${trx.namaSiswa}</h4><p>${dateStr}</p></div>
-                            ${statusHtmlSiswa}
+                            ${trx.status === 'Pending' ? `<button class="btn-confirm" onclick="adminKonfirmasiSPP('${key}')">Konfirmasi</button>` : `<span class="badge success">Lunas</span>`}
                         </div>`;
                 }
+                if(listSiswa && trx.uid === currentUserUid) {
+                    listSiswa.innerHTML += `<div class="user-item"><div class="user-info-box"><h4>SPP Bulanan</h4><p>${dateStr}</p></div><span class="badge ${trx.status === 'Pending' ? 'pending' : 'success'}">${trx.status}</span></div>`;
+                }
             });
+            if(document.getElementById('dashPendingSpp')) document.getElementById('dashPendingSpp').innerText = pendingCount;
         });
 
-        // --- PENGATURAN GLOBAL ---
-        document.getElementById('btnSaveJadwal').addEventListener('click', async () => {
-            const jadwal = document.getElementById('adminInputJadwal').value.trim();
-            if(!jadwal) return showToast("Jadwal kosong!", "error");
-            await set(ref(db, 'settings/jadwal'), jadwal); showToast("Jadwal disebarkan!", "success");
+        // --- PENGATURAN GLOBAL (NAMA & JADWAL) ---
+        document.getElementById('btnSaveJadwalAdminTab')?.addEventListener('click', async () => {
+            const jadwal = document.getElementById('adminInputJadwalAdminTab').value.trim();
+            if(!jadwal) return; await set(ref(db, 'settings/jadwal'), jadwal); showToast("Disebarkan!", "success");
         });
 
         onValue(ref(db, 'settings'), (snapshot) => {
@@ -642,15 +681,23 @@
                 const data = snapshot.val(); const name = data.schoolName || "SMA Nusantara Vipercell";
                 document.querySelectorAll('.dynamic-school-name').forEach(el => { if(el.tagName === 'TITLE') document.title = name; else el.innerText = name; });
                 if(document.getElementById('adminInputSchoolName')) document.getElementById('adminInputSchoolName').value = name;
-                if(document.getElementById('adminInputJadwal') && data.jadwal) { document.getElementById('adminInputJadwal').value = data.jadwal; document.getElementById('jadwalTextLengkap').innerText = data.jadwal; }
+                
+                if(data.jadwal) {
+                    if(document.getElementById('adminInputJadwalAdminTab')) document.getElementById('adminInputJadwalAdminTab').value = data.jadwal;
+                    if(document.getElementById('dashJadwalText')) document.getElementById('dashJadwalText').innerText = data.jadwal;
+                    if(document.getElementById('guruJadwalText')) document.getElementById('guruJadwalText').innerText = data.jadwal;
+                    if(document.getElementById('siswaJadwalText')) document.getElementById('siswaJadwalText').innerText = data.jadwal;
+                }
             }
         });
 
-        document.getElementById('btnSaveSchoolName').addEventListener('click', async () => {
+        document.getElementById('btnSaveSchoolName')?.addEventListener('click', async () => {
             const newName = document.getElementById('adminInputSchoolName').value.trim();
-            if(!newName) return showToast("Nama kosong!", "error");
-            await set(ref(db, 'settings/schoolName'), newName); showToast("Tersimpan!", "success");
+            if(newName) { await set(ref(db, 'settings/schoolName'), newName); showToast("Tersimpan!", "success"); }
         });
+
+        // Trigger load mobile siswa data periodically if active
+        setInterval(() => { if(currentUserRole === 'siswa') loadNilaiSiswaMobile(); }, 5000);
 
         // Logout
         document.querySelectorAll('.btn-logout').forEach(btn => {
