@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title class="dynamic-school-name">Portal Sekolah Digital</title>
+    
+    <script>
+        window.SCHOOL_CONFIG = {
+            apiKey: "AIzaSyCoR1remXkwNMUy4FKnGnb1LYDiF_iurqM",
+            authDomain: "sekolahid-ddec0.firebaseapp.com",
+            projectId: "sekolahid-ddec0",
+            storageBucket: "sekolahid-ddec0.firebasestorage.app",
+            messagingSenderId: "282613864270",
+            appId: "1:282613864270:web:e5d133e56dcfd7cd4b701f"
+        };
+    </script>
+    
+    <style>
+        /* === CSS MODERN VIPERCELL v2.7 === */
+        :root {
+            --primary-color: #3b82f6; --primary-dark: #2563eb;
+            --bg-color: #f3f4f6; --card-bg: #ffffff;
+            --text-dark: #1f2937; --text-muted: #6b7280;
+            --border-radius: 16px;
+            --success-color: #10b981; --warning-color: #f59e0b; --danger-color: #ef4444;
+            --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background-color: var(--bg-color); color: var(--text-dark); max-width: 768px; margin: 0 auto; position: relative; min-height: 100vh; }
+
+        .view-section { display: none; animation: fadeIn 0.3s ease; padding-bottom: 80px; }
+        .view-section.active { display: block; }
+
+        /* Login & Header */
+        .login-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100vh; padding: 20px; background: linear-gradient(135deg, var(--bg-color), #e0e7ff); }
+        .login-card { background: var(--card-bg); padding: 30px; border-radius: var(--border-radius); box-shadow: var(--shadow); width: 100%; max-width: 400px; text-align: center; }
+        .login-card h2 { margin-bottom: 5px; color: var(--primary-dark); font-size: 22px; }
+        .header { background: linear-gradient(135deg, var(--primary-color), var(--primary-dark)); color: white; padding: 30px 20px 50px 20px; border-bottom-left-radius: 24px; border-bottom-right-radius: 24px; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; }
+        .user-info h1 { font-size: 20px; font-weight: 600; }
+        .user-info p { font-size: 13px; opacity: 0.9; margin-top: 4px; }
+        .profile-pic { width: 45px; height: 45px; background-color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: var(--primary-color); font-weight: bold; font-size: 18px; cursor: pointer; }
+
+        /* Forms & Buttons (Lebih Compact) */
+        .form-group { margin-bottom: 12px; text-align: left; }
+        .form-group label { display: block; font-size: 12px; margin-bottom: 4px; font-weight: 600; color: var(--text-dark); }
+        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 10px 12px; border: 1px solid #d1d5db; border-radius: 10px; font-size: 13px; outline: none; background: #f9fafb; transition: 0.2s; }
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--primary-color); background: #fff; box-shadow: 0 0 0 2px rgba(59,130,246,0.2); }
+        .form-group input:disabled { background-color: #e5e7eb; color: #9ca3af; cursor: not-allowed; }
+        .btn-action { background-color: var(--primary-color); color: white; border: none; padding: 12px; border-radius: 10px; font-weight: bold; cursor: pointer; width: 100%; transition: 0.2s; margin-top: 5px; display: flex; justify-content: center; align-items: center; gap: 8px;}
+        .btn-action:active { transform: scale(0.98); }
+        .btn-action.dark { background-color: var(--text-dark); }
+        .btn-action.success { background-color: var(--success-color); }
+        .forgot-password { display: block; text-align: right; font-size: 12px; color: var(--primary-color); font-weight: 600; cursor: pointer; margin-top: -5px; margin-bottom: 15px; }
+
+        /* Cards & UI Layout */
+        .container { padding: 0 20px; margin-top: -30px; }
+        .card { background-color: var(--card-bg); padding: 20px; border-radius: var(--border-radius); box-shadow: var(--shadow); margin-bottom: 15px; }
+        .card h3 { font-size: 15px; margin-bottom: 15px; border-bottom: 1px solid #e5e7eb; padding-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+        
+        /* Menu Grid (Beta Badge) */
+        .menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 20px 0;}
+        .menu-item { background-color: var(--card-bg); border-radius: 12px; padding: 15px 5px; text-align: center; box-shadow: var(--shadow); cursor: pointer; position: relative; }
+        .menu-icon { width: 35px; height: 35px; background-color: #e0e7ff; color: var(--primary-color); border-radius: 10px; display: flex; align-items: center; justify-content: center; margin: 0 auto 8px auto; font-size: 18px; }
+        .menu-item span { font-size: 11px; font-weight: 600; }
+        .beta-badge { position: absolute; top: -5px; right: -5px; background: var(--danger-color); color: white; font-size: 8px; padding: 2px 5px; border-radius: 5px; font-weight: bold; }
+
+        /* === SEGMENTED TABS (Desain Baru) === */
+        .tab-container { display: flex; background: #e5e7eb; border-radius: 10px; padding: 4px; margin-bottom: 15px; }
+        .tab-btn { flex: 1; padding: 8px; text-align: center; font-size: 12px; font-weight: 600; border: none; background: transparent; cursor: pointer; color: var(--text-muted); transition: 0.3s ease; border-radius: 8px; }
+        .tab-btn.active { background: white; color: var(--primary-dark); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        
+        /* === USER LIST DENGAN AVATAR === */
+        .list-container { display: none; flex-direction: column; max-height: 350px; overflow-y: auto; padding-right: 5px; }
+        .list-container.active { display: flex; }
+        .search-box { width: 100%; padding: 10px 15px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 13px; margin-bottom: 15px; outline: none; }
+        
+        .user-item { display: flex; align-items: center; gap: 12px; padding: 12px 5px; border-bottom: 1px solid #f3f4f6; animation: fadeIn 0.3s ease; }
+        .user-item:last-child { border-bottom: none; }
+        .avatar { width: 38px; height: 38px; border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; font-weight: bold; font-size: 14px; text-transform: uppercase; flex-shrink: 0; }
+        .user-info-box { flex: 1; }
+        .user-info-box h4 { font-size: 13px; margin-bottom: 2px; color: var(--text-dark); }
+        .user-info-box p { font-size: 11px; color: var(--text-muted); }
+        .btn-edit { background: #f3f4f6; border: none; color: var(--primary-dark); font-size: 11px; font-weight: bold; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: 0.2s; }
+        .btn-edit:active { background: #e5e7eb; }
+
+        /* Beta Views & Modals */
+        .header-beta { background: var(--card-bg); padding: 15px 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
+        .btn-back { background: #f3f4f6; border: none; width: 35px; height: 35px; border-radius: 10px; font-size: 16px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        .beta-title { font-weight: 600; font-size: 16px; color: var(--text-dark); }
+        .beta-content { padding: 20px; }
+        .list-absen { display: flex; flex-direction: column; gap: 10px; margin-top: 15px; }
+        .absen-item { background: white; padding: 12px; border-radius: 10px; border-left: 4px solid var(--success-color); box-shadow: var(--shadow); display: flex; justify-content: space-between;}
+
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 2000; align-items: center; justify-content: center; backdrop-filter: blur(3px); }
+        .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-out; }
+        .modal-content { background: white; padding: 25px; border-radius: 20px; width: 90%; max-width: 350px; text-align: center; position: relative; }
+        .close-modal { position: absolute; top: 15px; right: 15px; font-size: 20px; cursor: pointer; color: var(--text-muted); }
+        
+        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--text-dark); color: white; padding: 10px 20px; border-radius: 30px; font-size: 12px; font-weight: 600; box-shadow: 0 4px 12px rgba(0,0,0,0.15); transition: bottom 0.3s; z-index: 3000; display: flex; align-items: center; gap: 8px; }
+        .toast.show { bottom: 30px; }
+        .toast.error { background: var(--danger-color); }
+        .toast.success { background: var(--success-color); }
+
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid var(--primary-color); border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+        /* Scrollbar */
+        .list-container::-webkit-scrollbar { width: 4px; }
+        .list-container::-webkit-scrollbar-track { background: transparent; }
+        .list-container::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <div id="toastNotif" class="toast"><span id="toastIcon">ℹ️</span><span id="toastMsg">Memproses...</span></div>
+
+    <div id="view-login" class="view-section active">
+        <div class="login-container">
+            <div class="login-card">
+                <h2 class="dynamic-school-name">Portal Sekolah</h2>
+                <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 25px;">Masuk menggunakan email terdaftar.</p>
+                
+                <div class="form-group"><label>Alamat Email</label><input type="email" id="loginIdentitas" placeholder="contoh@sekolah.com" autocomplete="off"></div>
+                <div class="form-group" style="margin-bottom: 5px;"><label>Kata Sandi</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
+                <span class="forgot-password" onclick="showModal('modalLupaSandi')">Lupa Sandi?</span>
+                
+                <button class="btn-action" id="btnLoginSubmit"><span id="loginText">Masuk</span><div class="loader" id="loginLoader"></div></button>
+            </div>
+        </div>
+    </div>
+
+    <div id="view-admin" class="view-section">
+        <header class="header">
+            <div class="header-top">
+                <div class="user-info"><p>Super Admin</p><h1 class="dynamic-school-name">Sistem Sekolah</h1></div>
+                <div class="profile-pic btn-logout" title="Keluar">⚙️</div>
+            </div>
+        </header>
+        <main class="container">
+            <div class="card" style="padding: 15px 20px;">
+                <h3 style="margin-bottom: 10px; padding-bottom: 5px;">⚡ Buat Akun Cepat</h3>
+                <div style="display: flex; gap: 10px;">
+                    <div class="form-group" style="flex: 1;"><select id="newUserRole"><option value="siswa">Siswa</option><option value="guru">Guru</option></select></div>
+                    <div class="form-group" style="flex: 2;"><input type="text" id="newUserName" placeholder="Nama Lengkap" autocomplete="off"></div>
+                </div>
+                <div class="form-group"><input type="email" id="newUserIdentitas" placeholder="Alamat Email Aktif" autocomplete="off"></div>
+                <div class="form-group"><input type="text" id="newUserPassword" value="123456" placeholder="Kata Sandi Awal (Tekan Enter untuk simpan)"></div>
+                <button class="btn-action" id="btnCreateUser" style="display: none;">Hidden Submit</button>
+            </div>
+
+            <div class="card">
+                <h3 style="margin-bottom: 10px;">👥 Data Pengguna</h3>
+                <input type="text" id="searchUser" class="search-box" placeholder="Cari nama atau email...">
+                
+                <div class="tab-container">
+                    <button class="tab-btn active" id="tabSiswaBtn" onclick="switchTab('siswa')">Siswa (0)</button>
+                    <button class="tab-btn" id="tabGuruBtn" onclick="switchTab('guru')">Guru (0)</button>
+                </div>
+                
+                <div class="list-container active" id="listSiswaContainer"></div>
+                <div class="list-container" id="listGuruContainer"></div>
+            </div>
+
+            <div class="card">
+                <h3>📅 Pengaturan Jadwal <span class="beta-badge" style="position:relative; top:0; right:0;">BETA</span></h3>
+                <div class="form-group"><textarea id="adminInputJadwal" rows="3" placeholder="Ketik pengumuman jadwal di sini..."></textarea></div>
+                <button class="btn-action dark" id="btnSaveJadwal">Sebarkan Jadwal</button>
+            </div>
+            
+            <div class="card" style="margin-bottom: 40px;">
+                <h3>⚙️ Identitas Web</h3>
+                <div class="form-group" style="display:flex; gap:10px;">
+                    <input type="text" id="adminInputSchoolName" placeholder="Nama sekolah...">
+                    <button class="btn-action dark" id="btnSaveSchoolName" style="width: auto; margin:0; padding: 0 15px;">Simpan</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <div id="view-guru" class="view-section">
+        <header class="header">
+            <div class="header-top">
+                <div class="user-info"><p class="dynamic-school-name">Nama Sekolah</p><h1 id="guruNameDisplay">Guru</h1></div>
+                <div class="profile-pic btn-logout" title="Keluar">Keluar</div>
+            </div>
+        </header>
+        <main class="container">
+            <div class="menu-grid">
+                <div class="menu-item" onclick="openBetaMenu('absensi')"><span class="beta-badge">BETA</span><div class="menu-icon">📅</div><span>Cek Absen</span></div>
+                <div class="menu-item" onclick="openBetaMenu('jadwal')"><span class="beta-badge">BETA</span><div class="menu-icon">⏰</div><span>Jadwal</span></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="view-siswa" class="view-section">
+        <header class="header">
+            <div class="header-top">
+                <div class="user-info"><p class="dynamic-school-name">Nama Sekolah</p><h1 id="siswaNameDisplay">Siswa</h1></div>
+                <div class="profile-pic btn-logout" title="Keluar">Keluar</div>
+            </div>
+        </header>
+        <main class="container">
+            <div class="menu-grid">
+                <div class="menu-item" onclick="openBetaMenu('absensi')"><span class="beta-badge">BETA</span><div class="menu-icon">📅</div><span>Isi Absen</span></div>
+                <div class="menu-item" onclick="openBetaMenu('nilai')"><span class="beta-badge">BETA</span><div class="menu-icon">📝</div><span>Nilai</span></div>
+                <div class="menu-item" onclick="alert('Fitur Pembayaran diaktifkan di rilis resmi.')"><div class="menu-icon">💳</div><span>SPP</span></div>
+                <div class="menu-item" onclick="openBetaMenu('jadwal')"><span class="beta-badge">BETA</span><div class="menu-icon">⏰</div><span>Jadwal</span></div>
+            </div>
+        </main>
+    </div>
+
+    <div id="view-beta" class="view-section">
+        <div class="header-beta">
+            <button class="btn-back" onclick="goBackToDashboard()">←</button>
+            <div class="beta-title" id="betaTitle">Fitur Beta</div>
+        </div>
+        <div class="beta-content" id="betaContent"></div>
+    </div>
+
+    <div class="modal-overlay" id="modalLupaSandi">
+        <div class="modal-content">
+            <span class="close-modal" onclick="hideModal('modalLupaSandi')">&times;</span>
+            <div class="modal-icon" style="font-size:30px; margin-bottom:10px;">🔐</div>
+            <h3 style="margin-bottom: 10px;">Pemulihan Sandi</h3>
+            <p style="font-size: 13px; color: var(--text-muted); margin-bottom: 20px;">Silakan hubungi Admin Sekolah untuk mereset kata sandi email Anda.</p>
+            <button class="btn-action" onclick="hideModal('modalLupaSandi')">Tutup</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modalEditUser">
+        <div class="modal-content" style="text-align: left;">
+            <span class="close-modal" onclick="hideModal('modalEditUser')">&times;</span>
+            <h3 style="margin-bottom: 15px; text-align: center;">Edit Data</h3>
+            <input type="hidden" id="editUserId">
+            <div class="form-group"><label>Nama Lengkap</label><input type="text" id="editUserName" placeholder="Nama baru..."></div>
+            <div class="form-group"><label>Email Login (Kunci)</label><input type="email" id="editUserIdentitas" disabled></div>
+            <button class="btn-action success" id="btnSaveUserEdit">Simpan</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, initializeAuth, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getDatabase, ref, set, get, update, onValue } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-database.js";
+
+        const app = initializeApp(window.SCHOOL_CONFIG);
+        const auth = getAuth(app);
+        const db = getDatabase(app);
+
+        // Secondary Auth untuk Rapid Entry
+        const secondaryApp = initializeApp(window.SCHOOL_CONFIG, "Secondary");
+        const secondaryAuth = initializeAuth(secondaryApp, { persistence: inMemoryPersistence });
+
+        const ADMIN_EMAIL = "millerstoreid@gmail.com";
+        let allUsersData = {};
+        let currentUserRole = '', currentUserName = '', currentUserUid = '';
+
+        // === UI UTILITIES ===
+        window.showModal = (id) => document.getElementById(id).classList.add('active');
+        window.hideModal = (id) => document.getElementById(id).classList.remove('active');
+        
+        function switchView(viewId) {
+            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+            window.scrollTo(0,0);
+        }
+
+        // Fungsi Toast Dinamis
+        function showToast(message, type = "info") {
+            const toast = document.getElementById('toastNotif');
+            toast.className = 'toast'; // reset class
+            document.getElementById('toastMsg').innerText = message;
+            
+            if(type === 'error') { toast.classList.add('error'); document.getElementById('toastIcon').innerText = "❌"; }
+            else if(type === 'success') { toast.classList.add('success'); document.getElementById('toastIcon').innerText = "✅"; }
+            else { document.getElementById('toastIcon').innerText = "⏳"; }
+            
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), type === 'info' ? 1500 : 3000);
+        }
+
+        window.switchTab = (role) => {
+            document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.list-container').forEach(list => list.classList.remove('active'));
+            if(role === 'siswa') {
+                document.getElementById('tabSiswaBtn').classList.add('active');
+                document.getElementById('listSiswaContainer').classList.add('active');
+            } else {
+                document.getElementById('tabGuruBtn').classList.add('active');
+                document.getElementById('listGuruContainer').classList.add('active');
+            }
+        };
+
+        // Generator Warna Avatar Otomatis
+        function getAvatarColor(name) {
+            const colors = ['#f56565', '#ed8936', '#ecc94b', '#48bb78', '#38b2ac', '#4299e1', '#667eea', '#9f7aea', '#ed64a6'];
+            let sum = 0; for(let i=0; i<name.length; i++) sum += name.charCodeAt(i);
+            return colors[sum % colors.length];
+        }
+
+        // --- SISTEM LOGIN ---
+        document.getElementById('btnLoginSubmit').addEventListener('click', async () => {
+            const email = document.getElementById('loginIdentitas').value.trim();
+            const password = document.getElementById('loginPassword').value;
+            if(!email || !password) return alert("Isi form dengan lengkap.");
+
+            document.getElementById('loginText').style.display = "none"; document.getElementById('loginLoader').style.display = "inline-block";
+            try { await signInWithEmailAndPassword(auth, email, password); } 
+            catch (error) {
+                document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none";
+                alert("Login gagal.");
+            }
+        });
+
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none";
+                currentUserUid = user.uid;
+                if (user.email === ADMIN_EMAIL) { currentUserRole = 'admin'; switchView('view-admin'); document.getElementById('newUserName').focus(); } 
+                else {
+                    const snapshot = await get(ref(db, 'users/' + user.uid));
+                    if (snapshot.exists()) {
+                        const userData = snapshot.val();
+                        currentUserRole = userData.role; currentUserName = userData.nama;
+                        if (userData.role === 'guru') { document.getElementById('guruNameDisplay').innerText = userData.nama; switchView('view-guru'); } 
+                        else { document.getElementById('siswaNameDisplay').innerText = userData.nama; switchView('view-siswa'); }
+                    } else signOut(auth);
+                }
+            } else switchView('view-login');
+        });
+
+        // --- FITUR ADMIN: RAPID BACKGROUND SAVE (SUPER CEPAT) ---
+        // Shortcut Keyboard Enter
+        document.getElementById('newUserName').addEventListener('keypress', (e) => { if(e.key === 'Enter') document.getElementById('newUserIdentitas').focus(); });
+        document.getElementById('newUserIdentitas').addEventListener('keypress', (e) => { if(e.key === 'Enter') document.getElementById('newUserPassword').focus(); });
+        document.getElementById('newUserPassword').addEventListener('keypress', (e) => { 
+            if(e.key === 'Enter') { e.preventDefault(); document.getElementById('btnCreateUser').click(); } 
+        });
+
+        document.getElementById('btnCreateUser').addEventListener('click', () => {
+            const role = document.getElementById('newUserRole').value;
+            const namaInput = document.getElementById('newUserName');
+            const emailInput = document.getElementById('newUserIdentitas');
+            const password = document.getElementById('newUserPassword').value;
+
+            const nama = namaInput.value.trim();
+            const email = emailInput.value.trim();
+
+            if(!nama || !email || password.length < 6) return showToast("Data tidak valid!", "error");
+            
+            // 1. OPTIMISTIC UI: Bersihkan form dalam 0 detik & kembalikan fokus
+            namaInput.value = ''; emailInput.value = '';
+            namaInput.focus();
+            showToast(`Menyimpan ${nama}...`, "info");
+
+            // 2. BACKGROUND PROCESS: Kirim ke server tanpa memblokir UI Admin
+            setTimeout(async () => {
+                try {
+                    const userCredential = await createUserWithEmailAndPassword(secondaryAuth, email, password);
+                    await set(ref(db, 'users/' + userCredential.user.uid), {
+                        nama: nama, role: role, email: email, waktuDibuat: new Date().toISOString()
+                    });
+                    await signOut(secondaryAuth);
+                    showToast(`${nama} tersimpan!`, "success");
+                } catch (error) {
+                    showToast(error.code === 'auth/email-already-in-use' ? "Email sudah terdaftar!" : "Gagal: " + error.message, "error");
+                }
+            }, 10); // delay micro task
+        });
+
+        // --- FITUR ADMIN: DAFTAR PENGGUNA TERPISAH DENGAN AVATAR ---
+        onValue(ref(db, 'users'), (snapshot) => {
+            allUsersData = snapshot.exists() ? snapshot.val() : {};
+            renderUserList();
+        });
+
+        function renderUserList(searchQuery = "") {
+            const containerSiswa = document.getElementById('listSiswaContainer');
+            const containerGuru = document.getElementById('listGuruContainer');
+            containerSiswa.innerHTML = ''; containerGuru.innerHTML = '';
+            
+            let countSiswa = 0, countGuru = 0;
+
+            Object.keys(allUsersData).forEach(uid => {
+                const user = allUsersData[uid];
+                if(searchQuery && !user.nama.toLowerCase().includes(searchQuery) && !user.email.includes(searchQuery)) return;
+
+                const initial = user.nama.charAt(0).toUpperCase();
+                const bgColor = getAvatarColor(user.nama);
+
+                const div = document.createElement('div');
+                div.className = 'user-item';
+                div.innerHTML = `
+                    <div class="avatar" style="background-color: ${bgColor}">${initial}</div>
+                    <div class="user-info-box">
+                        <h4>${user.nama}</h4>
+                        <p>${user.email}</p>
+                    </div>
+                    <button class="btn-edit" data-uid="${uid}">Edit</button>
+                `;
+
+                if(user.role === 'siswa') { containerSiswa.appendChild(div); countSiswa++; } 
+                else { containerGuru.appendChild(div); countGuru++; }
+            });
+
+            document.getElementById('tabSiswaBtn').innerText = `Siswa (${countSiswa})`;
+            document.getElementById('tabGuruBtn').innerText = `Guru (${countGuru})`;
+
+            document.querySelectorAll('.btn-edit').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const uid = e.target.getAttribute('data-uid');
+                    const user = allUsersData[uid];
+                    document.getElementById('editUserId').value = uid;
+                    document.getElementById('editUserName').value = user.nama;
+                    document.getElementById('editUserIdentitas').value = user.email; 
+                    window.showModal('modalEditUser');
+                });
+            });
+        }
+        document.getElementById('searchUser').addEventListener('input', (e) => renderUserList(e.target.value.toLowerCase()));
+
+        document.getElementById('btnSaveUserEdit').addEventListener('click', async () => {
+            const uid = document.getElementById('editUserId').value;
+            const newName = document.getElementById('editUserName').value.trim();
+            if(!newName) return;
+            try { await update(ref(db, 'users/' + uid), { nama: newName }); showToast("Diperbarui!", "success"); window.hideModal('modalEditUser'); } 
+            catch (error) { showToast("Gagal update", "error"); }
+        });
+
+        // --- SISTEM MODUL BETA & SINKRONISASI LAINNYA ---
+        window.goBackToDashboard = () => {
+            if(currentUserRole === 'admin') switchView('view-admin'); else if(currentUserRole === 'guru') switchView('view-guru'); else switchView('view-siswa');
+        }
+
+        window.openBetaMenu = (tipe) => {
+            switchView('view-beta');
+            const content = document.getElementById('betaContent'); const title = document.getElementById('betaTitle');
+            if(tipe === 'absensi') {
+                title.innerText = "Sistem Absensi";
+                if(currentUserRole === 'siswa') {
+                    content.innerHTML = `<div class="card" style="text-align:center;"><h3>Absensi Kehadiran</h3><button class="btn-action success" id="btnHadir">Hadir Hari Ini</button></div>`;
+                    document.getElementById('btnHadir').addEventListener('click', async () => {
+                        const today = new Date().toISOString().split('T')[0];
+                        await set(ref(db, `absensi/${today}/${currentUserUid}`), { nama: currentUserName, waktu: new Date().toLocaleTimeString() });
+                        showToast("Absen Dicatat!", "success"); document.getElementById('btnHadir').innerText = "Sudah Absen"; document.getElementById('btnHadir').disabled = true;
+                    });
+                } else if(currentUserRole === 'guru') {
+                    content.innerHTML = `<h3>Siswa Hadir Hari Ini</h3><div class="list-absen" id="listAbsenHariIni">Memuat data...</div>`;
+                    const today = new Date().toISOString().split('T')[0];
+                    onValue(ref(db, `absensi/${today}`), (snapshot) => {
+                        const list = document.getElementById('listAbsenHariIni'); list.innerHTML = '';
+                        if(!snapshot.exists()) return list.innerHTML = '<p style="font-size:12px;">Belum ada siswa yang absen.</p>';
+                        const data = snapshot.val();
+                        Object.keys(data).forEach(key => list.innerHTML += `<div class="absen-item"><span>${data[key].nama}</span><span style="font-size:12px; font-weight:bold; color:var(--success-color);">${data[key].waktu}</span></div>`);
+                    });
+                }
+            } else if (tipe === 'jadwal') {
+                title.innerText = "Jadwal Akademik";
+                content.innerHTML = `<div class="card" id="jadwalText" style="white-space: pre-wrap; font-size:14px; line-height:1.6;">Memuat...</div>`;
+                onValue(ref(db, 'settings/jadwal'), (snapshot) => document.getElementById('jadwalText').innerText = snapshot.val() || "Belum ada jadwal.");
+            } else if (tipe === 'nilai') {
+                title.innerText = "Transkrip Nilai";
+                content.innerHTML = `<div class="card"><h3>Semester Ganjil</h3><div class="list-absen"><div class="absen-item"><span>Contoh UI</span><span style="font-weight:bold; color:var(--primary-dark);">100</span></div></div></div>`;
+            }
+        }
+
+        document.getElementById('btnSaveJadwal').addEventListener('click', async () => {
+            const jadwal = document.getElementById('adminInputJadwal').value;
+            await set(ref(db, 'settings/jadwal'), jadwal); showToast("Jadwal disebarkan!", "success");
+        });
+
+        onValue(ref(db, 'settings'), (snapshot) => {
+            if(snapshot.exists()) {
+                const data = snapshot.val(); const name = data.schoolName || "SMA Nusantara Vipercell";
+                document.querySelectorAll('.dynamic-school-name').forEach(el => { if(el.tagName === 'TITLE') document.title = name; else el.innerText = name; });
+                if(document.getElementById('adminInputSchoolName')) document.getElementById('adminInputSchoolName').value = name;
+                if(document.getElementById('adminInputJadwal') && data.jadwal) document.getElementById('adminInputJadwal').value = data.jadwal;
+            }
+        });
+
+        document.getElementById('btnSaveSchoolName').addEventListener('click', async () => {
+            const newName = document.getElementById('adminInputSchoolName').value.trim();
+            if(newName) { await set(ref(db, 'settings/schoolName'), newName); showToast("Tersimpan!", "success"); }
+        });
+
+        // Logout
+        document.querySelectorAll('.btn-logout').forEach(btn => {
+            btn.addEventListener('click', () => { signOut(auth).then(() => { document.getElementById('loginIdentitas').value = ''; document.getElementById('loginPassword').value = ''; }); });
+        });
+    </script>
+</body>
+</html>
