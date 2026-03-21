@@ -17,7 +17,7 @@
     </script>
     
     <style>
-        /* === CSS MODERN VIPERCELL v3.0 === */
+        /* === CSS MODERN VIPERCELL v3.1 === */
         :root {
             --primary-color: #3b82f6; --primary-dark: #2563eb;
             --bg-color: #f3f4f6; --card-bg: #ffffff;
@@ -81,6 +81,7 @@
         .user-info-box h4 { font-size: 13px; margin-bottom: 2px; color: var(--text-dark); }
         .user-info-box p { font-size: 11px; color: var(--text-muted); }
         .btn-edit { background: #f3f4f6; border: none; color: var(--primary-dark); font-size: 11px; font-weight: bold; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: 0.2s; }
+        .btn-confirm { background: #d1fae5; border: none; color: #059669; font-size: 11px; font-weight: bold; cursor: pointer; padding: 6px 12px; border-radius: 6px; transition: 0.2s; }
         
         /* Unified Feature Views */
         .header-feature { background: var(--card-bg); padding: 15px 20px; display: flex; align-items: center; gap: 15px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); position: sticky; top: 0; z-index: 100; }
@@ -175,8 +176,10 @@
                 <div class="form-group"><label>String QRIS Aktif</label><textarea id="adminInputQris" rows="2" placeholder="Tempelkan string QRIS di sini..."></textarea></div>
                 <button class="btn-action dark" id="btnSaveQris" style="margin-bottom: 20px;">Simpan QRIS</button>
                 
-                <h4 style="font-size: 13px; margin-bottom: 10px; color: var(--text-dark);">Transaksi SPP Masuk:</h4>
-                <div class="list-container active" id="listSppAdmin" style="max-height: 200px;">
+                <h4 style="font-size: 13px; margin-bottom: 10px; color: var(--text-dark); display: flex; justify-content: space-between;">
+                    <span>Transaksi SPP Masuk:</span>
+                </h4>
+                <div class="list-container active" id="listSppAdmin" style="max-height: 250px;">
                     <p style="font-size: 12px; color: gray;">Memuat transaksi...</p>
                 </div>
             </div>
@@ -184,7 +187,7 @@
             <div class="card">
                 <h3>📅 Pengumuman Sekolah</h3>
                 <div class="form-group"><textarea id="adminInputJadwal" rows="3" placeholder="Ketik pengumuman jadwal di sini..."></textarea></div>
-                <button class="btn-action dark" id="btnSaveJadwal">Sebarkan</button>
+                <button class="btn-action dark" id="btnSaveJadwal">Sebarkan Jadwal</button>
             </div>
             
             <div class="card" style="margin-bottom: 40px;">
@@ -247,7 +250,7 @@
             <div id="panel-siswa-absen" class="feature-panel">
                 <div class="card" style="text-align:center;">
                     <h3 style="justify-content: center; border: none; font-size: 18px;">Absensi Kehadiran</h3>
-                    <p style="font-size:13px; margin-bottom:20px; color: gray;">Tekan tombol di bawah ini untuk mencatat kehadiran Anda ke sistem sekolah hari ini.</p>
+                    <p style="font-size:13px; margin-bottom:20px; color: gray;">Tekan tombol di bawah ini untuk mencatat kehadiran Anda ke sistem hari ini.</p>
                     <button class="btn-action success" id="btnHadirSiswa" style="padding: 15px; font-size: 16px;">Hadir Hari Ini</button>
                 </div>
             </div>
@@ -262,18 +265,9 @@
             <div id="panel-guru-nilai" class="feature-panel">
                 <div class="card">
                     <h3>Pemberian Nilai</h3>
-                    <div class="form-group">
-                        <label>Pilih Siswa</label>
-                        <select id="inputNilaiSiswa"><option value="">Memuat daftar siswa...</option></select>
-                    </div>
-                    <div class="form-group">
-                        <label>Mata Pelajaran</label>
-                        <input type="text" id="inputNilaiMapel" placeholder="Contoh: Matematika">
-                    </div>
-                    <div class="form-group">
-                        <label>Skor Nilai (0-100)</label>
-                        <input type="number" id="inputNilaiSkor" placeholder="85">
-                    </div>
+                    <div class="form-group"><label>Pilih Siswa</label><select id="inputNilaiSiswa"><option value="">Memuat daftar...</option></select></div>
+                    <div class="form-group"><label>Mata Pelajaran</label><input type="text" id="inputNilaiMapel" placeholder="Contoh: Matematika"></div>
+                    <div class="form-group"><label>Skor Nilai (0-100)</label><input type="number" id="inputNilaiSkor" placeholder="85"></div>
                     <button class="btn-action" id="btnSimpanNilai">Simpan Nilai ke Rapor</button>
                 </div>
             </div>
@@ -281,9 +275,7 @@
             <div id="panel-siswa-nilai" class="feature-panel">
                 <div class="card">
                     <h3>Transkrip Nilai Saya</h3>
-                    <div class="list-absen" id="listNilaiSiswa">
-                        <p style="font-size: 12px; color: gray; text-align: center;">Belum ada nilai yang diinput oleh Guru.</p>
-                    </div>
+                    <div class="list-absen" id="listNilaiSiswa"><p style="font-size: 12px; color: gray; text-align: center;">Belum ada nilai.</p></div>
                 </div>
             </div>
 
@@ -300,9 +292,7 @@
             </div>
 
             <div id="panel-umum-jadwal" class="feature-panel">
-                <div class="card" id="jadwalTextLengkap" style="white-space: pre-wrap; font-size:14px; line-height:1.6; color: var(--text-dark);">
-                    Memuat jadwal...
-                </div>
+                <div class="card" id="jadwalTextLengkap" style="white-space: pre-wrap; font-size:14px; line-height:1.6; color: var(--text-dark);">Memuat jadwal...</div>
             </div>
 
         </div>
@@ -321,11 +311,11 @@
     <div class="modal-overlay" id="modalEditUser">
         <div class="modal-content" style="text-align: left;">
             <span class="close-modal" onclick="hideModal('modalEditUser')">&times;</span>
-            <h3 style="margin-bottom: 15px; text-align: center;">Edit Data</h3>
+            <h3 style="margin-bottom: 15px; text-align: center;">Edit Data Pengguna</h3>
             <input type="hidden" id="editUserId">
             <div class="form-group"><label>Nama Lengkap</label><input type="text" id="editUserName" placeholder="Nama baru..."></div>
             <div class="form-group"><label>Email Login (Kunci)</label><input type="email" id="editUserIdentitas" disabled></div>
-            <button class="btn-action success" id="btnSaveUserEdit">Simpan</button>
+            <button class="btn-action success" id="btnSaveUserEdit">Simpan Perubahan</button>
         </div>
     </div>
 
@@ -421,13 +411,7 @@
             } else switchView('view-login');
         });
 
-        // --- FITUR ADMIN: PEMBUATAN AKUN (TOMBOL DIPULIHKAN) ---
-        // Shortcut keyboard tetap ada
-        document.getElementById('newUserName').addEventListener('keypress', (e) => { if(e.key === 'Enter') document.getElementById('newUserIdentitas').focus(); });
-        document.getElementById('newUserIdentitas').addEventListener('keypress', (e) => { if(e.key === 'Enter') document.getElementById('newUserPassword').focus(); });
-        document.getElementById('newUserPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') { e.preventDefault(); document.getElementById('btnCreateUser').click(); } });
-
-        // Tombol nyata yang bisa disentuh di tablet
+        // --- FITUR ADMIN: PEMBUATAN AKUN ---
         document.getElementById('btnCreateUser').addEventListener('click', async () => {
             const role = document.getElementById('newUserRole').value;
             const namaInput = document.getElementById('newUserName');
@@ -455,11 +439,13 @@
             }
         });
 
-        // --- FITUR ADMIN: DAFTAR PENGGUNA TERPISAH ---
+        // Shortcut keyboard tetap aktif
+        document.getElementById('newUserPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') { e.preventDefault(); document.getElementById('btnCreateUser').click(); } });
+
+        // --- FITUR ADMIN: DAFTAR PENGGUNA ---
         onValue(ref(db, 'users'), (snapshot) => {
             allUsersData = snapshot.exists() ? snapshot.val() : {};
-            renderUserList();
-            populateGuruDropdown(); // Update dropdown nilai untuk guru
+            renderUserList(); populateGuruDropdown();
         });
 
         function renderUserList(searchQuery = "") {
@@ -511,20 +497,15 @@
         window.openFeature = (panelId, titleText) => {
             switchView('view-feature');
             document.getElementById('featureTitle').innerText = titleText;
-            
-            // Sembunyikan semua panel, tampilkan yang diminta
             document.querySelectorAll('.feature-panel').forEach(p => p.classList.remove('active'));
             document.getElementById(`panel-${panelId}`).classList.add('active');
 
-            const effectiveRole = (currentUserRole === 'admin' && window.adminActivePreview) ? window.adminActivePreview.replace('view-', '') : currentUserRole;
-
-            // Trigger Fetch Data berdasarkan Panel yang dibuka
             if(panelId === 'guru-absen') loadAbsenGuru();
             else if(panelId === 'siswa-nilai') loadNilaiSiswa();
             else if(panelId === 'siswa-spp') setupSppSiswa();
         }
 
-        // Logika Absen Siswa
+        // Absen Siswa
         document.getElementById('btnHadirSiswa').addEventListener('click', async () => {
             if(currentUserRole === 'admin') return alert("Admin Preview: Logika absen berfungsi.");
             const today = new Date().toISOString().split('T')[0];
@@ -532,7 +513,7 @@
             showToast("Absen Tercatat!", "success"); document.getElementById('btnHadirSiswa').innerText = "✅ Sudah Absen"; document.getElementById('btnHadirSiswa').disabled = true;
         });
 
-        // Logika Absen Guru
+        // Absen Guru
         function loadAbsenGuru() {
             const today = new Date().toISOString().split('T')[0];
             onValue(ref(db, `absensi/${today}`), (snapshot) => {
@@ -543,7 +524,7 @@
             });
         }
 
-        // Logika Input Nilai Guru
+        // Input Nilai Guru
         function populateGuruDropdown() {
             const select = document.getElementById('inputNilaiSiswa');
             select.innerHTML = '<option value="">-- Pilih Siswa --</option>';
@@ -557,32 +538,23 @@
             const uidSiswa = document.getElementById('inputNilaiSiswa').value;
             const mapel = document.getElementById('inputNilaiMapel').value.trim();
             const skor = document.getElementById('inputNilaiSkor').value;
-
             if(!uidSiswa || !mapel || !skor) return showToast("Isi data nilai dengan lengkap", "error");
-
-            try {
-                // Simpan ke database: nilai/UID_SISWA/MAPEL
-                await set(ref(db, `nilai/${uidSiswa}/${mapel}`), skor);
-                showToast("Nilai berhasil dimasukkan!", "success");
-                document.getElementById('inputNilaiMapel').value = ''; document.getElementById('inputNilaiSkor').value = '';
-            } catch (err) { showToast("Gagal menyimpan nilai", "error"); }
+            try { await set(ref(db, `nilai/${uidSiswa}/${mapel}`), skor); showToast("Nilai berhasil dimasukkan!", "success"); document.getElementById('inputNilaiMapel').value = ''; document.getElementById('inputNilaiSkor').value = ''; } 
+            catch (err) { showToast("Gagal menyimpan nilai", "error"); }
         });
 
-        // Logika Lihat Nilai Siswa
+        // Lihat Nilai Siswa
         function loadNilaiSiswa() {
             const targetUid = (currentUserRole === 'admin') ? "contoh_uid" : currentUserUid;
             onValue(ref(db, `nilai/${targetUid}`), (snapshot) => {
                 const list = document.getElementById('listNilaiSiswa'); list.innerHTML = '';
                 if(!snapshot.exists()) return list.innerHTML = '<p style="font-size: 12px; color: gray; text-align: center;">Belum ada nilai yang diinput oleh Guru.</p>';
                 const data = snapshot.val();
-                Object.keys(data).forEach(mapel => {
-                    list.innerHTML += `<div class="absen-item"><span>${mapel}</span><span style="font-weight:bold; color:var(--primary-dark); font-size: 16px;">${data[mapel]}</span></div>`;
-                });
+                Object.keys(data).forEach(mapel => list.innerHTML += `<div class="absen-item"><span>${mapel}</span><span style="font-weight:bold; color:var(--primary-dark); font-size: 16px;">${data[mapel]}</span></div>`);
             });
         }
 
-        // === SISTEM QRIS & SPP (DIPULIHKAN) ===
-        // 1. Admin Mengatur QRIS
+        // === SISTEM QRIS & SPP ADMIN KUASA PENUH ===
         onValue(ref(db, 'settings/qris'), (snapshot) => {
             activeQrisString = snapshot.val() || "";
             if(document.getElementById('adminInputQris')) document.getElementById('adminInputQris').value = activeQrisString;
@@ -590,45 +562,42 @@
 
         document.getElementById('btnSaveQris').addEventListener('click', async () => {
             const qris = document.getElementById('adminInputQris').value.trim();
-            if(!qris) return;
+            if(!qris) return showToast("String kosong!", "error");
             await set(ref(db, 'settings/qris'), qris); showToast("QRIS Diperbarui!", "success");
         });
 
-        // 2. Siswa Buka SPP
         function setupSppSiswa() {
-            const img = document.getElementById('sppQrImage');
-            const fallback = document.getElementById('sppQrFallback');
-            if(activeQrisString) {
-                img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(activeQrisString)}`;
-                img.style.display = "block"; fallback.style.display = "none";
-            } else {
-                img.style.display = "none"; fallback.style.display = "block";
-            }
+            const img = document.getElementById('sppQrImage'); const fallback = document.getElementById('sppQrFallback');
+            if(activeQrisString) { img.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(activeQrisString)}`; img.style.display = "block"; fallback.style.display = "none"; } 
+            else { img.style.display = "none"; fallback.style.display = "block"; }
         }
 
-        // 3. Siswa Konfirmasi Bayar
         document.getElementById('btnKonfirmasiSpp').addEventListener('click', async () => {
             if(!activeQrisString) return showToast("QRIS belum tersedia.", "error");
-            if(currentUserRole === 'admin') return alert("Admin Preview: Tombol fungsi berfungsi.");
-            
+            if(currentUserRole === 'admin') return alert("Admin Preview: Tombol berfungsi.");
             try {
                 const newTrxRef = push(ref(db, 'transactions/spp'));
                 await set(newTrxRef, { namaSiswa: currentUserName, uid: currentUserUid, status: "Pending", waktu: serverTimestamp() });
-                showToast("Berhasil Dilaporkan!", "success");
-                goBackToDashboard();
+                showToast("Berhasil Dilaporkan!", "success"); goBackToDashboard();
             } catch (err) { showToast("Gagal melaporkan.", "error"); }
         });
 
-        // 4. Admin & Siswa Memantau Riwayat SPP
+        // FUNGSI BARU: Admin Mengonfirmasi SPP menjadi Lunas
+        window.adminKonfirmasiSPP = async (trxKey) => {
+            try {
+                await update(ref(db, `transactions/spp/${trxKey}`), { status: "Lunas" });
+                showToast("Pembayaran Lunas!", "success");
+            } catch (err) { showToast("Gagal konfirmasi", "error"); }
+        };
+
+        // Riwayat SPP List
         onValue(ref(db, 'transactions/spp'), (snapshot) => {
-            const listAdmin = document.getElementById('listSppAdmin');
-            const listSiswa = document.getElementById('listSppSiswa');
+            const listAdmin = document.getElementById('listSppAdmin'); const listSiswa = document.getElementById('listSppSiswa');
             listAdmin.innerHTML = ''; if(listSiswa) listSiswa.innerHTML = '';
             
             if(!snapshot.exists()) {
-                listAdmin.innerHTML = '<p style="font-size: 12px; color: gray;">Belum ada transaksi.</p>';
-                if(listSiswa) listSiswa.innerHTML = '<p style="font-size: 12px; color: gray;">Belum ada riwayat SPP.</p>';
-                return;
+                listAdmin.innerHTML = '<p style="font-size: 12px; color: gray;">Belum ada transaksi masuk.</p>';
+                if(listSiswa) listSiswa.innerHTML = '<p style="font-size: 12px; color: gray;">Belum ada riwayat SPP.</p>'; return;
             }
 
             const data = snapshot.val();
@@ -637,20 +606,34 @@
                 const dateObj = trx.waktu ? new Date(trx.waktu) : new Date();
                 const dateStr = `${dateObj.getDate()}/${dateObj.getMonth()+1}/${dateObj.getFullYear()}`;
                 
-                const html = `
+                // Jika Admin, tampilkan tombol Konfirmasi jika Pending
+                let statusHtmlAdmin = trx.status === 'Pending' 
+                    ? `<button class="btn-confirm" onclick="adminKonfirmasiSPP('${key}')">Konfirmasi</button>`
+                    : `<span class="badge success">Lunas</span>`;
+                
+                // Tampilan untuk Siswa
+                let statusHtmlSiswa = `<span class="badge ${trx.status === 'Pending' ? 'pending' : 'success'}">${trx.status}</span>`;
+
+                listAdmin.innerHTML += `
                     <div class="user-item">
-                        <div class="user-info-box"><h4>${trx.namaSiswa}</h4><p>SPP Bulan Ini • ${dateStr}</p></div>
-                        <span class="badge ${trx.status === 'Pending' ? 'pending' : 'success'}">${trx.status}</span>
+                        <div class="user-info-box"><h4>${trx.namaSiswa}</h4><p>${dateStr}</p></div>
+                        ${statusHtmlAdmin}
                     </div>`;
                 
-                listAdmin.innerHTML += html;
-                if(trx.uid === currentUserUid && listSiswa) listSiswa.innerHTML += html;
+                if(trx.uid === currentUserUid && listSiswa) {
+                    listSiswa.innerHTML += `
+                        <div class="user-item">
+                            <div class="user-info-box"><h4>${trx.namaSiswa}</h4><p>${dateStr}</p></div>
+                            ${statusHtmlSiswa}
+                        </div>`;
+                }
             });
         });
 
-        // --- PENGATURAN GLOBAL (JADWAL & NAMA SEKOLAH) ---
+        // --- PENGATURAN GLOBAL ---
         document.getElementById('btnSaveJadwal').addEventListener('click', async () => {
-            const jadwal = document.getElementById('adminInputJadwal').value;
+            const jadwal = document.getElementById('adminInputJadwal').value.trim();
+            if(!jadwal) return showToast("Jadwal kosong!", "error");
             await set(ref(db, 'settings/jadwal'), jadwal); showToast("Jadwal disebarkan!", "success");
         });
 
@@ -659,16 +642,14 @@
                 const data = snapshot.val(); const name = data.schoolName || "SMA Nusantara Vipercell";
                 document.querySelectorAll('.dynamic-school-name').forEach(el => { if(el.tagName === 'TITLE') document.title = name; else el.innerText = name; });
                 if(document.getElementById('adminInputSchoolName')) document.getElementById('adminInputSchoolName').value = name;
-                if(document.getElementById('adminInputJadwal') && data.jadwal) {
-                    document.getElementById('adminInputJadwal').value = data.jadwal;
-                    document.getElementById('jadwalTextLengkap').innerText = data.jadwal;
-                }
+                if(document.getElementById('adminInputJadwal') && data.jadwal) { document.getElementById('adminInputJadwal').value = data.jadwal; document.getElementById('jadwalTextLengkap').innerText = data.jadwal; }
             }
         });
 
         document.getElementById('btnSaveSchoolName').addEventListener('click', async () => {
             const newName = document.getElementById('adminInputSchoolName').value.trim();
-            if(newName) { await set(ref(db, 'settings/schoolName'), newName); showToast("Tersimpan!", "success"); }
+            if(!newName) return showToast("Nama kosong!", "error");
+            await set(ref(db, 'settings/schoolName'), newName); showToast("Tersimpan!", "success");
         });
 
         // Logout
