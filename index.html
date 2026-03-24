@@ -1,6 +1,6 @@
 <!-- 
-  Vipercell Web Update v2.3
-  Feature: Persistent Storage, Fullscreen UI Auto-Hide, & Toast Optimization
+  Vipercell Web Update v3.0
+  Feature: Book Management, Named Saves, Storage Tabs, & Enhanced Fullscreen
   Developer: Senior AI Developer Partner (Vipercell Project)
 -->
 <!DOCTYPE html>
@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viper Bingo Digital v2.3</title>
+    <title>Viper Bingo Digital v3.0</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -23,14 +23,13 @@
             background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
             min-height: 100vh;
             color: var(--viper-text-dark);
-            transition: all 0.3s ease;
+            overflow-x: hidden;
         }
         .bingo-card {
             background: var(--viper-card-bg);
             border: 2px solid #e2e8f0;
             border-radius: 1.5rem;
             box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
-            transition: transform 0.3s ease;
         }
         .cell {
             aspect-ratio: 1/1;
@@ -39,11 +38,11 @@
             justify-content: center;
             cursor: pointer;
             font-weight: 800;
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             background: #f1f5f9;
             color: var(--viper-text-dark);
             border: 1px solid #e2e8f0;
-            transition: all 0.15s ease;
+            transition: all 0.1s ease;
         }
         .cell.marked {
             background: var(--viper-blue) !important;
@@ -56,133 +55,197 @@
         .cell.free {
             background: #f59e0b;
             color: #ffffff;
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             font-weight: 900;
         }
         .header-col {
             background: var(--viper-blue);
             color: white;
             font-weight: 900;
-            padding: 12px 0;
-            font-size: 1.2rem;
+            padding: 10px 0;
+            font-size: 1.1rem;
         }
-        /* Header hiding in Fullscreen */
-        .fullscreen-hide {
-            transition: all 0.4s ease;
+        /* Fullscreen Controls */
+        #fullscreen-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: #f8fafc;
+            z-index: 9999;
+            padding: 1rem;
+            overflow-y: auto;
         }
-        body.is-fullscreen .fullscreen-hide {
-            display: none !important;
+        body.is-fullscreen #fullscreen-overlay {
+            display: block;
         }
-        body.is-fullscreen #bingo-container {
-            margin-top: 2rem;
+        /* Tab Logic */
+        .tab-btn.active {
+            background: var(--viper-blue);
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
-        .btn-action {
-            transition: all 0.2s ease;
-            display: flex;
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(4px);
+            z-index: 10000;
             align-items: center;
-            gap: 0.5rem;
+            justify-content: center;
         }
-        .btn-action:disabled {
-            opacity: 0.3;
-            cursor: not-allowed;
-        }
+        .modal.active { display: flex; }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <div id="main-container" class="max-w-7xl mx-auto">
-        <!-- Header Section (Akan hilang saat Fullscreen) -->
-        <header id="app-header" class="fullscreen-hide flex flex-col lg:flex-row justify-between items-center mb-8 gap-6 bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+    <!-- MODAL: SIMPAN NAMA BUKU -->
+    <div id="modal-save" class="modal px-4">
+        <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl scale-in-center">
+            <h3 class="text-xl font-extrabold mb-2 text-slate-800">Simpan Buku</h3>
+            <p class="text-slate-500 text-sm mb-6">Masukkan nama untuk buku bingo ini agar mudah dicari.</p>
+            <input type="text" id="input-book-name" placeholder="Contoh: Bingo Minggu Sore" class="w-full bg-slate-100 border-2 border-slate-200 p-4 rounded-2xl mb-6 focus:border-blue-500 outline-none font-bold text-slate-700">
+            <div class="flex gap-3">
+                <button onclick="closeModal('modal-save')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 rounded-2xl hover:bg-slate-200">Batal</button>
+                <button onclick="confirmSave()" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl shadow-lg shadow-blue-900/20">Simpan Sekarang</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: PERINGATAN BUAT BARU -->
+    <div id="modal-warning" class="modal px-4">
+        <div class="bg-white w-full max-w-md p-8 rounded-3xl shadow-2xl">
+            <div class="w-16 h-16 bg-amber-100 text-amber-600 rounded-full flex items-center justify-center mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 class="text-xl font-extrabold mb-2 text-slate-800">Buku Belum Disimpan!</h3>
+            <p class="text-slate-500 text-sm mb-8">Membuat buku baru akan menghapus buku yang sedang Anda buat saat ini. Lanjutkan?</p>
+            <div class="flex gap-3">
+                <button onclick="closeModal('modal-warning')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 rounded-2xl">Batal</button>
+                <button onclick="confirmNewCards()" class="flex-1 py-4 font-bold text-white bg-amber-600 rounded-2xl shadow-lg">Ya, Buat Baru</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- FULLSCREEN OVERLAY -->
+    <div id="fullscreen-overlay">
+        <div class="flex justify-between items-center mb-6 bg-white p-4 rounded-2xl shadow-sm border border-slate-200">
+            <div id="fs-title" class="font-extrabold text-blue-600 text-lg uppercase tracking-tight">Main Bingo</div>
+            <button onclick="exitFullscreenMode()" class="bg-red-500 text-white p-3 rounded-xl font-bold flex items-center gap-2 active:scale-95 shadow-lg shadow-red-200">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                Keluar Layar Penuh
+            </button>
+        </div>
+        <div id="fs-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
+            <!-- Content will be cloned here -->
+        </div>
+    </div>
+
+    <div id="main-ui" class="max-w-7xl mx-auto">
+        <!-- Main Header -->
+        <header class="flex flex-col lg:flex-row justify-between items-center mb-8 gap-6 bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
             <div class="text-center lg:text-left">
-                <h1 class="text-3xl font-extrabold tracking-tighter text-blue-600">
+                <h1 class="text-3xl font-extrabold tracking-tighter text-blue-600 leading-none">
                     VIPER <span class="text-slate-800">BINGO DIGITAL</span>
                 </h1>
-                <p class="text-slate-500 text-sm font-bold uppercase tracking-widest">Update v2.3 • Storage Edition</p>
+                <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">Vipercell Entertainment v3.0 • Ambon</p>
             </div>
             
-            <div class="flex flex-wrap justify-center gap-3">
-                <button onclick="toggleFullScreen()" class="btn-action bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-bold border border-slate-300">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                    Layar Penuh
+            <!-- Feature Tabs -->
+            <div class="flex bg-slate-100 p-1.5 rounded-2xl border border-slate-200">
+                <button id="tab-saved-btn" onclick="switchTab('saved')" class="tab-btn px-6 py-3 rounded-xl font-bold transition-all text-slate-500 active">
+                    Buku Tersimpan
                 </button>
-                
-                <button id="undo-btn" onclick="undoCards()" disabled class="btn-action bg-amber-50 hover:bg-amber-100 text-amber-700 px-4 py-2.5 rounded-xl font-bold border border-amber-200">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
-                    Batal
-                </button>
-
-                <button id="save-btn" onclick="saveCards()" class="btn-action bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-md active:scale-95">
-                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
-                    Simpan ke HP
-                </button>
-
-                <button onclick="requestNewCards()" class="btn-action bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-md active:scale-95">
-                    Buat Buku Baru
+                <button id="tab-new-btn" onclick="switchTab('new')" class="tab-btn px-6 py-3 rounded-xl font-bold transition-all text-slate-500">
+                    Buat Baru
                 </button>
             </div>
         </header>
 
-        <!-- Status Indicator (Juga hilang saat Fullscreen) -->
-        <div id="status-bar" class="fullscreen-hide mb-6 flex items-center justify-center">
-            <div id="status-badge" class="px-5 py-2 rounded-full text-xs font-black tracking-widest uppercase bg-white text-slate-400 border border-slate-200 shadow-sm">
-                Memuat data...
+        <!-- VIEW: BUKU TERSIMPAN (Home) -->
+        <section id="view-saved" class="mb-10">
+            <div id="saved-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Saved items list -->
             </div>
-        </div>
+            <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 bg-white/50 border-2 border-dashed border-slate-300 rounded-3xl text-slate-400">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-16 h-16 mb-4 opacity-20" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/></svg>
+                <p class="font-bold">Belum ada buku yang disimpan</p>
+                <p class="text-xs">Klik tab "Buat Baru" untuk memulai permainan.</p>
+            </div>
+        </section>
 
-        <!-- Cards Grid Container -->
-        <div id="bingo-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
-            <!-- Bingo Cards will be injected here -->
-        </div>
+        <!-- VIEW: DRAFT BARU -->
+        <section id="view-new" class="hidden">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <div class="bg-amber-100 text-amber-700 px-4 py-2 rounded-xl text-xs font-bold border border-amber-200">
+                    STATUS: BUKU DRAFT (BELUM DISIMPAN)
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="handleRequestNew()" class="bg-blue-100 text-blue-700 px-6 py-3 rounded-xl font-bold border border-blue-200 active:scale-95">Acak Ulang</button>
+                    <button onclick="openSaveModal()" class="bg-green-600 text-white px-8 py-3 rounded-xl font-bold shadow-lg shadow-green-900/20 active:scale-95">Simpan & Masuk Koleksi</button>
+                </div>
+            </div>
+            <div id="new-draft-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                <!-- New cards will be injected here -->
+            </div>
+        </section>
 
-        <!-- Footer -->
-        <footer class="fullscreen-hide text-center pb-10">
-            <p class="text-slate-500 font-bold text-sm">© 2024 VIPERCELL DIGITAL ENTERTAINMENT • AMBON</p>
-            <p class="text-slate-400 text-[10px] mt-1">Data tersimpan otomatis di penyimpanan lokal perangkat.</p>
+        <footer class="text-center pb-10 border-t border-slate-300 pt-8 opacity-50">
+            <p class="text-slate-600 font-bold text-xs tracking-widest uppercase">Viper Bingo Digital Pro Edition</p>
         </footer>
     </div>
 
-    <!-- Notification Overlay (Durasi 2 Detik) -->
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 font-black z-[100] uppercase tracking-widest text-sm">
+    <!-- Notification Toast (2 Detik) -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 font-black z-[10001] uppercase tracking-widest text-xs">
         Notifikasi
     </div>
 
     <script>
-        const STORAGE_KEY = 'viper_bingo_save_v2';
-        let currentCards = [];
-        let previousCards = null;
-        let isSaved = false;
+        const STORAGE_KEY = 'viper_bingo_collection_v3';
+        let savedCollection = [];
+        let currentDraft = [];
         let toastTimeout = null;
+        let activeTab = 'saved';
 
-        // Listener Fullscreen
-        document.addEventListener('fullscreenchange', () => {
-            if (document.fullscreenElement) {
-                document.body.classList.add('is-fullscreen');
-            } else {
-                document.body.classList.remove('is-fullscreen');
-            }
-        });
+        // Initialization
+        window.onload = () => {
+            loadCollection();
+            switchTab('saved');
+        };
+
+        function loadCollection() {
+            const data = localStorage.getItem(STORAGE_KEY);
+            savedCollection = data ? JSON.parse(data) : [];
+            renderSavedList();
+        }
+
+        function saveToLocalStorage() {
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(savedCollection));
+        }
 
         function showToast(msg, color = 'bg-blue-600') {
             const toast = document.getElementById('toast');
             if (toastTimeout) clearTimeout(toastTimeout);
-            
             toast.innerText = msg;
-            toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 ${color} text-white px-8 py-4 rounded-2xl shadow-2xl transition-all duration-300 font-black z-[100] opacity-100 uppercase tracking-widest text-sm`;
-            
-            // Notifikasi hilang dalam 2 detik (2000ms)
+            toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 ${color} text-white px-8 py-4 rounded-2xl shadow-2xl transition-all duration-300 font-black z-[10001] opacity-100 uppercase tracking-widest text-xs`;
             toastTimeout = setTimeout(() => {
                 toast.classList.add('opacity-0');
-            }, 2000);
+            }, 2000); // 2 Detik
         }
 
-        function toggleFullScreen() {
-            if (!document.fullscreenElement) {
-                document.documentElement.requestFullscreen().catch(err => {
-                    console.error(`Error: ${err.message}`);
-                });
-            } else {
-                if (document.exitFullscreen) document.exitFullscreen();
+        function switchTab(tab) {
+            activeTab = tab;
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tab}-btn`).classList.add('active');
+            
+            document.getElementById('view-saved').classList.toggle('hidden', tab !== 'saved');
+            document.getElementById('view-new').classList.toggle('hidden', tab !== 'new');
+
+            if (tab === 'new' && currentDraft.length === 0) {
+                generateNewDraft();
             }
+            if (tab === 'saved') renderSavedList();
         }
 
         function getRandomNumbers(min, max, count) {
@@ -201,137 +264,184 @@
                 'N': getRandomNumbers(31, 45, 5),
                 'G': getRandomNumbers(46, 60, 5),
                 'O': getRandomNumbers(61, 75, 5),
-                'marks': [] // To save marked cells
+                'marks': []
             };
         }
 
-        function renderCards() {
-            const container = document.getElementById('bingo-container');
-            container.innerHTML = '';
-            
-            currentCards.forEach((data, index) => {
-                const cardWrapper = document.createElement('div');
-                cardWrapper.className = 'bingo-card p-6 shadow-xl';
-                
-                let html = `
-                    <div class="flex justify-between items-center mb-5 px-1">
-                        <div class="flex items-center gap-2">
-                            <span class="w-3 h-3 rounded-full ${isSaved ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-amber-500 animate-pulse'}"></span>
-                            <span class="text-sm font-extrabold text-slate-700 uppercase tracking-tighter">Buku #${index + 1}</span>
-                        </div>
-                        <span class="text-[10px] font-black text-white bg-blue-600 px-2.5 py-1 rounded-full shadow-sm">VIPER PRO</span>
-                    </div>
-                    <div class="grid grid-cols-5 gap-2 text-center overflow-hidden rounded-2xl border-2 border-slate-100 bg-white shadow-inner">
-                        <div class="header-col">B</div>
-                        <div class="header-col">I</div>
-                        <div class="header-col">N</div>
-                        <div class="header-col">G</div>
-                        <div class="header-col">O</div>
-                `;
-
-                for (let row = 0; row < 5; row++) {
-                    ['B', 'I', 'N', 'G', 'O'].forEach(col => {
-                        const cellId = `${index}-${col}-${row}`;
-                        const isMarked = data.marks && data.marks.includes(cellId);
-                        
-                        if (col === 'N' && row === 2) {
-                            html += `<div class="cell free">FREE</div>`;
-                        } else {
-                            const num = data[col][row];
-                            html += `<div id="${cellId}" class="cell ${isMarked ? 'marked' : ''}" onclick="toggleMark('${cellId}', ${index})">${num}</div>`;
-                        }
-                    });
-                }
-
-                html += `</div>`;
-                cardWrapper.innerHTML = html;
-                container.appendChild(cardWrapper);
-            });
-            updateUI();
+        function generateNewDraft() {
+            currentDraft = [generateCardData(), generateCardData(), generateCardData(), generateCardData()];
+            renderDraft();
         }
 
-        function toggleMark(id, cardIndex) {
+        function renderDraft() {
+            const container = document.getElementById('new-draft-container');
+            container.innerHTML = '';
+            currentDraft.forEach((data, i) => {
+                container.appendChild(createCardHTML(data, i, false));
+            });
+        }
+
+        function createCardHTML(data, cardIndex, isSavedBook, bookId = null) {
+            const cardWrapper = document.createElement('div');
+            cardWrapper.className = 'bingo-card p-6 shadow-xl';
+            
+            let html = `
+                <div class="flex justify-between items-center mb-5">
+                    <div class="flex items-center gap-2">
+                        <span class="w-3 h-3 rounded-full ${isSavedBook ? 'bg-green-500' : 'bg-amber-500 animate-pulse'}"></span>
+                        <span class="text-sm font-extrabold text-slate-700 uppercase">KARTU #${cardIndex + 1}</span>
+                    </div>
+                    <span class="text-[9px] font-black text-white bg-blue-600 px-2 py-0.5 rounded-full">VIPER PRO</span>
+                </div>
+                <div class="grid grid-cols-5 gap-1.5 text-center overflow-hidden rounded-2xl border-2 border-slate-100 bg-white">
+                    <div class="header-col">B</div><div class="header-col">I</div><div class="header-col">N</div><div class="header-col">G</div><div class="header-col">O</div>
+            `;
+
+            for (let row = 0; row < 5; row++) {
+                ['B', 'I', 'N', 'G', 'O'].forEach(col => {
+                    const cellId = `cell-${isSavedBook ? bookId : 'draft'}-${cardIndex}-${col}-${row}`;
+                    const isMarked = data.marks && data.marks.includes(cellId);
+                    
+                    if (col === 'N' && row === 2) {
+                        html += `<div class="cell free">FREE</div>`;
+                    } else {
+                        const num = data[col][row];
+                        html += `<div id="${cellId}" class="cell ${isMarked ? 'marked' : ''}" onclick="toggleMark('${cellId}', ${cardIndex}, ${isSavedBook}, '${bookId}')">${num}</div>`;
+                    }
+                });
+            }
+            html += `</div>`;
+            cardWrapper.innerHTML = html;
+            return cardWrapper;
+        }
+
+        function toggleMark(id, cardIdx, isSavedBook, bookId) {
             const el = document.getElementById(id);
             if (!el) return;
-            
             el.classList.toggle('marked');
             
-            // Update data marks for persistence
-            if (!currentCards[cardIndex].marks) currentCards[cardIndex].marks = [];
+            let targetSource = isSavedBook ? savedCollection.find(b => b.id === bookId).cards : currentDraft;
+            if (!targetSource[cardIdx].marks) targetSource[cardIdx].marks = [];
             
             if (el.classList.contains('marked')) {
-                if (!currentCards[cardIndex].marks.includes(id)) currentCards[cardIndex].marks.push(id);
+                if (!targetSource[cardIdx].marks.includes(id)) targetSource[cardIdx].marks.push(id);
             } else {
-                currentCards[cardIndex].marks = currentCards[cardIndex].marks.filter(m => m !== id);
+                targetSource[cardIdx].marks = targetSource[cardIdx].marks.filter(m => m !== id);
             }
 
-            // Jika sudah tersimpan, auto-update tanda di storage
-            if (isSaved) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify({ cards: currentCards, isSaved: true }));
-            }
+            if (isSavedBook) saveToLocalStorage();
         }
 
-        function requestNewCards() {
-            previousCards = JSON.parse(JSON.stringify(currentCards));
-            currentCards = [generateCardData(), generateCardData(), generateCardData(), generateCardData()];
-            isSaved = false;
-            renderCards();
-            showToast("Buku Baru Siap!", "bg-blue-600");
+        // Modal Handlers
+        function openModal(id) { document.getElementById(id).classList.add('active'); }
+        function closeModal(id) { document.getElementById(id).classList.remove('active'); }
+
+        function handleRequestNew() {
+            openModal('modal-warning');
         }
 
-        function undoCards() {
-            if (previousCards && !isSaved) {
-                currentCards = JSON.parse(JSON.stringify(previousCards));
-                previousCards = null;
-                renderCards();
-                showToast("Kembali ke Sebelumnya", "bg-amber-600");
-            }
+        function confirmNewCards() {
+            closeModal('modal-warning');
+            generateNewDraft();
+            showToast("Buku Baru Berhasil Diacak!", "bg-blue-600");
         }
 
-        function saveCards() {
-            isSaved = true;
-            previousCards = null;
+        function openSaveModal() {
+            document.getElementById('input-book-name').value = '';
+            openModal('modal-save');
+        }
+
+        function confirmSave() {
+            const name = document.getElementById('input-book-name').value.trim();
+            if (!name) return showToast("Nama buku tidak boleh kosong!", "bg-red-500");
             
-            // Simpan ke Penyimpanan Lokal HP (LocalStorage)
-            const dataToSave = {
-                cards: currentCards,
-                isSaved: true
+            const newBook = {
+                id: 'book-' + Date.now(),
+                name: name,
+                date: new Date().toLocaleDateString('id-ID'),
+                cards: JSON.parse(JSON.stringify(currentDraft))
             };
-            localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
             
-            updateUI();
-            renderCards();
-            showToast("Berhasil Simpan ke HP!", "bg-green-600");
+            savedCollection.unshift(newBook);
+            saveToLocalStorage();
+            closeModal('modal-save');
+            showToast("Buku '" + name + "' Tersimpan!", "bg-green-600");
+            switchTab('saved');
         }
 
-        function updateUI() {
-            const undoBtn = document.getElementById('undo-btn');
-            const statusBadge = document.getElementById('status-badge');
+        function renderSavedList() {
+            const list = document.getElementById('saved-list');
+            const empty = document.getElementById('empty-state');
+            list.innerHTML = '';
             
-            undoBtn.disabled = !previousCards || isSaved;
+            if (savedCollection.length === 0) {
+                empty.classList.remove('hidden');
+                return;
+            }
             
-            if (isSaved) {
-                statusBadge.innerText = "Buku Tersimpan di Perangkat";
-                statusBadge.className = "px-5 py-2 rounded-full text-xs font-black tracking-widest uppercase bg-green-100 text-green-700 border border-green-200 shadow-sm";
-            } else {
-                statusBadge.innerText = "Mode Draft (Belum Disimpan)";
-                statusBadge.className = "px-5 py-2 rounded-full text-xs font-black tracking-widest uppercase bg-amber-100 text-amber-700 border border-amber-200 shadow-sm animate-pulse";
+            empty.classList.add('hidden');
+            savedCollection.forEach(book => {
+                const item = document.createElement('div');
+                item.className = 'bg-white p-6 rounded-3xl border border-slate-200 shadow-sm hover:shadow-md transition-all flex flex-col gap-4';
+                item.innerHTML = `
+                    <div class="flex justify-between items-start">
+                        <div>
+                            <h4 class="font-extrabold text-slate-800 text-lg leading-tight">${book.name}</h4>
+                            <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mt-1">${book.date}</p>
+                        </div>
+                        <button onclick="deleteBook('${book.id}')" class="text-slate-300 hover:text-red-500 transition-colors p-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
+                    </div>
+                    <div class="flex gap-2 mt-auto pt-4 border-t border-slate-50">
+                        <button onclick="playBookFullscreen('${book.id}')" class="flex-1 bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg shadow-blue-100 active:scale-95">Mainkan Sekarang</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        function deleteBook(id) {
+            if (confirm("Hapus buku ini secara permanen?")) {
+                savedCollection = savedCollection.filter(b => b.id !== id);
+                saveToLocalStorage();
+                renderSavedList();
+                showToast("Buku Dihapus", "bg-slate-700");
             }
         }
 
-        function loadFromStorage() {
-            const savedData = localStorage.getItem(STORAGE_KEY);
-            if (savedData) {
-                const parsed = JSON.parse(savedData);
-                currentCards = parsed.cards;
-                isSaved = parsed.isSaved;
-                renderCards();
-            } else {
-                requestNewCards();
+        // Fullscreen Logic
+        function playBookFullscreen(bookId) {
+            const book = savedCollection.find(b => b.id === bookId);
+            if (!book) return;
+
+            document.getElementById('fs-title').innerText = book.name;
+            const content = document.getElementById('fs-content');
+            content.innerHTML = '';
+            
+            book.cards.forEach((card, i) => {
+                content.appendChild(createCardHTML(card, i, true, bookId));
+            });
+
+            document.body.classList.add('is-fullscreen');
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen();
             }
         }
 
-        window.onload = loadFromStorage;
+        function exitFullscreenMode() {
+            document.body.classList.remove('is-fullscreen');
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
+            renderSavedList(); // Refresh marks
+        }
+
+        document.addEventListener('fullscreenchange', () => {
+            if (!document.fullscreenElement) {
+                document.body.classList.remove('is-fullscreen');
+            }
+        });
     </script>
 </body>
 </html>
