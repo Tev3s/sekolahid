@@ -1,6 +1,6 @@
 <!-- 
-  Vipercell Web Update v3.1
-  Feature: Dark/Light Mode, Reset Marks Button, & UI Optimization
+  Vipercell Web Update v3.2
+  Feature: Exit/Reset Confirmations, Refresh Persistence, & Session Locking
   Developer: Senior AI Developer Partner (Vipercell Project)
 -->
 <!DOCTYPE html>
@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viper Bingo Digital v3.1</title>
+    <title>Viper Bingo Digital v3.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -35,6 +35,7 @@
             min-height: 100vh;
             color: var(--text-main);
             transition: background 0.3s ease, color 0.3s ease;
+            overflow-x: hidden;
         }
 
         .bingo-card {
@@ -103,17 +104,27 @@
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
+        /* Modal Enhanced */
         .modal {
             display: none;
             position: fixed;
             inset: 0;
-            background: rgba(15, 23, 42, 0.7);
-            backdrop-filter: blur(4px);
+            background: rgba(15, 23, 42, 0.75);
+            backdrop-filter: blur(8px);
             z-index: 10000;
             align-items: center;
             justify-content: center;
         }
         .modal.active { display: flex; }
+        
+        .modal-content {
+            animation: modalScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes modalScale {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
 
         .theme-toggle-btn {
             background: var(--card-bg);
@@ -126,25 +137,28 @@
 
     <!-- MODAL: SIMPAN NAMA BUKU -->
     <div id="modal-save" class="modal px-4">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl">
-            <h3 class="text-xl font-extrabold mb-2 text-slate-800 dark:text-white">Simpan Buku</h3>
-            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Masukkan nama untuk buku bingo ini agar mudah dicari.</p>
+        <div class="modal-content bg-white dark:bg-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl">
+            <h3 class="text-xl font-extrabold mb-2 text-slate-800 dark:text-white">Simpan Koleksi</h3>
+            <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Beri nama untuk paket 4 buku bingo ini.</p>
             <input type="text" id="input-book-name" placeholder="Nama Buku..." class="w-full bg-slate-100 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 p-4 rounded-2xl mb-6 focus:border-blue-500 outline-none font-bold text-slate-700 dark:text-white">
             <div class="flex gap-3">
-                <button onclick="closeModal('modal-save')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl hover:bg-slate-200 dark:hover:bg-slate-600">Batal</button>
-                <button onclick="confirmSave()" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl shadow-lg">Simpan Sekarang</button>
+                <button onclick="closeModal('modal-save')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl hover:bg-slate-200">Batal</button>
+                <button onclick="confirmSave()" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl shadow-lg">Simpan</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: PERINGATAN BUAT BARU -->
-    <div id="modal-warning" class="modal px-4">
-        <div class="bg-white dark:bg-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl">
-            <h3 class="text-xl font-extrabold mb-2 text-slate-800 dark:text-white">Buku Belum Disimpan!</h3>
-            <p class="text-slate-500 dark:text-slate-400 text-sm mb-8">Membuat buku baru akan menghapus buku draft saat ini. Lanjutkan?</p>
+    <!-- MODAL: KONFIRMASI (GENERAL) -->
+    <div id="modal-confirm" class="modal px-4">
+        <div class="modal-content bg-white dark:bg-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl">
+            <div id="confirm-icon" class="w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto bg-amber-100 text-amber-600">
+                <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
+            </div>
+            <h3 id="confirm-title" class="text-xl font-extrabold mb-2 text-slate-800 dark:text-white text-center">Konfirmasi</h3>
+            <p id="confirm-msg" class="text-slate-500 dark:text-slate-400 text-sm mb-8 text-center">Apakah Anda yakin ingin melakukan tindakan ini?</p>
             <div class="flex gap-3">
-                <button onclick="closeModal('modal-warning')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl">Batal</button>
-                <button onclick="confirmNewCards()" class="flex-1 py-4 font-bold text-white bg-amber-600 rounded-2xl shadow-lg">Ya, Buat Baru</button>
+                <button onclick="closeModal('modal-confirm')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl hover:bg-slate-200">Batal</button>
+                <button id="confirm-action-btn" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl shadow-lg">Lanjutkan</button>
             </div>
         </div>
     </div>
@@ -154,11 +168,11 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 gap-4">
             <div class="flex items-center gap-4">
                 <div id="fs-title" class="font-extrabold text-blue-600 text-lg uppercase tracking-tight">Main Bingo</div>
-                <button onclick="clearCurrentBookMarks()" class="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-4 py-2 rounded-xl text-xs font-bold border border-amber-200 dark:border-amber-800 active:scale-95 transition-all">
-                    Bersihkan Tanda Nomor
+                <button onclick="handleClearMarks('fullscreen')" class="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-4 py-2 rounded-xl text-xs font-bold border border-amber-200 dark:border-amber-800 active:scale-95 transition-all">
+                    Bersihkan Tanda
                 </button>
             </div>
-            <button onclick="exitFullscreenMode()" class="bg-red-500 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 active:scale-95 shadow-lg shadow-red-200 dark:shadow-red-900/20">
+            <button onclick="handleExitFullscreen()" class="bg-red-500 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 active:scale-95 shadow-lg shadow-red-200 dark:shadow-red-900/20">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
                 Keluar Layar Penuh
             </button>
@@ -175,7 +189,7 @@
                 <h1 class="text-3xl font-extrabold tracking-tighter text-blue-600 leading-none">
                     VIPER <span class="text-slate-800 dark:text-white">BINGO DIGITAL</span>
                 </h1>
-                <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">Vipercell Entertainment v3.1 • Ambon</p>
+                <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">Vipercell Entertainment v3.2 • Ambon</p>
             </div>
             
             <div class="flex flex-wrap justify-center items-center gap-4">
@@ -202,6 +216,7 @@
             <div id="saved-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 bg-white/30 dark:bg-slate-800/30 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl text-slate-400">
                 <p class="font-bold">Belum ada koleksi buku bingo</p>
+                <p class="text-xs">Data Anda disimpan secara lokal di perangkat ini.</p>
             </div>
         </section>
 
@@ -210,18 +225,18 @@
             <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4 bg-white dark:bg-slate-800 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
                 <div class="flex items-center gap-3">
                     <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-lg text-[10px] font-black uppercase">Draft Mode</span>
-                    <button onclick="clearCurrentDraftMarks()" class="text-blue-600 text-xs font-bold hover:underline">Bersihkan Tanda</button>
+                    <button onclick="handleClearMarks('draft')" class="text-blue-600 text-xs font-bold hover:underline">Bersihkan Tanda</button>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="handleRequestNew()" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl font-bold text-sm">Acak Baru</button>
-                    <button onclick="openSaveModal()" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md">Simpan Ke Koleksi</button>
+                    <button onclick="handleRequestNew()" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl font-bold text-sm active:scale-95">Acak Baru</button>
+                    <button onclick="openSaveModal()" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md active:scale-95">Simpan Koleksi</button>
                 </div>
             </div>
             <div id="new-draft-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"></div>
         </section>
 
         <footer class="text-center pb-10 border-t border-slate-300 dark:border-slate-700 pt-8 opacity-50">
-            <p class="text-slate-600 dark:text-slate-400 font-bold text-[10px] tracking-widest uppercase">VIPER BINGO DIGITAL • PRO v3.1</p>
+            <p class="text-slate-600 dark:text-slate-400 font-bold text-[10px] tracking-widest uppercase">VIPER BINGO DIGITAL • PRO v3.2</p>
         </footer>
     </div>
 
@@ -231,8 +246,10 @@
     </div>
 
     <script>
-        const STORAGE_KEY = 'viper_bingo_v3_1';
+        const STORAGE_KEY = 'viper_bingo_v3_2';
         const THEME_KEY = 'viper_bingo_theme';
+        const SESSION_KEY = 'viper_bingo_active_session';
+        
         let savedCollection = [];
         let currentDraft = [];
         let toastTimeout = null;
@@ -242,7 +259,14 @@
         window.onload = () => {
             initTheme();
             loadCollection();
-            switchTab('saved');
+            
+            // Check if we were playing before refresh
+            const session = localStorage.getItem(SESSION_KEY);
+            if (session) {
+                playBookFullscreen(session);
+            } else {
+                switchTab('saved');
+            }
         };
 
         // Theme System
@@ -291,6 +315,8 @@
             document.getElementById(`tab-${tab}-btn`).classList.add('active');
             document.getElementById('view-saved').classList.toggle('hidden', tab !== 'saved');
             document.getElementById('view-new').classList.toggle('hidden', tab !== 'new');
+            
+            // Generate new draft on each refresh/switch if it's empty
             if (tab === 'new' && currentDraft.length === 0) generateNewDraft();
             if (tab === 'saved') renderSavedList();
         }
@@ -336,7 +362,7 @@
                     <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Kartu #${cardIndex + 1}</span>
                     <span class="text-[9px] font-black text-white bg-blue-600 px-2 py-0.5 rounded-full">VIPER PRO</span>
                 </div>
-                <div class="grid grid-cols-5 gap-1.5 text-center overflow-hidden rounded-2xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900">
+                <div class="grid grid-cols-5 gap-1.5 text-center overflow-hidden rounded-2xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-inner">
                     <div class="header-col">B</div><div class="header-col">I</div><div class="header-col">N</div><div class="header-col">G</div><div class="header-col">O</div>
             `;
             for (let row = 0; row < 5; row++) {
@@ -370,31 +396,74 @@
             if (isSavedBook) saveToLocalStorage();
         }
 
-        function clearCurrentDraftMarks() {
-            currentDraft.forEach(card => card.marks = []);
-            renderDraft();
-            showToast("Draft Dibersihkan", "bg-slate-600");
-        }
-
-        function clearCurrentBookMarks() {
-            if (!currentFullscreenBookId) return;
-            const book = savedCollection.find(b => b.id === currentFullscreenBookId);
-            if (book) {
-                book.cards.forEach(card => card.marks = []);
-                saveToLocalStorage();
-                playBookFullscreen(currentFullscreenBookId); // Refresh UI
-                showToast("Tanda Nomor Dibersihkan", "bg-amber-600");
-            }
-        }
-
+        // --- Custom Modal Handlers ---
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
-        function handleRequestNew() { openModal('modal-warning'); }
-        function confirmNewCards() {
-            closeModal('modal-warning');
-            generateNewDraft();
-            showToast("Draft Baru Diacak!", "bg-blue-600");
+        function showConfirmModal(title, msg, btnText, btnColor, onConfirm) {
+            const modal = document.getElementById('modal-confirm');
+            document.getElementById('confirm-title').innerText = title;
+            document.getElementById('confirm-msg').innerText = msg;
+            
+            const btn = document.getElementById('confirm-action-btn');
+            btn.innerText = btnText;
+            btn.className = `flex-1 py-4 font-bold text-white rounded-2xl shadow-lg ${btnColor}`;
+            
+            btn.onclick = () => {
+                onConfirm();
+                closeModal('modal-confirm');
+            };
+            
+            openModal('modal-confirm');
+        }
+
+        // --- Action Handlers ---
+        function handleClearMarks(type) {
+            showConfirmModal(
+                "Bersihkan Tanda?",
+                "Semua nomor yang telah ditandai akan dibuka kembali. Kartu tidak akan berubah.",
+                "Ya, Bersihkan",
+                "bg-amber-600",
+                () => {
+                    if (type === 'draft') {
+                        currentDraft.forEach(card => card.marks = []);
+                        renderDraft();
+                    } else if (currentFullscreenBookId) {
+                        const book = savedCollection.find(b => b.id === currentFullscreenBookId);
+                        if (book) {
+                            book.cards.forEach(card => card.marks = []);
+                            saveToLocalStorage();
+                            playBookFullscreen(currentFullscreenBookId);
+                        }
+                    }
+                    showToast("Tanda Dibersihkan", "bg-slate-600");
+                }
+            );
+        }
+
+        function handleRequestNew() {
+            showConfirmModal(
+                "Buku Baru?",
+                "Membuat buku baru akan menghapus buku draft saat ini yang belum disimpan.",
+                "Ya, Acak Baru",
+                "bg-blue-600",
+                () => {
+                    generateNewDraft();
+                    showToast("Draft Baru Berhasil Diacak!", "bg-blue-600");
+                }
+            );
+        }
+
+        function handleExitFullscreen() {
+            showConfirmModal(
+                "Keluar Layar Penuh?",
+                "Anda akan kembali ke menu utama. Permainan tetap tersimpan otomatis.",
+                "Ya, Keluar",
+                "bg-red-500",
+                () => {
+                    exitFullscreenMode();
+                }
+            );
         }
 
         function openSaveModal() {
@@ -404,7 +473,7 @@
 
         function confirmSave() {
             const name = document.getElementById('input-book-name').value.trim();
-            if (!name) return showToast("Nama buku kosong!", "bg-red-500");
+            if (!name) return showToast("Nama buku tidak boleh kosong!", "bg-red-500");
             const newBook = {
                 id: 'book-' + Date.now(),
                 name: name,
@@ -414,7 +483,7 @@
             savedCollection.unshift(newBook);
             saveToLocalStorage();
             closeModal('modal-save');
-            showToast("Tersimpan!", "bg-green-600");
+            showToast("Berhasil Disimpan!", "bg-green-600");
             switchTab('saved');
         }
 
@@ -429,52 +498,76 @@
             empty.classList.add('hidden');
             savedCollection.forEach(book => {
                 const item = document.createElement('div');
-                item.className = 'bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col gap-4';
+                item.className = 'bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col gap-4 hover:shadow-md transition-all';
                 item.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
                             <h4 class="font-extrabold text-slate-800 dark:text-white text-lg leading-tight">${book.name}</h4>
-                            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase">${book.date}</p>
+                            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">${book.date}</p>
                         </div>
-                        <button onclick="deleteBook('${book.id}')" class="text-slate-300 hover:text-red-500 p-2"><svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg></button>
+                        <button onclick="deleteBook('${book.id}')" class="text-slate-300 hover:text-red-500 p-2 transition-colors">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                        </button>
                     </div>
-                    <button onclick="playBookFullscreen('${book.id}')" class="bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg active:scale-95">Mainkan</button>
+                    <button onclick="playBookFullscreen('${book.id}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-all">Mainkan Sekarang</button>
                 `;
                 list.appendChild(item);
             });
         }
 
         function deleteBook(id) {
-            if (confirm("Hapus buku ini?")) {
-                savedCollection = savedCollection.filter(b => b.id !== id);
-                saveToLocalStorage();
-                renderSavedList();
-                showToast("Dihapus", "bg-slate-700");
-            }
+            showConfirmModal(
+                "Hapus Buku?",
+                "Tindakan ini permanen dan buku tidak bisa dikembalikan.",
+                "Ya, Hapus",
+                "bg-red-600",
+                () => {
+                    savedCollection = savedCollection.filter(b => b.id !== id);
+                    saveToLocalStorage();
+                    renderSavedList();
+                    showToast("Buku Dihapus", "bg-slate-700");
+                }
+            );
         }
 
         function playBookFullscreen(bookId) {
             currentFullscreenBookId = bookId;
             const book = savedCollection.find(b => b.id === bookId);
             if (!book) return;
+            
+            // Save active session
+            localStorage.setItem(SESSION_KEY, bookId);
+            
             document.getElementById('fs-title').innerText = book.name;
             const content = document.getElementById('fs-content');
             content.innerHTML = '';
             book.cards.forEach((card, i) => content.appendChild(createCardHTML(card, i, true, bookId)));
+            
             document.body.classList.add('is-fullscreen');
-            if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen();
+            if (document.documentElement.requestFullscreen) {
+                document.documentElement.requestFullscreen().catch(e => {
+                    // Fail silently or handle if needed
+                });
+            }
         }
 
         function exitFullscreenMode() {
             document.body.classList.remove('is-fullscreen');
-            if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
+            localStorage.removeItem(SESSION_KEY);
+            if (document.exitFullscreen) {
+                document.exitFullscreen().catch(() => {});
+            }
             currentFullscreenBookId = null;
             renderSavedList();
+            showToast("Keluar Layar Penuh", "bg-slate-600");
         }
 
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement) {
+                // If exited via ESC key, we don't force warning (browser limitation)
+                // but we clear the session state
                 document.body.classList.remove('is-fullscreen');
+                localStorage.removeItem(SESSION_KEY);
                 currentFullscreenBookId = null;
             }
         });
