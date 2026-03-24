@@ -1,807 +1,337 @@
+<!-- 
+  Vipercell Web Update v2.3
+  Feature: Persistent Storage, Fullscreen UI Auto-Hide, & Toast Optimization
+  Developer: Senior AI Developer Partner (Vipercell Project)
+-->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <meta name="theme-color" content="#1e3a8a">
-    <title>Sekolah ID - Platform Edukasi Premium</title>
-    
-    <script src="https://cdn.sheetjs.com/xlsx-latest/package/dist/xlsx.full.min.js"></script>
-
-    <script>
-        window.SCHOOL_CONFIG = {
-            apiKey: "AIzaSyCoR1remXkwNMUy4FKnGnb1LYDiF_iurqM",
-            authDomain: "sekolahid-ddec0.firebaseapp.com",
-            projectId: "sekolahid-ddec0",
-            storageBucket: "sekolahid-ddec0.firebasestorage.app",
-            messagingSenderId: "282613864270",
-            appId: "1:282613864270:web:e5d133e56dcfd7cd4b701f"
-        };
-    </script>
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Viper Bingo Digital v2.3</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <style>
-        /* === CSS PREMIUM SEKOLAH ID v5.0 === */
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap');
-
         :root {
-            --navy-primary: #1e3a8a; --navy-dark: #172554;
-            --orange-accent: #f97316; --orange-hover: #ea580c;
-            --bg-body: #f8fafc; --bg-card: #ffffff;
-            --text-main: #0f172a; --text-gray: #64748b;
-            --border-light: #e2e8f0;
-            --radius-sm: 12px; --radius-lg: 24px;
-            --shadow-card: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            --shadow-float: 0 10px 30px rgba(0,0,0,0.1);
-            --success: #10b981; --danger: #ef4444; --warning: #f59e0b;
+            --viper-blue: #2563eb;
+            --viper-light-bg: #f8fafc;
+            --viper-card-bg: #ffffff;
+            --viper-text-dark: #1e293b;
         }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; -webkit-tap-highlight-color: transparent;}
-        body { background-color: var(--bg-body); color: var(--text-main); overflow: hidden; height: 100vh; width: 100vw; }
-
-        .view-section { display: none; height: 100%; width: 100%; animation: fadeUp 0.3s ease; }
-        .view-section.active { display: block; }
-
-        /* === GLOBAL COMPONENTS === */
-        .card { background: var(--bg-card); padding: 24px; border-radius: var(--radius-lg); box-shadow: var(--shadow-card); margin-bottom: 20px; border: 1px solid var(--border-light); }
-        .card h3 { font-size: 16px; font-weight: 800; margin-bottom: 16px; color: var(--navy-primary); display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--border-light); padding-bottom: 12px;}
-        
-        .form-group { margin-bottom: 16px; text-align: left; }
-        .form-group label { display: block; font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
-        .form-group input, .form-group select, .form-group textarea { width: 100%; padding: 14px 16px; border: 2px solid var(--border-light); border-radius: var(--radius-sm); font-size: 14px; font-weight: 500; transition: 0.3s; outline: none; background: #f8fafc; }
-        .form-group input:focus, .form-group select:focus, .form-group textarea:focus { border-color: var(--navy-primary); background: white; }
-        .form-group input:disabled { background: #e2e8f0; color: var(--text-gray); cursor: not-allowed; }
-
-        .btn-primary { background: var(--orange-accent); color: white; border: none; padding: 14px 24px; border-radius: var(--radius-sm); font-weight: 700; font-size: 14px; cursor: pointer; transition: 0.3s; width: 100%; box-shadow: 0 8px 15px -3px rgba(249, 115, 22, 0.3); display: inline-flex; justify-content: center; align-items: center; gap: 8px;}
-        .btn-primary:active { transform: scale(0.96); box-shadow: none; }
-        .btn-primary:hover { background: var(--orange-hover); }
-        .btn-navy { background: var(--navy-primary); box-shadow: 0 8px 15px -3px rgba(30, 58, 138, 0.3); }
-        .btn-navy:hover { background: var(--navy-dark); }
-
-        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
-        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
-
-        /* === LOGIN UI === */
-        .login-wrapper { display: flex; height: 100vh; width: 100vw; }
-        .login-left { flex: 1; background: linear-gradient(135deg, var(--navy-dark), var(--navy-primary)); color: white; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px; text-align: center; }
-        .login-left .brand-icon { font-size: 60px; margin-bottom: 20px; background: rgba(255,255,255,0.1); padding: 20px; border-radius: var(--radius-lg); backdrop-filter: blur(10px); }
-        .login-left h1 { font-size: 36px; font-weight: 800; letter-spacing: -1px; margin-bottom: 10px; }
-        .login-right { flex: 1; background: white; display: flex; align-items: center; justify-content: center; padding: 40px; }
-        .login-form-box { width: 100%; max-width: 400px; }
-        .login-form-box h2 { font-size: 28px; font-weight: 800; margin-bottom: 8px; }
-
-        /* === MENU TITIK TIGA (DROPDOWN) === */
-        .menu-trigger { font-size: 28px; font-weight: bold; cursor: pointer; color: var(--navy-primary); padding: 5px 15px; border-radius: 12px; transition: 0.2s; background: #eff6ff; display: flex; align-items: center; justify-content: center;}
-        .menu-trigger:active { transform: scale(0.9); background: #dbeafe; }
-        .menu-trigger-mobile { font-size: 28px; font-weight: bold; cursor: pointer; color: white; padding: 5px; transition: 0.2s; }
-        
-        .dropdown-menu { position: fixed; top: 80px; right: 30px; background: rgba(255,255,255,0.95); backdrop-filter: blur(15px); -webkit-backdrop-filter: blur(15px); border-radius: 20px; box-shadow: var(--shadow-float); width: 260px; display: none; flex-direction: column; z-index: 9999; border: 1px solid rgba(255,255,255,0.5); overflow: hidden; transform-origin: top right; animation: scaleIn 0.2s cubic-bezier(0.16, 1, 0.3, 1); }
-        .dropdown-menu.active { display: flex; }
-        .dropdown-header { padding: 20px; border-bottom: 1px solid var(--border-light); background: var(--navy-primary); color: white; }
-        .dropdown-header h4 { font-size: 16px; font-weight: 800; margin-bottom: 4px; }
-        .dropdown-header p { font-size: 11px; color: #93c5fd; font-weight: 600; text-transform: uppercase; letter-spacing: 1px;}
-        
-        .dropdown-link { padding: 16px 20px; display: flex; align-items: center; gap: 14px; color: var(--text-main); text-decoration: none; font-size: 14px; font-weight: 700; transition: 0.2s; cursor: pointer; border-bottom: 1px solid #f1f5f9; }
-        .dropdown-link:last-child { border-bottom: none; }
-        .dropdown-link:hover { background: #f8fafc; color: var(--orange-accent); padding-left: 25px;}
-
-        /* === DESKTOP LAYOUT (ADMIN/GURU FULL SCREEN) === */
-        .desktop-layout { display: flex; flex-direction: column; height: 100vh; width: 100%; background: var(--bg-body); }
-        .topbar { background: white; padding: 20px 30px; display: flex; justify-content: space-between; align-items: center; flex-shrink: 0; border-bottom: 1px solid var(--border-light); box-shadow: 0 4px 20px rgba(0,0,0,0.02);}
-        .topbar-left { display: flex; align-items: center; gap: 15px; }
-        .topbar-logo { width: 45px; height: 45px; background: var(--navy-primary); color: white; border-radius: 14px; display: flex; align-items: center; justify-content: center; font-size: 22px; font-weight: 800; }
-        .topbar-title h2 { font-size: 20px; font-weight: 800; color: var(--navy-primary); line-height: 1.2;}
-        .topbar-title p { font-size: 12px; color: var(--text-gray); font-weight: 600; text-transform: uppercase; }
-        
-        .content-area { flex: 1; padding: 30px; overflow-y: auto; scroll-behavior: smooth; }
-        .tab-content { display: none; animation: fadeUp 0.4s ease; padding-bottom: 40px; max-width: 1200px; margin: 0 auto;}
-        .tab-content.active { display: block; }
-
-        /* Dashboard Stats */
-        .stat-card { display: flex; align-items: center; gap: 16px; padding: 24px; border-left: 4px solid var(--navy-primary);}
-        .stat-icon { width: 56px; height: 56px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 26px; flex-shrink: 0; background: #eff6ff; color: var(--navy-primary); }
-        .stat-info h3 { border: none; margin: 0; padding: 0; font-size: 13px; color: var(--text-gray); font-weight: 600; }
-        .stat-info h2 { font-size: 32px; font-weight: 800; color: var(--text-main); margin-top: 4px; line-height: 1; }
-
-        /* User List & Data UI */
-        .list-container { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding-right: 5px; }
-        .user-item { background: white; border: 1px solid var(--border-light); padding: 16px; border-radius: 16px; display: flex; justify-content: space-between; align-items: center; transition: 0.2s;}
-        .user-item:hover { border-color: var(--navy-primary); box-shadow: var(--shadow-card); transform: translateY(-2px);}
-        .user-info-box h4 { font-size: 14px; margin-bottom: 4px; font-weight: 700; color: var(--navy-primary);}
-        .user-info-box p { font-size: 12px; color: var(--text-gray); font-weight: 500;}
-        .badge { padding: 4px 10px; border-radius: 8px; font-size: 10px; font-weight: 800; text-transform: uppercase; }
-        .badge.guru { background: #fff7ed; color: var(--orange-accent); }
-        .badge.siswa { background: #eff6ff; color: var(--navy-primary); }
-        .badge.success { background: #ecfdf5; color: var(--success); }
-        .badge.warning { background: #fffbeb; color: var(--warning); }
-
-        /* === MOBILE LAYOUT (SISWA PWA) === */
-        .mobile-layout { max-width: 480px; margin: 0 auto; height: 100vh; overflow-y: auto; background: var(--bg-body); position: relative; border-left: 1px solid var(--border-light); border-right: 1px solid var(--border-light); }
-        .m-header { background: var(--navy-primary); color: white; padding: 25px; border-bottom-left-radius: 32px; border-bottom-right-radius: 32px; position: relative; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 20px rgba(30,58,138,0.2);}
-        .m-header-info h1 { font-size: 20px; font-weight: 800; margin-bottom: 2px;}
-        .m-header-info p { font-size: 12px; opacity: 0.8; font-weight: 600;}
-        .m-content { padding: 20px; }
-
-        /* Modals & Toasts */
-        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(15, 23, 42, 0.6); z-index: 10000; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .modal-overlay.active { display: flex; animation: fadeIn 0.2s ease-out; }
-        .modal-content { background: white; padding: 30px; border-radius: var(--radius-lg); width: 90%; max-width: 400px; text-align: center; position: relative; }
-        .toast { position: fixed; bottom: -100px; left: 50%; transform: translateX(-50%); background: var(--text-main); color: white; padding: 14px 28px; border-radius: 30px; font-size: 13px; font-weight: 700; transition: bottom 0.4s ease; z-index: 10001; box-shadow: 0 10px 25px rgba(0,0,0,0.2); display: flex; align-items: center; gap: 8px;}
-        .toast.show { bottom: 40px; }
-        .toast.error { background: var(--danger); }
-        .toast.success { background: var(--success); }
-        .loader { border: 3px solid rgba(255,255,255,0.3); border-top: 3px solid white; border-radius: 50%; width: 20px; height: 20px; animation: spin 1s linear infinite; display: none; }
-
-        @keyframes fadeUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes scaleIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        @media (max-width: 768px) {
-            .login-wrapper { flex-direction: column; }
-            .login-left { flex: 0.35; padding: 20px; border-bottom-left-radius: 40px; border-bottom-right-radius: 40px; z-index: 10; }
-            .login-right { flex: 0.65; align-items: flex-start; padding-top: 40px; background: var(--bg-body); }
-            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
-            .content-area { padding: 20px; }
-            .dropdown-menu { right: 10px; width: calc(100% - 20px); top: 90px; }
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: linear-gradient(135deg, #e2e8f0 0%, #cbd5e1 100%);
+            min-height: 100vh;
+            color: var(--viper-text-dark);
+            transition: all 0.3s ease;
+        }
+        .bingo-card {
+            background: var(--viper-card-bg);
+            border: 2px solid #e2e8f0;
+            border-radius: 1.5rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        .cell {
+            aspect-ratio: 1/1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-weight: 800;
+            font-size: 1.5rem;
+            background: #f1f5f9;
+            color: var(--viper-text-dark);
+            border: 1px solid #e2e8f0;
+            transition: all 0.15s ease;
+        }
+        .cell.marked {
+            background: var(--viper-blue) !important;
+            color: white !important;
+            border-radius: 50%;
+            transform: scale(0.85);
+            border: none;
+            box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
+        }
+        .cell.free {
+            background: #f59e0b;
+            color: #ffffff;
+            font-size: 0.75rem;
+            font-weight: 900;
+        }
+        .header-col {
+            background: var(--viper-blue);
+            color: white;
+            font-weight: 900;
+            padding: 12px 0;
+            font-size: 1.2rem;
+        }
+        /* Header hiding in Fullscreen */
+        .fullscreen-hide {
+            transition: all 0.4s ease;
+        }
+        body.is-fullscreen .fullscreen-hide {
+            display: none !important;
+        }
+        body.is-fullscreen #bingo-container {
+            margin-top: 2rem;
+        }
+        .btn-action {
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .btn-action:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
         }
     </style>
 </head>
-<body onclick="closeAllMenus(event)">
+<body class="p-4 md:p-8">
 
-    <div id="toastNotif" class="toast"><span id="toastIcon">ℹ️</span><span id="toastMsg">Memproses...</span></div>
-
-    <div id="view-login" class="view-section active">
-        <div class="login-wrapper">
-            <div class="login-left">
-                <div class="brand-icon">🎓</div>
-                <h1>Sekolah ID</h1>
-                <p>Platform Edukasi Digital Terintegrasi</p>
-            </div>
-            <div class="login-right">
-                <div class="login-form-box">
-                    <h2>Selamat Datang</h2>
-                    <p>Masuk ke akun Anda untuk melanjutkan.</p>
-                    <div class="form-group"><label>Email Pengguna</label><input type="email" id="loginEmail" placeholder="email@sekolah.id" autocomplete="off"></div>
-                    <div class="form-group" style="margin-bottom: 24px;"><label>Kata Sandi</label><input type="password" id="loginPassword" placeholder="••••••••"></div>
-                    <button class="btn-primary btn-navy" id="btnLoginSubmit" style="margin-bottom: 16px;"><span id="loginText">Masuk Sistem</span><div class="loader" id="loginLoader"></div></button>
-                    <div style="text-align: center;"><span style="font-size: 13px; color: var(--navy-primary); font-weight: 700; cursor: pointer;">Lupa Password?</span></div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-admin" class="view-section desktop-layout">
-        <header class="topbar">
-            <div class="topbar-left">
-                <div class="topbar-logo">A</div>
-                <div class="topbar-title">
-                    <h2 id="adminTopbarTitleText">Dashboard Analitik</h2>
-                    <p>Super Admin Panel</p>
-                </div>
-            </div>
-            <div style="position: relative;">
-                <div class="menu-trigger" onclick="toggleMenu(event, 'adminDropdown')">⋮</div>
-                
-                <div class="dropdown-menu" id="adminDropdown">
-                    <div class="dropdown-header"><h4>Navigasi Admin</h4><p>Master Control</p></div>
-                    <a class="dropdown-link" onclick="switchAdminTab('admin-dashboard', 'Dashboard Analitik')"><span>📊</span> Dashboard Utama</a>
-                    <a class="dropdown-link" onclick="switchAdminTab('admin-users', 'Manajemen Pengguna')"><span>👥</span> Data User & Akun</a>
-                    <a class="dropdown-link" onclick="switchAdminTab('admin-spp', 'Manajemen SPP')"><span>💳</span> Tagihan Keuangan</a>
-                    <a class="dropdown-link" onclick="switchAdminTab('admin-jadwal', 'Pusat Informasi')"><span>📢</span> Pengumuman Sekolah</a>
-                    <a class="dropdown-link" onclick="switchAdminTab('admin-export', 'Export Excel')"><span>📥</span> Unduh Database</a>
-                    <a class="dropdown-link btn-logout" style="color: var(--danger);"><span>🚪</span> Keluar Sistem</a>
-                </div>
-            </div>
-        </header>
-
-        <div class="content-area" id="adminContentArea">
-            <div id="admin-dashboard" class="tab-content active">
-                <div class="grid-4">
-                    <div class="card stat-card"><div class="stat-icon">👨‍🎓</div><div class="stat-info"><h3>Total Siswa</h3><h2 id="countSiswa">0</h2></div></div>
-                    <div class="card stat-card"><div class="stat-icon" style="background: #fff7ed; color: var(--orange-accent);">👨‍🏫</div><div class="stat-info"><h3>Total Guru</h3><h2 id="countGuru">0</h2></div></div>
-                    <div class="card stat-card"><div class="stat-icon" style="background: #ecfdf5; color: var(--success);">✅</div><div class="stat-info"><h3>Sistem Routing</h3><h2 style="font-size: 16px; line-height: 1.5;">V5.0 Strict</h2></div></div>
-                </div>
-            </div>
-
-            <div id="admin-users" class="tab-content">
-                <div class="grid-2">
-                    <div class="card">
-                        <h3>⚡ Buat Akun Cepat <span id="queueBadgeUI" style="display:none; font-size:11px; background:var(--warning); color:white; padding:4px 8px; border-radius:6px;">⏳</span></h3>
-                        <div class="grid-2" style="gap: 15px; margin-bottom: 16px;">
-                            <div class="form-group" style="margin: 0;"><label>Peran</label><select id="newUserRole"><option value="siswa">Siswa</option><option value="guru">Guru</option></select></div>
-                            <div class="form-group" style="margin: 0;"><label>Nama Lengkap</label><input type="text" id="newUserName" placeholder="Nama..." autocomplete="off"></div>
-                        </div>
-                        <div class="form-group"><label>Email Aktif</label><input type="email" id="newUserIdentitas" placeholder="contoh@gmail.com" autocomplete="off"></div>
-                        <div class="form-group"><label>Kata Sandi</label><input type="text" id="newUserPassword" value="123456" placeholder="Tekan Enter untuk menyimpan"></div>
-                        <button class="btn-primary btn-navy" id="btnCreateUser">Simpan ke Database</button>
-                    </div>
-                    
-                    <div class="card">
-                        <h3 style="margin-bottom: 15px;">Data Terdaftar (Bisa Dihapus)</h3>
-                        <input type="text" id="searchUser" class="form-group" style="width: 100%; padding: 12px; border-radius: 12px; outline: none; margin-bottom: 15px;" placeholder="Cari nama atau email...">
-                        <div class="list-container" id="adminUserListContainer"></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="admin-spp" class="tab-content">
-                <div class="grid-2">
-                    <div class="card">
-                        <h3>Konfigurasi QRIS Pembayaran</h3>
-                        <p style="font-size: 12px; color: var(--text-gray); margin-bottom: 10px;">Link/String ini akan muncul sebagai QR Code di HP Siswa.</p>
-                        <div class="form-group"><textarea id="adminInputQris" rows="4" placeholder="Tempelkan data QRIS..."></textarea></div>
-                        <button class="btn-primary" id="btnSaveQris">Perbarui QRIS</button>
-                    </div>
-                    <div class="card">
-                        <h3>Daftar Konfirmasi Tagihan</h3>
-                        <div class="list-container" id="adminListSpp"><p style="font-size: 13px; text-align: center; color: var(--text-gray);">Belum ada pembayaran masuk.</p></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="admin-jadwal" class="tab-content">
-                <div class="card" style="max-width: 600px;">
-                    <h3>Siarkan Pengumuman Sekolah</h3>
-                    <div class="form-group"><textarea id="adminInputPengumuman" rows="5" placeholder="Ketik pengumuman yang akan muncul di layar semua siswa dan guru..."></textarea></div>
-                    <button class="btn-primary btn-navy" id="btnSavePengumuman">Broadcast Pengumuman</button>
-                </div>
+    <div id="main-container" class="max-w-7xl mx-auto">
+        <!-- Header Section (Akan hilang saat Fullscreen) -->
+        <header id="app-header" class="fullscreen-hide flex flex-col lg:flex-row justify-between items-center mb-8 gap-6 bg-white p-6 rounded-3xl shadow-sm border border-slate-200">
+            <div class="text-center lg:text-left">
+                <h1 class="text-3xl font-extrabold tracking-tighter text-blue-600">
+                    VIPER <span class="text-slate-800">BINGO DIGITAL</span>
+                </h1>
+                <p class="text-slate-500 text-sm font-bold uppercase tracking-widest">Update v2.3 • Storage Edition</p>
             </div>
             
-            <div id="admin-export" class="tab-content">
-                <div class="card" style="text-align: center; padding: 40px;">
-                    <div style="font-size: 50px; margin-bottom: 20px;">📥</div>
-                    <h2 style="color: var(--navy-primary); font-weight: 800; margin-bottom: 10px;">Export Data ke Excel</h2>
-                    <div style="display: flex; gap: 20px; justify-content: center; max-width: 500px; margin: 20px auto 0 auto;">
-                        <button class="btn-primary" onclick="exportToExcel('siswa')">📊 Export Siswa</button>
-                        <button class="btn-primary btn-navy" onclick="exportToExcel('guru')">📊 Export Guru</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="view-guru" class="view-section desktop-layout">
-        <header class="topbar">
-            <div class="topbar-left">
-                <div class="topbar-logo" style="background: var(--orange-accent);">G</div>
-                <div class="topbar-title">
-                    <h2 id="guruTopbarTitleText">Beranda Pengajar</h2>
-                    <p id="guruNameHeader">Nama Guru</p>
-                </div>
-            </div>
-            <div style="position: relative;">
-                <div class="menu-trigger" onclick="toggleMenu(event, 'guruDropdown')">⋮</div>
+            <div class="flex flex-wrap justify-center gap-3">
+                <button onclick="toggleFullScreen()" class="btn-action bg-slate-100 hover:bg-slate-200 text-slate-700 px-4 py-2.5 rounded-xl font-bold border border-slate-300">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                    Layar Penuh
+                </button>
                 
-                <div class="dropdown-menu" id="guruDropdown">
-                    <div class="dropdown-header" style="background: var(--orange-accent);"><h4>Navigasi Guru</h4><p>Akademik</p></div>
-                    <a class="dropdown-link" onclick="switchGuruTab('guru-dashboard', 'Beranda Pengajar')"><span>🏠</span> Beranda</a>
-                    <a class="dropdown-link" onclick="switchGuruTab('guru-absen', 'Rekap Absensi')"><span>📅</span> Lihat Absen Siswa</a>
-                    <a class="dropdown-link" onclick="switchGuruTab('guru-nilai', 'Input Nilai Siswa')"><span>📝</span> Input Nilai Rapor</a>
-                    <a class="dropdown-link" onclick="switchGuruTab('guru-tugas', 'Manajemen Tugas')"><span>📚</span> Berikan Tugas</a>
-                    <a class="dropdown-link btn-logout" style="color: var(--danger);"><span>🚪</span> Keluar</a>
-                </div>
+                <button id="undo-btn" onclick="undoCards()" disabled class="btn-action bg-amber-50 hover:bg-amber-100 text-amber-700 px-4 py-2.5 rounded-xl font-bold border border-amber-200">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 5.5 5.5v0a5.5 5.5 0 0 1-5.5 5.5H11"/></svg>
+                    Batal
+                </button>
+
+                <button id="save-btn" onclick="saveCards()" class="btn-action bg-green-600 hover:bg-green-700 text-white px-5 py-2.5 rounded-xl font-bold shadow-md active:scale-95">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>
+                    Simpan ke HP
+                </button>
+
+                <button onclick="requestNewCards()" class="btn-action bg-blue-600 hover:bg-blue-700 text-white px-6 py-2.5 rounded-xl font-bold shadow-md active:scale-95">
+                    Buat Buku Baru
+                </button>
             </div>
         </header>
 
-        <div class="content-area" id="guruContentArea">
-            <div id="guru-dashboard" class="tab-content active">
-                <div class="card">
-                    <h3>Pengumuman Sekolah</h3>
-                    <p id="guruTextPengumuman" style="font-size: 14px; color: var(--text-main); white-space: pre-wrap; line-height: 1.6;">Tidak ada pengumuman.</p>
-                </div>
-            </div>
-
-            <div id="guru-nilai" class="tab-content">
-                <div class="card" style="max-width: 600px;">
-                    <h3>Input Nilai Transkrip Siswa</h3>
-                    <div class="form-group"><label>Pilih Siswa</label><select id="guruSelectSiswa"><option value="">Memuat data siswa...</option></select></div>
-                    <div class="grid-2" style="gap: 15px;">
-                        <div class="form-group" style="margin:0;"><label>Mata Pelajaran</label><input type="text" id="guruInputMapel" placeholder="Contoh: Matematika"></div>
-                        <div class="form-group" style="margin:0;"><label>Skor Nilai (0-100)</label><input type="number" id="guruInputSkor" placeholder="85"></div>
-                    </div>
-                    <button class="btn-primary" id="btnSubmitNilai" style="margin-top: 15px;">Simpan Nilai ke Rapor</button>
-                </div>
-            </div>
-
-            <div id="guru-tugas" class="tab-content">
-                <div class="grid-2">
-                    <div class="card">
-                        <h3>Buat Tugas Baru</h3>
-                        <div class="form-group"><label>Judul Tugas</label><input type="text" id="guruJudulTugas" placeholder="Contoh: PR Bab 1"></div>
-                        <div class="form-group"><label>Deskripsi / Instruksi</label><textarea id="guruDeskripsiTugas" rows="4" placeholder="Kerjakan halaman..."></textarea></div>
-                        <div class="form-group"><label>Tenggat Waktu (Deadline)</label><input type="date" id="guruDeadlineTugas"></div>
-                        <button class="btn-primary btn-navy" id="btnSubmitTugas">Terbitkan Tugas</button>
-                    </div>
-                    <div class="card">
-                        <h3>Tugas Terpublikasi</h3>
-                        <div class="list-container" id="guruListTugas"><p style="font-size: 12px; color: var(--text-gray); text-align: center;">Belum ada tugas.</p></div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="guru-absen" class="tab-content">
-                <div class="card">
-                    <h3>Daftar Kehadiran Siswa Hari Ini</h3>
-                    <div class="list-container" id="guruListAbsensi"><p style="font-size: 13px; color: var(--text-gray); text-align: center;">Memuat data absensi...</p></div>
-                </div>
+        <!-- Status Indicator (Juga hilang saat Fullscreen) -->
+        <div id="status-bar" class="fullscreen-hide mb-6 flex items-center justify-center">
+            <div id="status-badge" class="px-5 py-2 rounded-full text-xs font-black tracking-widest uppercase bg-white text-slate-400 border border-slate-200 shadow-sm">
+                Memuat data...
             </div>
         </div>
-    </div>
 
-    <div id="view-siswa" class="view-section mobile-layout">
-        <header class="m-header">
-            <div class="m-header-top">
-                <div>
-                    <h1 style="font-size: 20px; font-weight: 800; margin-bottom: 2px;">Hai, <span id="siswaFirstName">Siswa</span>!</h1>
-                    <p style="font-size: 12px; color: #93c5fd; font-weight: 600;" id="siswaTopbarTitleText">Beranda Akademik</p>
-                </div>
-                <div style="position: relative;">
-                    <div class="menu-trigger-mobile" onclick="toggleMenu(event, 'siswaDropdown')">⋮</div>
-                    
-                    <div class="dropdown-menu" id="siswaDropdown" style="top: 40px; right: 0;">
-                        <div class="dropdown-header"><h4>Menu Utama</h4><p>Siswa Aktif</p></div>
-                        <a class="dropdown-link" onclick="switchSiswaTab('siswa-dashboard', 'Beranda Akademik')"><span>🏠</span> Beranda</a>
-                        <a class="dropdown-link" onclick="switchSiswaTab('siswa-absen', 'Absensi Harian')"><span>📌</span> Isi Absen</a>
-                        <a class="dropdown-link" onclick="switchSiswaTab('siswa-tugas', 'Tugas Harian')"><span>📚</span> Daftar Tugas</a>
-                        <a class="dropdown-link" onclick="switchSiswaTab('siswa-nilai', 'Transkrip Nilai')"><span>📊</span> Lihat Rapor</a>
-                        <a class="dropdown-link" onclick="switchSiswaTab('siswa-spp', 'Tagihan Keuangan')"><span>💳</span> Bayar SPP</a>
-                        <a class="dropdown-link btn-logout" style="color: var(--danger);"><span>🚪</span> Keluar Aplikasi</a>
-                    </div>
-                </div>
-            </div>
-        </header>
-
-        <div class="m-content" id="siswaContentArea">
-            <div id="siswa-dashboard" class="tab-content active">
-                <div class="card" style="border-left: 4px solid var(--navy-primary); padding: 20px;">
-                    <h3 style="border: none; padding: 0; margin-bottom: 6px;">Profil Siswa</h3>
-                    <h2 style="font-size: 18px; font-weight: 800; color: var(--navy-primary); margin-bottom: 4px;" id="siswaFullName">Nama Lengkap</h2>
-                    <p style="font-size: 12px; color: var(--text-gray); font-weight: 600;">Status: Terdaftar Aktif</p>
-                </div>
-                <div class="card" style="background: #fff7ed; border-color: #ffedd5;">
-                    <h3 style="border:none; margin:0; padding:0; color: var(--orange-accent); font-size: 14px;">Pengumuman Sekolah</h3>
-                    <p id="siswaTextPengumuman" style="font-size: 13px; color: var(--text-main); margin-top: 8px; line-height: 1.5; white-space: pre-wrap;">Tidak ada pengumuman.</p>
-                </div>
-                <div class="card" style="text-align: center;">
-                    <p style="font-size: 12px; color: var(--text-gray); line-height: 1.6;">Gunakan menu <b>titik tiga (⋮)</b> di pojok kanan atas untuk melihat Tugas, Nilai, atau melakukan Pembayaran SPP.</p>
-                </div>
-            </div>
-
-            <div id="siswa-absen" class="tab-content">
-                <div class="card" style="text-align: center;">
-                    <div style="font-size: 50px; margin-bottom: 15px;">📍</div>
-                    <h3 style="justify-content: center; border: none; font-size: 18px;">Konfirmasi Kehadiran</h3>
-                    <p style="font-size: 13px; color: var(--text-gray); margin-bottom: 20px;">Catat kehadiran Anda ke database sekolah hari ini.</p>
-                    <button class="btn-primary" id="btnHadirSiswa" style="padding: 16px; font-size: 16px;">Hadir Hari Ini</button>
-                </div>
-            </div>
-
-            <div id="siswa-tugas" class="tab-content">
-                <div class="card">
-                    <h3>Tugas Harian dari Guru</h3>
-                    <div class="list-container" id="listTugasSiswa">
-                        <p style="font-size: 13px; color: var(--text-gray); text-align: center; padding: 20px;">Belum ada tugas.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="siswa-nilai" class="tab-content">
-                <div class="card">
-                    <h3>Transkrip Rapor</h3>
-                    <div class="list-container" id="listNilaiSiswa">
-                        <p style="font-size: 13px; color: var(--text-gray); text-align: center; padding: 20px;">Belum ada nilai dipublikasikan.</p>
-                    </div>
-                </div>
-            </div>
-
-            <div id="siswa-spp" class="tab-content">
-                <div class="card" style="text-align: center;">
-                    <h3 style="justify-content: center; border: none; font-size: 16px;">Pembayaran SPP (Rp 150.000)</h3>
-                    <p style="font-size: 12px; color: var(--text-gray); margin-bottom: 15px;">Scan QRIS ini menggunakan M-Banking/Gopay.</p>
-                    <div style="background: #f8fafc; padding: 15px; border-radius: 16px; display: inline-block; border: 1px solid var(--border-light); margin-bottom: 20px;">
-                        <img id="siswaImgQris" src="" alt="QRIS" style="max-width: 180px; display: none; border-radius: 10px;">
-                        <p id="siswaFallbackQris" style="font-size: 12px; font-weight: 700; color: var(--text-gray);">Admin belum mengatur QRIS.</p>
-                    </div>
-                    <button class="btn-primary btn-navy" id="btnBayarSpp" style="padding: 16px;">Konfirmasi Saya Sudah Bayar</button>
-                </div>
-                <div class="card">
-                    <h3>Riwayat Tagihan</h3>
-                    <div class="list-container" id="listSppRiwayatSiswa"></div>
-                </div>
-            </div>
+        <!-- Cards Grid Container -->
+        <div id="bingo-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-8 mb-12">
+            <!-- Bingo Cards will be injected here -->
         </div>
+
+        <!-- Footer -->
+        <footer class="fullscreen-hide text-center pb-10">
+            <p class="text-slate-500 font-bold text-sm">© 2024 VIPERCELL DIGITAL ENTERTAINMENT • AMBON</p>
+            <p class="text-slate-400 text-[10px] mt-1">Data tersimpan otomatis di penyimpanan lokal perangkat.</p>
+        </footer>
     </div>
 
-    <div class="modal-overlay" id="modalEditUser">
-        <div class="modal-content" style="text-align: left;">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h3 style="font-weight: 800; color: var(--navy-primary);">Edit Profil</h3>
-                <span style="font-size: 24px; font-weight: bold; color: var(--text-gray); cursor: pointer;" onclick="hideModal('modalEditUser')">×</span>
-            </div>
-            <input type="hidden" id="editUserId">
-            <div class="form-group"><label>Nama Lengkap</label><input type="text" id="editUserName"></div>
-            <div class="form-group"><label>Email</label><input type="email" id="editUserIdentitas" disabled></div>
-            <button class="btn-primary btn-navy" id="btnSaveUserEdit" style="margin-top: 10px;">Simpan Perubahan</button>
-        </div>
+    <!-- Notification Overlay (Durasi 2 Detik) -->
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 font-black z-[100] uppercase tracking-widest text-sm">
+        Notifikasi
     </div>
 
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword, onAuthStateChanged, signOut, initializeAuth, browserLocalPersistence, inMemoryPersistence } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, updateDoc, deleteDoc, getDoc, collection, onSnapshot, addDoc, query, where, orderBy, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+    <script>
+        const STORAGE_KEY = 'viper_bingo_save_v2';
+        let currentCards = [];
+        let previousCards = null;
+        let isSaved = false;
+        let toastTimeout = null;
 
-        const app = initializeApp(window.SCHOOL_CONFIG); 
-        const auth = getAuth(app); auth.setPersistence(browserLocalPersistence); // Pastikan sesi utama kuat
-        const db = getFirestore(app);
-        
-        // Mesin pembuatan akun di background
-        const secondaryApp = initializeApp(window.SCHOOL_CONFIG, "Secondary"); 
-        const secondaryAuth = initializeAuth(secondaryApp, { persistence: inMemoryPersistence });
-
-        const ADMIN_EMAIL = "millerstoreid@gmail.com"; 
-        let allUsersData = {};
-        let currentUserUid = ""; let currentUserName = ""; let currentUserRole = "";
-        let globalQrisString = "";
-
-        // === UI UTILITIES ===
-        window.showModal = (id) => document.getElementById(id).classList.add('active');
-        window.hideModal = (id) => document.getElementById(id).classList.remove('active');
-        
-        // FUNGSI ISOLASI VIEW (Sangat Ketat)
-        function switchView(viewId, roleForced = null) { 
-            // Cek keamanan sebelum menampilkan view
-            if(roleForced === 'admin' && currentUserRole !== 'admin') return;
-            if(roleForced === 'guru' && currentUserRole !== 'guru') return;
-            if(roleForced === 'siswa' && currentUserRole !== 'siswa') return;
-
-            document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active')); 
-            const target = document.getElementById(viewId);
-            if(target) {
-                target.classList.add('active');
-                if(target.classList.contains('mobile-layout')) target.scrollTop = 0;
+        // Listener Fullscreen
+        document.addEventListener('fullscreenchange', () => {
+            if (document.fullscreenElement) {
+                document.body.classList.add('is-fullscreen');
+            } else {
+                document.body.classList.remove('is-fullscreen');
             }
-        }
-
-        function showToast(message, type = "info") {
-            const toast = document.getElementById('toastNotif'); toast.className = `toast show ${type === 'error' ? 'error' : (type === 'success' ? 'success' : '')}`;
-            document.getElementById('toastIcon').innerText = type === 'error' ? "❌" : "✅"; document.getElementById('toastMsg').innerText = message;
-            setTimeout(() => toast.classList.remove('show'), 3000);
-        }
-
-        window.toggleMenu = (event, menuId) => {
-            event.stopPropagation(); const menu = document.getElementById(menuId);
-            document.querySelectorAll('.dropdown-menu').forEach(el => { if(el.id !== menuId) el.classList.remove('active'); });
-            menu.classList.toggle('active');
-        };
-
-        window.closeAllMenus = (event) => {
-            if(!event.target.matches('.menu-trigger') && !event.target.matches('.menu-trigger-mobile')) {
-                document.querySelectorAll('.dropdown-menu').forEach(el => el.classList.remove('active'));
-            }
-        };
-
-        window.switchAdminTab = (tabId, title) => {
-            document.querySelectorAll('#adminContentArea .tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active'); document.getElementById('adminTopbarTitleText').innerText = title;
-            document.getElementById('adminContentArea').scrollTop = 0; document.getElementById('adminDropdown').classList.remove('active');
-        };
-
-        window.switchGuruTab = (tabId, title) => {
-            document.querySelectorAll('#guruContentArea .tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active'); document.getElementById('guruTopbarTitleText').innerText = title;
-            document.getElementById('guruContentArea').scrollTop = 0; document.getElementById('guruDropdown').classList.remove('active');
-            if(tabId === 'guru-absen') loadGuruAbsensi();
-            if(tabId === 'guru-tugas') loadGuruTugas();
-        };
-
-        window.switchSiswaTab = (tabId, title) => {
-            document.querySelectorAll('#siswaContentArea .tab-content').forEach(el => el.classList.remove('active'));
-            document.getElementById(tabId).classList.add('active'); document.getElementById('siswaTopbarTitleText').innerText = title;
-            document.getElementById('view-siswa').scrollTop = 0; document.getElementById('siswaDropdown').classList.remove('active');
-            if(tabId === 'siswa-nilai') loadSiswaNilai();
-            if(tabId === 'siswa-tugas') loadSiswaTugas();
-        };
-
-        // === SISTEM AUTENTIKASI (STRICT ROUTING) ===
-        document.getElementById('btnLoginSubmit').addEventListener('click', async () => {
-            const email = document.getElementById('loginEmail').value.trim(); const password = document.getElementById('loginPassword').value;
-            if(!email || !password) return showToast("Masukkan Email dan Password", "error");
-            document.getElementById('loginText').style.display = "none"; document.getElementById('loginLoader').style.display = "block";
-            try { await signInWithEmailAndPassword(auth, email, password); } 
-            catch (error) { document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none"; showToast("Login Gagal.", "error"); }
         });
 
-        onAuthStateChanged(auth, async (user) => {
-            if(document.getElementById('loginText')) { document.getElementById('loginText').style.display = "inline"; document.getElementById('loginLoader').style.display = "none"; }
-            if (user) {
-                currentUserUid = user.uid;
-                if (user.email === ADMIN_EMAIL) { 
-                    currentUserRole = "admin"; switchView('view-admin', 'admin'); 
-                } 
-                else {
-                    try {
-                        const userDoc = await getDoc(doc(db, "users", user.uid));
-                        if (userDoc.exists()) {
-                            const data = userDoc.data();
-                            currentUserRole = data.role;
-                            currentUserName = data.nama;
-                            if (data.role === 'guru') {
-                                document.getElementById('guruNameHeader').innerText = data.nama;
-                                switchView('view-guru', 'guru');
-                            } else {
-                                document.getElementById('siswaFullName').innerText = data.nama;
-                                document.getElementById('siswaFirstName').innerText = data.nama.split(' ')[0];
-                                switchView('view-siswa', 'siswa');
-                            }
-                        } else { 
-                            showToast("Akses Ditolak. Akun Anda telah dihapus oleh Admin.", "error"); 
-                            signOut(auth); 
+        function showToast(msg, color = 'bg-blue-600') {
+            const toast = document.getElementById('toast');
+            if (toastTimeout) clearTimeout(toastTimeout);
+            
+            toast.innerText = msg;
+            toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 ${color} text-white px-8 py-4 rounded-2xl shadow-2xl transition-all duration-300 font-black z-[100] opacity-100 uppercase tracking-widest text-sm`;
+            
+            // Notifikasi hilang dalam 2 detik (2000ms)
+            toastTimeout = setTimeout(() => {
+                toast.classList.add('opacity-0');
+            }, 2000);
+        }
+
+        function toggleFullScreen() {
+            if (!document.fullscreenElement) {
+                document.documentElement.requestFullscreen().catch(err => {
+                    console.error(`Error: ${err.message}`);
+                });
+            } else {
+                if (document.exitFullscreen) document.exitFullscreen();
+            }
+        }
+
+        function getRandomNumbers(min, max, count) {
+            const nums = [];
+            while (nums.length < count) {
+                const r = Math.floor(Math.random() * (max - min + 1)) + min;
+                if (!nums.includes(r)) nums.push(r);
+            }
+            return nums.sort((a, b) => a - b);
+        }
+
+        function generateCardData() {
+            return {
+                'B': getRandomNumbers(1, 15, 5),
+                'I': getRandomNumbers(16, 30, 5),
+                'N': getRandomNumbers(31, 45, 5),
+                'G': getRandomNumbers(46, 60, 5),
+                'O': getRandomNumbers(61, 75, 5),
+                'marks': [] // To save marked cells
+            };
+        }
+
+        function renderCards() {
+            const container = document.getElementById('bingo-container');
+            container.innerHTML = '';
+            
+            currentCards.forEach((data, index) => {
+                const cardWrapper = document.createElement('div');
+                cardWrapper.className = 'bingo-card p-6 shadow-xl';
+                
+                let html = `
+                    <div class="flex justify-between items-center mb-5 px-1">
+                        <div class="flex items-center gap-2">
+                            <span class="w-3 h-3 rounded-full ${isSaved ? 'bg-green-500 shadow-[0_0_8px_rgba(34,197,94,0.6)]' : 'bg-amber-500 animate-pulse'}"></span>
+                            <span class="text-sm font-extrabold text-slate-700 uppercase tracking-tighter">Buku #${index + 1}</span>
+                        </div>
+                        <span class="text-[10px] font-black text-white bg-blue-600 px-2.5 py-1 rounded-full shadow-sm">VIPER PRO</span>
+                    </div>
+                    <div class="grid grid-cols-5 gap-2 text-center overflow-hidden rounded-2xl border-2 border-slate-100 bg-white shadow-inner">
+                        <div class="header-col">B</div>
+                        <div class="header-col">I</div>
+                        <div class="header-col">N</div>
+                        <div class="header-col">G</div>
+                        <div class="header-col">O</div>
+                `;
+
+                for (let row = 0; row < 5; row++) {
+                    ['B', 'I', 'N', 'G', 'O'].forEach(col => {
+                        const cellId = `${index}-${col}-${row}`;
+                        const isMarked = data.marks && data.marks.includes(cellId);
+                        
+                        if (col === 'N' && row === 2) {
+                            html += `<div class="cell free">FREE</div>`;
+                        } else {
+                            const num = data[col][row];
+                            html += `<div id="${cellId}" class="cell ${isMarked ? 'marked' : ''}" onclick="toggleMark('${cellId}', ${index})">${num}</div>`;
                         }
-                    } catch (err) { showToast("Error database.", "error"); signOut(auth); }
+                    });
                 }
-            } else { 
-                currentUserRole = "";
-                switchView('view-login'); 
-            }
-        });
 
-        // === ADMIN: ENGINE CRUD PENGGUNA ===
-        const saveQueue = []; let isProcessingQueue = false;
-        function updateQueueUI() { const badge = document.getElementById('queueBadgeUI'); if(badge) { if(saveQueue.length > 0) { badge.innerText = `⏳ ${saveQueue.length}`; badge.style.display = 'inline-block'; } else badge.style.display = 'none'; } }
-        async function processSaveQueue() {
-            if(saveQueue.length === 0) { isProcessingQueue = false; updateQueueUI(); return; }
-            isProcessingQueue = true; const task = saveQueue[0];
-            try {
-                const userCredential = await createUserWithEmailAndPassword(secondaryAuth, task.email, task.password);
-                await setDoc(doc(db, "users", userCredential.user.uid), { nama: task.nama, role: task.role, email: task.email, createdAt: new Date().toISOString() });
-                await signOut(secondaryAuth); showToast(`${task.nama} tersimpan!`, "success");
-            } catch (error) { showToast(`Gagal menyimpan ${task.email}`, "error"); }
-            saveQueue.shift(); updateQueueUI(); processSaveQueue();
+                html += `</div>`;
+                cardWrapper.innerHTML = html;
+                container.appendChild(cardWrapper);
+            });
+            updateUI();
         }
 
-        document.getElementById('newUserPassword').addEventListener('keypress', (e) => { if(e.key === 'Enter') { e.preventDefault(); document.getElementById('btnCreateUser').click(); } });
-        document.getElementById('btnCreateUser').addEventListener('click', () => {
-            const role = document.getElementById('newUserRole').value; const namaInput = document.getElementById('newUserName');
-            const emailInput = document.getElementById('newUserIdentitas'); const password = document.getElementById('newUserPassword').value;
-            const nama = namaInput.value.trim(); const email = emailInput.value.trim();
-            if(!nama || !email || password.length < 6) return showToast("Lengkapi form!", "error");
-            saveQueue.push({ nama, email, role, password }); updateQueueUI();
-            namaInput.value = ''; emailInput.value = ''; namaInput.focus();
-            if(!isProcessingQueue) processSaveQueue();
-        });
-
-        onSnapshot(collection(db, "users"), (snapshot) => {
-            allUsersData = {}; let countSiswa = 0; let countGuru = 0;
-            snapshot.forEach((doc) => {
-                const data = doc.data(); allUsersData[doc.id] = data;
-                if(data.role === 'siswa') countSiswa++; if(data.role === 'guru') countGuru++;
-            });
-            if(document.getElementById('countSiswa')) document.getElementById('countSiswa').innerText = countSiswa;
-            if(document.getElementById('countGuru')) document.getElementById('countGuru').innerText = countGuru;
-            renderUserList();
+        function toggleMark(id, cardIndex) {
+            const el = document.getElementById(id);
+            if (!el) return;
             
-            // Dropdown guru
-            const selectGuru = document.getElementById('guruSelectSiswa');
-            if(selectGuru) {
-                selectGuru.innerHTML = '<option value="">-- Pilih Siswa --</option>';
-                Object.keys(allUsersData).forEach(uid => { if(allUsersData[uid].role === 'siswa') selectGuru.innerHTML += `<option value="${uid}">${allUsersData[uid].nama}</option>`; });
-            }
-        });
-
-        function renderUserList() {
-            const container = document.getElementById('adminUserListContainer'); if(!container) return;
-            container.innerHTML = ''; const searchQuery = document.getElementById('searchUser').value.toLowerCase(); let htmlHTML = "";
-            Object.keys(allUsersData).forEach(uid => {
-                const user = allUsersData[uid];
-                if(searchQuery && !user.nama.toLowerCase().includes(searchQuery) && !user.email.includes(searchQuery)) return;
-                htmlHTML += `
-                    <div class="user-item">
-                        <div class="user-info-box">
-                            <h4 style="color:var(--text-main); font-size:14px; margin-bottom:4px;">${user.nama} <span class="badge ${user.role}">${user.role}</span></h4>
-                            <p style="color:var(--text-gray);">${user.email}</p>
-                        </div>
-                        <div style="display:flex; gap:5px;">
-                            <button class="btn-primary btn-outline" style="padding: 6px 12px; font-size:11px; width:auto;" onclick="bukaModalEdit('${uid}')">Edit</button>
-                            <button class="btn-primary" style="background:var(--danger); padding: 6px 12px; font-size:11px; width:auto; box-shadow:none;" onclick="hapusAkun('${uid}')">🗑️</button>
-                        </div>
-                    </div>`;
-            });
-            container.innerHTML = htmlHTML || `<p style="font-size:13px; color:var(--text-gray); text-align:center; padding: 20px;">Tidak ada data.</p>`;
-        }
-        document.getElementById('searchUser').addEventListener('input', renderUserList);
-
-        window.bukaModalEdit = (uid) => {
-            const user = allUsersData[uid]; document.getElementById('editUserId').value = uid; document.getElementById('editUserName').value = user.nama; document.getElementById('editUserIdentitas').value = user.email;
-            window.showModal('modalEditUser'); setTimeout(() => document.getElementById('editUserName').focus(), 100);
-        };
-        document.getElementById('btnSaveUserEdit').addEventListener('click', async () => {
-            const uid = document.getElementById('editUserId').value; const newName = document.getElementById('editUserName').value.trim();
-            if(!newName) return; 
-            try { await updateDoc(doc(db, "users", uid), { nama: newName }); showToast("Profil diperbarui!", "success"); window.hideModal('modalEditUser'); } 
-            catch (error) { showToast("Gagal update.", "error"); }
-        });
-
-        // FITUR HAPUS AKUN (ADMIN)
-        window.hapusAkun = async (uid) => {
-            if(confirm("PERINGATAN!\nMenghapus data ini akan mencabut hak akses login pengguna ini selamanya. Lanjutkan?")) {
-                try {
-                    await deleteDoc(doc(db, "users", uid));
-                    showToast("Akses Akun Berhasil Dicabut!", "success");
-                } catch(e) { showToast("Gagal menghapus.", "error"); }
-            }
-        };
-
-        // === ENGINE ABSENSI ===
-        document.getElementById('btnHadirSiswa').addEventListener('click', async () => {
-            const btn = document.getElementById('btnHadirSiswa'); btn.disabled = true; btn.innerText = "Memproses...";
-            const today = new Date(); const dateStr = today.toISOString().split('T')[0]; const timeStr = today.toLocaleTimeString('id-ID');
-            try {
-                await addDoc(collection(db, "absensi"), { uid_siswa: currentUserUid, nama_siswa: currentUserName, status: "Hadir", tanggal: dateStr, waktu: timeStr, timestamp: today.toISOString() });
-                showToast("Kehadiran dicatat!", "success"); btn.innerText = "✅ Anda Sudah Absen"; btn.style.background = "var(--success)";
-            } catch (err) { showToast("Gagal absen.", "error"); btn.disabled = false; btn.innerText = "Hadir Hari Ini"; }
-        });
-
-        function loadGuruAbsensi() {
-            const container = document.getElementById('guruListAbsensi'); container.innerHTML = '<p style="font-size: 13px; color: var(--text-gray); text-align: center;">Memuat...</p>';
-            const todayStr = new Date().toISOString().split('T')[0];
-            onSnapshot(query(collection(db, "absensi"), where("tanggal", "==", todayStr)), (snapshot) => {
-                container.innerHTML = '';
-                if (snapshot.empty) { container.innerHTML = '<p style="font-size: 13px; color: var(--text-gray); text-align: center;">Belum ada siswa hadir.</p>'; return; }
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    container.innerHTML += `<div class="user-item"><div class="user-info-box"><h4 style="font-size:14px; margin:0;">${data.nama_siswa}</h4><p>Jam: ${data.waktu}</p></div><span class="badge success">${data.status}</span></div>`;
-                });
-            });
-        }
-
-        // === ENGINE AKADEMIK (NILAI) ===
-        document.getElementById('btnSubmitNilai').addEventListener('click', async () => {
-            const uidSiswa = document.getElementById('guruSelectSiswa').value; const mapel = document.getElementById('guruInputMapel').value.trim(); const skor = document.getElementById('guruInputSkor').value;
-            if(!uidSiswa || !mapel || !skor) return showToast("Lengkapi form nilai!", "error");
-            const btn = document.getElementById('btnSubmitNilai'); btn.disabled = true; btn.innerText = "Menyimpan...";
-            try {
-                await addDoc(collection(db, "nilai"), { uid_siswa: uidSiswa, nama_siswa: allUsersData[uidSiswa].nama, mapel: mapel, skor: parseInt(skor), tanggal_input: new Date().toISOString() });
-                showToast(`Nilai disimpan!`, "success"); document.getElementById('guruInputMapel').value = ''; document.getElementById('guruInputSkor').value = '';
-            } catch (err) { showToast("Gagal.", "error"); } finally { btn.disabled = false; btn.innerText = "Simpan Nilai ke Rapor"; }
-        });
-
-        function loadSiswaNilai() {
-            const container = document.getElementById('listNilaiSiswa'); container.innerHTML = '<p style="font-size: 13px; text-align: center;">Memuat...</p>';
-            onSnapshot(query(collection(db, "nilai"), where("uid_siswa", "==", currentUserUid)), (snapshot) => {
-                container.innerHTML = '';
-                if (snapshot.empty) { container.innerHTML = '<p style="font-size: 13px; text-align: center;">Belum ada nilai dirilis.</p>'; return; }
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data(); const date = new Date(data.tanggal_input).toLocaleDateString('id-ID');
-                    container.innerHTML += `<div class="user-item"><div class="user-info-box"><h4 style="font-size: 15px; color: var(--navy-primary);">${data.mapel}</h4><p>Diinput: ${date}</p></div><div style="font-size: 20px; font-weight: 800; color: var(--orange-accent);">${data.skor}</div></div>`;
-                });
-            });
-        }
-
-        // === ENGINE TUGAS (NEW) ===
-        document.getElementById('btnSubmitTugas')?.addEventListener('click', async () => {
-            const judul = document.getElementById('guruJudulTugas').value.trim();
-            const desk = document.getElementById('guruDeskripsiTugas').value.trim();
-            const deadline = document.getElementById('guruDeadlineTugas').value;
-            if(!judul || !deadline) return showToast("Judul dan Deadline wajib diisi!", "error");
+            el.classList.toggle('marked');
             
-            try {
-                await addDoc(collection(db, "tugas"), { judul, deskripsi: desk, deadline, nama_guru: currentUserName, timestamp: serverTimestamp() });
-                showToast("Tugas Diterbitkan!", "success");
-                document.getElementById('guruJudulTugas').value = ''; document.getElementById('guruDeskripsiTugas').value = ''; document.getElementById('guruDeadlineTugas').value = '';
-            } catch(e) { showToast("Gagal buat tugas", "error"); }
-        });
-
-        function loadGuruTugas() {
-            const container = document.getElementById('guruListTugas');
-            onSnapshot(collection(db, "tugas"), (snapshot) => {
-                container.innerHTML = '';
-                if(snapshot.empty) { container.innerHTML = '<p style="text-align:center; font-size:12px;">Belum ada tugas</p>'; return; }
-                snapshot.forEach(docSnap => {
-                    const t = docSnap.data();
-                    container.innerHTML += `<div class="user-item"><div class="user-info-box"><h4 style="font-size:14px; margin-bottom:2px;">${t.judul}</h4><p style="font-size:11px;">Batas Waktu: ${t.deadline}</p></div></div>`;
-                });
-            });
-        }
-
-        function loadSiswaTugas() {
-            const container = document.getElementById('listTugasSiswa');
-            onSnapshot(collection(db, "tugas"), (snapshot) => {
-                container.innerHTML = '';
-                if(snapshot.empty) { container.innerHTML = '<p style="text-align:center; font-size:12px;">Hore! Tidak ada tugas.</p>'; return; }
-                snapshot.forEach(docSnap => {
-                    const t = docSnap.data();
-                    container.innerHTML += `<div class="card" style="margin-bottom:10px; padding:16px; border-left:4px solid var(--orange-accent);"><h3 style="border:none; padding:0; margin-bottom:5px; font-size:15px; color:var(--text-main);">${t.judul}</h3><p style="font-size:12px; color:var(--text-gray); margin-bottom:10px;">${t.deskripsi}</p><span class="badge warning">Tenggat: ${t.deadline}</span></div>`;
-                });
-            });
-        }
-
-        // === ENGINE KEUANGAN & SPP (NEW) ===
-        // Admin: Atur QRIS & Broadcast Pengumuman
-        onSnapshot(doc(db, "settings", "global"), (docSnap) => {
-            if(docSnap.exists()) {
-                const data = docSnap.data();
-                globalQrisString = data.qris || "";
-                if(document.getElementById('adminInputQris')) document.getElementById('adminInputQris').value = globalQrisString;
-                
-                // Update QRIS di Siswa
-                const qrImg = document.getElementById('siswaImgQris');
-                if(qrImg) {
-                    if(globalQrisString) { qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=${encodeURIComponent(globalQrisString)}`; qrImg.style.display = 'block'; document.getElementById('siswaFallbackQris').style.display='none'; }
-                    else { qrImg.style.display = 'none'; document.getElementById('siswaFallbackQris').style.display='block'; }
-                }
-
-                // Update Pengumuman
-                const txtSiswa = document.getElementById('siswaTextPengumuman');
-                if(txtSiswa) txtSiswa.innerText = data.pengumuman || "Tidak ada pengumuman.";
-                const txtGuru = document.getElementById('guruTextPengumuman');
-                if(txtGuru) txtGuru.innerText = data.pengumuman || "Tidak ada pengumuman.";
-            }
-        });
-
-        document.getElementById('btnSaveQris')?.addEventListener('click', async () => {
-            const q = document.getElementById('adminInputQris').value;
-            await setDoc(doc(db, "settings", "global"), { qris: q }, { merge: true }); showToast("QRIS tersimpan!", "success");
-        });
-        document.getElementById('btnSavePengumuman')?.addEventListener('click', async () => {
-            const p = document.getElementById('adminInputPengumuman').value;
-            await setDoc(doc(db, "settings", "global"), { pengumuman: p }, { merge: true }); showToast("Pengumuman Terkirim!", "success");
-        });
-
-        // Siswa: Konfirmasi SPP
-        document.getElementById('btnBayarSpp')?.addEventListener('click', async () => {
-            if(!globalQrisString) return showToast("QRIS Belum Tersedia", "error");
-            try {
-                await addDoc(collection(db, "spp"), { uid_siswa: currentUserUid, nama_siswa: currentUserName, status: "Pending", timestamp: serverTimestamp() });
-                showToast("Tagihan Dilaporkan!", "success");
-            } catch(e) { showToast("Gagal melapor", "error"); }
-        });
-
-        // List SPP
-        window.konfirmasiLunasSpp = async (docId) => {
-            try { await updateDoc(doc(db, "spp", docId), { status: "Lunas" }); showToast("Pembayaran Lunas!", "success"); } catch(e) {}
-        };
-
-        onSnapshot(collection(db, "spp"), (snapshot) => {
-            const listAdmin = document.getElementById('adminListSpp');
-            const listSiswa = document.getElementById('listSppRiwayatSiswa');
-            if(listAdmin) listAdmin.innerHTML = ''; if(listSiswa) listSiswa.innerHTML = '';
+            // Update data marks for persistence
+            if (!currentCards[cardIndex].marks) currentCards[cardIndex].marks = [];
             
-            snapshot.forEach(docSnap => {
-                const data = docSnap.data();
-                const id = docSnap.id;
-                const dDate = data.timestamp ? new Date(data.timestamp.toDate()).toLocaleDateString('id-ID') : "Hari Ini";
-                
-                if(listAdmin) {
-                    listAdmin.innerHTML += `
-                        <div class="user-item">
-                            <div class="user-info-box"><h4 style="font-size:14px; margin-bottom:2px;">${data.nama_siswa}</h4><p style="font-size:11px;">Tgl: ${dDate}</p></div>
-                            ${data.status === 'Pending' ? `<button class="btn-primary" style="width:auto; padding:6px 12px; font-size:11px;" onclick="konfirmasiLunasSpp('${id}')">Set Lunas</button>` : `<span class="badge success">Lunas</span>`}
-                        </div>
-                    `;
-                }
-                if(listSiswa && data.uid_siswa === currentUserUid) {
-                    listSiswa.innerHTML += `<div class="user-item"><div class="user-info-box"><h4 style="font-size:14px; margin-bottom:2px;">Tagihan SPP</h4><p style="font-size:11px;">${dDate}</p></div><span class="badge ${data.status === 'Pending' ? 'warning' : 'success'}">${data.status}</span></div>`;
-                }
-            });
-        });
+            if (el.classList.contains('marked')) {
+                if (!currentCards[cardIndex].marks.includes(id)) currentCards[cardIndex].marks.push(id);
+            } else {
+                currentCards[cardIndex].marks = currentCards[cardIndex].marks.filter(m => m !== id);
+            }
 
-        // === EXCEL EXPORT ===
-        window.exportToExcel = (roleTarget) => {
-            const rawData = []; let no = 1;
-            Object.keys(allUsersData).forEach(uid => {
-                const user = allUsersData[uid];
-                if (user.role === roleTarget) rawData.push({ "No": no++, "Nama Lengkap": user.nama, "Email": user.email, "Peran": user.role.toUpperCase() });
-            });
-            if(rawData.length === 0) return showToast(`Tidak ada data ${roleTarget}.`, "error");
-            const ws = XLSX.utils.json_to_sheet(rawData); ws['!cols'] = [ {wch:5}, {wch:30}, {wch:35}, {wch:15} ];
-            const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, `Data ${roleTarget.toUpperCase()}`);
-            XLSX.writeFile(wb, `Export_Data_${roleTarget.toUpperCase()}_SekolahID.xlsx`); showToast(`File Excel diunduh!`, "success");
-        };
+            // Jika sudah tersimpan, auto-update tanda di storage
+            if (isSaved) {
+                localStorage.setItem(STORAGE_KEY, JSON.stringify({ cards: currentCards, isSaved: true }));
+            }
+        }
 
-        // --- LOGOUT ---
-        document.querySelectorAll('.btn-logout').forEach(btn => {
-            btn.addEventListener('click', () => { signOut(auth).then(() => { document.getElementById('loginEmail').value = ''; document.getElementById('loginPassword').value = ''; showToast("Berhasil Keluar."); }); });
-        });
+        function requestNewCards() {
+            previousCards = JSON.parse(JSON.stringify(currentCards));
+            currentCards = [generateCardData(), generateCardData(), generateCardData(), generateCardData()];
+            isSaved = false;
+            renderCards();
+            showToast("Buku Baru Siap!", "bg-blue-600");
+        }
+
+        function undoCards() {
+            if (previousCards && !isSaved) {
+                currentCards = JSON.parse(JSON.stringify(previousCards));
+                previousCards = null;
+                renderCards();
+                showToast("Kembali ke Sebelumnya", "bg-amber-600");
+            }
+        }
+
+        function saveCards() {
+            isSaved = true;
+            previousCards = null;
+            
+            // Simpan ke Penyimpanan Lokal HP (LocalStorage)
+            const dataToSave = {
+                cards: currentCards,
+                isSaved: true
+            };
+            localStorage.setItem(STORAGE_KEY, JSON.stringify(dataToSave));
+            
+            updateUI();
+            renderCards();
+            showToast("Berhasil Simpan ke HP!", "bg-green-600");
+        }
+
+        function updateUI() {
+            const undoBtn = document.getElementById('undo-btn');
+            const statusBadge = document.getElementById('status-badge');
+            
+            undoBtn.disabled = !previousCards || isSaved;
+            
+            if (isSaved) {
+                statusBadge.innerText = "Buku Tersimpan di Perangkat";
+                statusBadge.className = "px-5 py-2 rounded-full text-xs font-black tracking-widest uppercase bg-green-100 text-green-700 border border-green-200 shadow-sm";
+            } else {
+                statusBadge.innerText = "Mode Draft (Belum Disimpan)";
+                statusBadge.className = "px-5 py-2 rounded-full text-xs font-black tracking-widest uppercase bg-amber-100 text-amber-700 border border-amber-200 shadow-sm animate-pulse";
+            }
+        }
+
+        function loadFromStorage() {
+            const savedData = localStorage.getItem(STORAGE_KEY);
+            if (savedData) {
+                const parsed = JSON.parse(savedData);
+                currentCards = parsed.cards;
+                isSaved = parsed.isSaved;
+                renderCards();
+            } else {
+                requestNewCards();
+            }
+        }
+
+        window.onload = loadFromStorage;
     </script>
 </body>
 </html>
