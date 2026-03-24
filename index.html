@@ -1,6 +1,6 @@
 <!-- 
-  Vipercell Web Update v3.2
-  Feature: Exit/Reset Confirmations, Refresh Persistence, & Session Locking
+  Vipercell Web Update v3.3
+  Feature: Professional PDF Export (Print Ready), A4 Layout Optimization, & PDF Branding
   Developer: Senior AI Developer Partner (Vipercell Project)
 -->
 <!DOCTYPE html>
@@ -8,9 +8,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viper Bingo Digital v3.2</title>
+    <title>Viper Bingo Digital v3.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- PDF Library -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
         :root {
             --viper-blue: #2563eb;
@@ -104,7 +106,6 @@
             box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
-        /* Modal Enhanced */
         .modal {
             display: none;
             position: fixed;
@@ -131,9 +132,21 @@
             border: 1px solid var(--border-color);
             color: var(--text-main);
         }
+
+        /* Print Template Style (Hidden from UI) */
+        #print-template {
+            display: none;
+            color: black;
+            background: white;
+            width: 800px; /* Base width for A4 calc */
+            padding: 20px;
+        }
     </style>
 </head>
 <body class="p-4 md:p-8">
+
+    <!-- HIDDEN PRINT TEMPLATE -->
+    <div id="print-template"></div>
 
     <!-- MODAL: SIMPAN NAMA BUKU -->
     <div id="modal-save" class="modal px-4">
@@ -142,23 +155,23 @@
             <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Beri nama untuk paket 4 buku bingo ini.</p>
             <input type="text" id="input-book-name" placeholder="Nama Buku..." class="w-full bg-slate-100 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 p-4 rounded-2xl mb-6 focus:border-blue-500 outline-none font-bold text-slate-700 dark:text-white">
             <div class="flex gap-3">
-                <button onclick="closeModal('modal-save')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl hover:bg-slate-200">Batal</button>
-                <button onclick="confirmSave()" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl shadow-lg">Simpan</button>
+                <button onclick="closeModal('modal-save')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl">Batal</button>
+                <button onclick="confirmSave()" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl">Simpan</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL: KONFIRMASI (GENERAL) -->
+    <!-- MODAL: KONFIRMASI -->
     <div id="modal-confirm" class="modal px-4">
         <div class="modal-content bg-white dark:bg-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl">
             <div id="confirm-icon" class="w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto bg-amber-100 text-amber-600">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
             </div>
             <h3 id="confirm-title" class="text-xl font-extrabold mb-2 text-slate-800 dark:text-white text-center">Konfirmasi</h3>
-            <p id="confirm-msg" class="text-slate-500 dark:text-slate-400 text-sm mb-8 text-center">Apakah Anda yakin ingin melakukan tindakan ini?</p>
+            <p id="confirm-msg" class="text-slate-500 dark:text-slate-400 text-sm mb-8 text-center">Apakah Anda yakin?</p>
             <div class="flex gap-3">
-                <button onclick="closeModal('modal-confirm')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl hover:bg-slate-200">Batal</button>
-                <button id="confirm-action-btn" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl shadow-lg">Lanjutkan</button>
+                <button onclick="closeModal('modal-confirm')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl">Batal</button>
+                <button id="confirm-action-btn" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl">Lanjutkan</button>
             </div>
         </div>
     </div>
@@ -166,20 +179,21 @@
     <!-- FULLSCREEN OVERLAY -->
     <div id="fullscreen-overlay">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 gap-4">
-            <div class="flex items-center gap-4">
-                <div id="fs-title" class="font-extrabold text-blue-600 text-lg uppercase tracking-tight">Main Bingo</div>
+            <div class="flex flex-wrap items-center gap-3">
+                <div id="fs-title" class="font-extrabold text-blue-600 text-lg uppercase mr-2">Main Bingo</div>
                 <button onclick="handleClearMarks('fullscreen')" class="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-4 py-2 rounded-xl text-xs font-bold border border-amber-200 dark:border-amber-800 active:scale-95 transition-all">
                     Bersihkan Tanda
                 </button>
+                <button onclick="downloadPDF(currentFullscreenBookId)" class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-4 py-2 rounded-xl text-xs font-bold border border-blue-200 dark:border-blue-800 active:scale-95 transition-all">
+                    Cetak PDF
+                </button>
             </div>
-            <button onclick="handleExitFullscreen()" class="bg-red-500 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 active:scale-95 shadow-lg shadow-red-200 dark:shadow-red-900/20">
+            <button onclick="handleExitFullscreen()" class="bg-red-500 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 active:scale-95 shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-                Keluar Layar Penuh
+                Keluar
             </button>
         </div>
-        <div id="fs-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20">
-            <!-- Content will be cloned here -->
-        </div>
+        <div id="fs-content" class="grid grid-cols-1 md:grid-cols-2 gap-6 pb-20"></div>
     </div>
 
     <div id="main-ui" class="max-w-7xl mx-auto">
@@ -189,24 +203,18 @@
                 <h1 class="text-3xl font-extrabold tracking-tighter text-blue-600 leading-none">
                     VIPER <span class="text-slate-800 dark:text-white">BINGO DIGITAL</span>
                 </h1>
-                <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">Vipercell Entertainment v3.2 • Ambon</p>
+                <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">Vipercell Pro v3.3 • Ambon</p>
             </div>
             
             <div class="flex flex-wrap justify-center items-center gap-4">
-                <!-- Theme Toggle -->
-                <button onclick="toggleTheme()" class="theme-toggle-btn p-3 rounded-2xl shadow-sm transition-all active:scale-95">
+                <button onclick="toggleTheme()" class="theme-toggle-btn p-3 rounded-2xl shadow-sm active:scale-95">
                     <svg id="theme-icon-sun" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364-6.364l-.707.707M6.343 17.657l-.707.707M16.95 16.95l.707.707M7.05 7.05l.707-.707M12 8a4 4 0 100 8 4 4 0 000-8z"/></svg>
                     <svg id="theme-icon-moon" class="w-6 h-6 hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"/></svg>
                 </button>
 
-                <!-- Feature Tabs -->
                 <div class="flex bg-slate-100 dark:bg-slate-900 p-1.5 rounded-2xl border border-slate-200 dark:border-slate-700">
-                    <button id="tab-saved-btn" onclick="switchTab('saved')" class="tab-btn px-6 py-3 rounded-xl font-bold transition-all text-slate-500 active">
-                        Tersimpan
-                    </button>
-                    <button id="tab-new-btn" onclick="switchTab('new')" class="tab-btn px-6 py-3 rounded-xl font-bold transition-all text-slate-500">
-                        Buat Baru
-                    </button>
+                    <button id="tab-saved-btn" onclick="switchTab('saved')" class="tab-btn px-6 py-3 rounded-xl font-bold text-slate-500 active">Koleksi</button>
+                    <button id="tab-new-btn" onclick="switchTab('new')" class="tab-btn px-6 py-3 rounded-xl font-bold text-slate-500">Buat Baru</button>
                 </div>
             </div>
         </header>
@@ -214,9 +222,9 @@
         <!-- VIEW: BUKU TERSIMPAN -->
         <section id="view-saved" class="mb-10">
             <div id="saved-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-            <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 bg-white/30 dark:bg-slate-800/30 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl text-slate-400">
+            <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 bg-white/30 dark:bg-slate-800/30 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl text-slate-400 text-center">
                 <p class="font-bold">Belum ada koleksi buku bingo</p>
-                <p class="text-xs">Data Anda disimpan secara lokal di perangkat ini.</p>
+                <p class="text-xs">Buku yang disimpan akan muncul di sini.</p>
             </div>
         </section>
 
@@ -228,25 +236,21 @@
                     <button onclick="handleClearMarks('draft')" class="text-blue-600 text-xs font-bold hover:underline">Bersihkan Tanda</button>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="handleRequestNew()" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl font-bold text-sm active:scale-95">Acak Baru</button>
-                    <button onclick="openSaveModal()" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md active:scale-95">Simpan Koleksi</button>
+                    <button onclick="handleRequestNew()" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl font-bold text-sm">Acak Baru</button>
+                    <button onclick="openSaveModal()" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md">Simpan Koleksi</button>
                 </div>
             </div>
             <div id="new-draft-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"></div>
         </section>
-
-        <footer class="text-center pb-10 border-t border-slate-300 dark:border-slate-700 pt-8 opacity-50">
-            <p class="text-slate-600 dark:text-slate-400 font-bold text-[10px] tracking-widest uppercase">VIPER BINGO DIGITAL • PRO v3.2</p>
-        </footer>
     </div>
 
-    <!-- Notification Toast (2 Detik) -->
+    <!-- Notification Toast -->
     <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 font-black z-[10001] uppercase tracking-widest text-xs">
         Notifikasi
     </div>
 
     <script>
-        const STORAGE_KEY = 'viper_bingo_v3_2';
+        const STORAGE_KEY = 'viper_bingo_v3_3';
         const THEME_KEY = 'viper_bingo_theme';
         const SESSION_KEY = 'viper_bingo_active_session';
         
@@ -259,17 +263,11 @@
         window.onload = () => {
             initTheme();
             loadCollection();
-            
-            // Check if we were playing before refresh
             const session = localStorage.getItem(SESSION_KEY);
-            if (session) {
-                playBookFullscreen(session);
-            } else {
-                switchTab('saved');
-            }
+            if (session) playBookFullscreen(session);
+            else switchTab('saved');
         };
 
-        // Theme System
         function initTheme() {
             const savedTheme = localStorage.getItem(THEME_KEY) || 'light';
             if (savedTheme === 'dark') document.body.classList.add('dark-theme');
@@ -278,8 +276,7 @@
 
         function toggleTheme() {
             document.body.classList.toggle('dark-theme');
-            const isDark = document.body.classList.contains('dark-theme');
-            localStorage.setItem(THEME_KEY, isDark ? 'dark' : 'light');
+            localStorage.setItem(THEME_KEY, document.body.classList.contains('dark-theme') ? 'dark' : 'light');
             updateThemeIcons();
         }
 
@@ -304,9 +301,7 @@
             if (toastTimeout) clearTimeout(toastTimeout);
             toast.innerText = msg;
             toast.className = `fixed bottom-10 left-1/2 -translate-x-1/2 ${color} text-white px-8 py-4 rounded-2xl shadow-2xl transition-all duration-300 font-black z-[10001] opacity-100 uppercase tracking-widest text-xs`;
-            toastTimeout = setTimeout(() => {
-                toast.classList.add('opacity-0');
-            }, 2000);
+            toastTimeout = setTimeout(() => { toast.classList.add('opacity-0'); }, 2000);
         }
 
         function switchTab(tab) {
@@ -315,8 +310,6 @@
             document.getElementById(`tab-${tab}-btn`).classList.add('active');
             document.getElementById('view-saved').classList.toggle('hidden', tab !== 'saved');
             document.getElementById('view-new').classList.toggle('hidden', tab !== 'new');
-            
-            // Generate new draft on each refresh/switch if it's empty
             if (tab === 'new' && currentDraft.length === 0) generateNewDraft();
             if (tab === 'saved') renderSavedList();
         }
@@ -349,9 +342,7 @@
         function renderDraft() {
             const container = document.getElementById('new-draft-container');
             container.innerHTML = '';
-            currentDraft.forEach((data, i) => {
-                container.appendChild(createCardHTML(data, i, false));
-            });
+            currentDraft.forEach((data, i) => { container.appendChild(createCardHTML(data, i, false)); });
         }
 
         function createCardHTML(data, cardIndex, isSavedBook, bookId = null) {
@@ -359,7 +350,7 @@
             cardWrapper.className = 'bingo-card p-6 shadow-xl';
             let html = `
                 <div class="flex justify-between items-center mb-5">
-                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">Kartu #${cardIndex + 1}</span>
+                    <span class="text-xs font-black text-slate-400 uppercase tracking-widest">KARTU #${cardIndex + 1}</span>
                     <span class="text-[9px] font-black text-white bg-blue-600 px-2 py-0.5 rounded-full">VIPER PRO</span>
                 </div>
                 <div class="grid grid-cols-5 gap-1.5 text-center overflow-hidden rounded-2xl border-2 border-slate-100 dark:border-slate-700 bg-white dark:bg-slate-900 shadow-inner">
@@ -396,7 +387,6 @@
             if (isSavedBook) saveToLocalStorage();
         }
 
-        // --- Custom Modal Handlers ---
         function openModal(id) { document.getElementById(id).classList.add('active'); }
         function closeModal(id) { document.getElementById(id).classList.remove('active'); }
 
@@ -404,82 +394,38 @@
             const modal = document.getElementById('modal-confirm');
             document.getElementById('confirm-title').innerText = title;
             document.getElementById('confirm-msg').innerText = msg;
-            
             const btn = document.getElementById('confirm-action-btn');
             btn.innerText = btnText;
             btn.className = `flex-1 py-4 font-bold text-white rounded-2xl shadow-lg ${btnColor}`;
-            
-            btn.onclick = () => {
-                onConfirm();
-                closeModal('modal-confirm');
-            };
-            
+            btn.onclick = () => { onConfirm(); closeModal('modal-confirm'); };
             openModal('modal-confirm');
         }
 
-        // --- Action Handlers ---
         function handleClearMarks(type) {
-            showConfirmModal(
-                "Bersihkan Tanda?",
-                "Semua nomor yang telah ditandai akan dibuka kembali. Kartu tidak akan berubah.",
-                "Ya, Bersihkan",
-                "bg-amber-600",
-                () => {
-                    if (type === 'draft') {
-                        currentDraft.forEach(card => card.marks = []);
-                        renderDraft();
-                    } else if (currentFullscreenBookId) {
-                        const book = savedCollection.find(b => b.id === currentFullscreenBookId);
-                        if (book) {
-                            book.cards.forEach(card => card.marks = []);
-                            saveToLocalStorage();
-                            playBookFullscreen(currentFullscreenBookId);
-                        }
-                    }
-                    showToast("Tanda Dibersihkan", "bg-slate-600");
+            showConfirmModal("Bersihkan Tanda?", "Semua nomor yang ditandai akan dibuka kembali.", "Ya, Bersihkan", "bg-amber-600", () => {
+                if (type === 'draft') { currentDraft.forEach(card => card.marks = []); renderDraft(); }
+                else if (currentFullscreenBookId) {
+                    const book = savedCollection.find(b => b.id === currentFullscreenBookId);
+                    if (book) { book.cards.forEach(card => card.marks = []); saveToLocalStorage(); playBookFullscreen(currentFullscreenBookId); }
                 }
-            );
+                showToast("Tanda Dibersihkan", "bg-slate-600");
+            });
         }
 
         function handleRequestNew() {
-            showConfirmModal(
-                "Buku Baru?",
-                "Membuat buku baru akan menghapus buku draft saat ini yang belum disimpan.",
-                "Ya, Acak Baru",
-                "bg-blue-600",
-                () => {
-                    generateNewDraft();
-                    showToast("Draft Baru Berhasil Diacak!", "bg-blue-600");
-                }
-            );
+            showConfirmModal("Buku Baru?", "Data draft saat ini akan hilang.", "Ya, Acak Baru", "bg-blue-600", () => { generateNewDraft(); showToast("Draft Baru Diacak!", "bg-blue-600"); });
         }
 
         function handleExitFullscreen() {
-            showConfirmModal(
-                "Keluar Layar Penuh?",
-                "Anda akan kembali ke menu utama. Permainan tetap tersimpan otomatis.",
-                "Ya, Keluar",
-                "bg-red-500",
-                () => {
-                    exitFullscreenMode();
-                }
-            );
+            showConfirmModal("Keluar?", "Kembali ke menu utama.", "Ya, Keluar", "bg-red-500", () => { exitFullscreenMode(); });
         }
 
-        function openSaveModal() {
-            document.getElementById('input-book-name').value = '';
-            openModal('modal-save');
-        }
+        function openSaveModal() { document.getElementById('input-book-name').value = ''; openModal('modal-save'); }
 
         function confirmSave() {
             const name = document.getElementById('input-book-name').value.trim();
-            if (!name) return showToast("Nama buku tidak boleh kosong!", "bg-red-500");
-            const newBook = {
-                id: 'book-' + Date.now(),
-                name: name,
-                date: new Date().toLocaleDateString('id-ID'),
-                cards: JSON.parse(JSON.stringify(currentDraft))
-            };
+            if (!name) return showToast("Nama buku kosong!", "bg-red-500");
+            const newBook = { id: 'book-' + Date.now(), name: name, date: new Date().toLocaleDateString('id-ID'), cards: JSON.parse(JSON.stringify(currentDraft)) };
             savedCollection.unshift(newBook);
             saveToLocalStorage();
             closeModal('modal-save');
@@ -491,81 +437,143 @@
             const list = document.getElementById('saved-list');
             const empty = document.getElementById('empty-state');
             list.innerHTML = '';
-            if (savedCollection.length === 0) {
-                empty.classList.remove('hidden');
-                return;
-            }
+            if (savedCollection.length === 0) { empty.classList.remove('hidden'); return; }
             empty.classList.add('hidden');
             savedCollection.forEach(book => {
                 const item = document.createElement('div');
-                item.className = 'bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col gap-4 hover:shadow-md transition-all';
+                item.className = 'bg-white dark:bg-slate-800 p-6 rounded-3xl border border-slate-200 dark:border-slate-700 shadow-sm flex flex-col gap-4';
                 item.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
-                            <h4 class="font-extrabold text-slate-800 dark:text-white text-lg leading-tight">${book.name}</h4>
-                            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">${book.date}</p>
+                            <h4 class="font-extrabold text-slate-800 dark:text-white text-lg">${book.name}</h4>
+                            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase">${book.date}</p>
                         </div>
-                        <button onclick="deleteBook('${book.id}')" class="text-slate-300 hover:text-red-500 p-2 transition-colors">
-                            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
-                        </button>
+                        <div class="flex gap-1">
+                            <button onclick="downloadPDF('${book.id}')" class="text-slate-300 hover:text-blue-500 p-2 transition-colors">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                            </button>
+                            <button onclick="deleteBook('${book.id}')" class="text-slate-300 hover:text-red-500 p-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/></svg>
+                            </button>
+                        </div>
                     </div>
-                    <button onclick="playBookFullscreen('${book.id}')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-all">Mainkan Sekarang</button>
+                    <button onclick="playBookFullscreen('${book.id}')" class="bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg active:scale-95">Mainkan</button>
                 `;
                 list.appendChild(item);
             });
         }
 
         function deleteBook(id) {
-            showConfirmModal(
-                "Hapus Buku?",
-                "Tindakan ini permanen dan buku tidak bisa dikembalikan.",
-                "Ya, Hapus",
-                "bg-red-600",
-                () => {
-                    savedCollection = savedCollection.filter(b => b.id !== id);
-                    saveToLocalStorage();
-                    renderSavedList();
-                    showToast("Buku Dihapus", "bg-slate-700");
-                }
-            );
+            showConfirmModal("Hapus Buku?", "Tindakan ini permanen.", "Ya, Hapus", "bg-red-600", () => {
+                savedCollection = savedCollection.filter(b => b.id !== id);
+                saveToLocalStorage();
+                renderSavedList();
+                showToast("Buku Dihapus", "bg-slate-700");
+            });
         }
 
         function playBookFullscreen(bookId) {
             currentFullscreenBookId = bookId;
             const book = savedCollection.find(b => b.id === bookId);
             if (!book) return;
-            
-            // Save active session
             localStorage.setItem(SESSION_KEY, bookId);
-            
             document.getElementById('fs-title').innerText = book.name;
             const content = document.getElementById('fs-content');
             content.innerHTML = '';
             book.cards.forEach((card, i) => content.appendChild(createCardHTML(card, i, true, bookId)));
-            
             document.body.classList.add('is-fullscreen');
-            if (document.documentElement.requestFullscreen) {
-                document.documentElement.requestFullscreen().catch(e => {
-                    // Fail silently or handle if needed
-                });
-            }
+            if (document.documentElement.requestFullscreen) document.documentElement.requestFullscreen().catch(() => {});
         }
 
         function exitFullscreenMode() {
             document.body.classList.remove('is-fullscreen');
             localStorage.removeItem(SESSION_KEY);
-            if (document.exitFullscreen) {
-                document.exitFullscreen().catch(() => {});
-            }
+            if (document.exitFullscreen) document.exitFullscreen().catch(() => {});
             currentFullscreenBookId = null;
             renderSavedList();
-            showToast("Keluar Layar Penuh", "bg-slate-600");
+        }
+
+        // --- PDF DOWNLOAD LOGIC ---
+        async function downloadPDF(bookId) {
+            const book = savedCollection.find(b => b.id === bookId);
+            if (!book) return;
+
+            showToast("Menyiapkan PDF...", "bg-blue-500");
+            
+            const template = document.getElementById('print-template');
+            template.innerHTML = '';
+            template.style.display = 'block';
+
+            // PDF Header
+            const pdfHeader = `
+                <div style="border-bottom: 4px solid #2563eb; padding-bottom: 10px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
+                    <div>
+                        <h1 style="margin: 0; color: #2563eb; font-size: 28px; font-weight: 800; letter-spacing: -1px;">VIPER BINGO DIGITAL</h1>
+                        <p style="margin: 0; color: #64748b; font-size: 12px; font-weight: 700;">KOLEKSI: ${book.name.toUpperCase()}</p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="margin: 0; color: #94a3b8; font-size: 10px; font-weight: 800;">DIUNDUH: ${book.date}</p>
+                        <p style="margin: 0; color: #2563eb; font-size: 10px; font-weight: 800;">ORIGINAL VIPERCELL AMBON</p>
+                    </div>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+            `;
+
+            let pdfContent = pdfHeader;
+
+            book.cards.forEach((card, idx) => {
+                let cardHtml = `
+                    <div style="border: 1px solid #e2e8f0; border-radius: 15px; padding: 15px; background: white;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
+                            <span style="font-size: 10px; font-weight: 800; color: #64748b;">KARTU #${idx + 1}</span>
+                            <span style="font-size: 8px; font-weight: 900; color: #2563eb;">VIPER PRO</span>
+                        </div>
+                        <table style="width: 100%; border-collapse: separate; border-spacing: 2px;">
+                            <tr>
+                                ${['B','I','N','G','O'].map(h => `<th style="background: #2563eb; color: white; padding: 8px; font-size: 16px; font-weight: 900; border-radius: 4px;">${h}</th>`).join('')}
+                            </tr>
+                `;
+
+                for (let row = 0; row < 5; row++) {
+                    cardHtml += '<tr>';
+                    ['B','I','N','G','O'].forEach(col => {
+                        if (col === 'N' && row === 2) {
+                            cardHtml += `<td style="width: 20%; aspect-ratio: 1/1; text-align: center; background: #f59e0b; color: white; font-weight: 900; font-size: 10px; border-radius: 4px; padding: 10px 0;">FREE</td>`;
+                        } else {
+                            const val = card[col][row];
+                            cardHtml += `<td style="width: 20%; aspect-ratio: 1/1; text-align: center; border: 1px solid #f1f5f9; background: #fafafa; color: #1e293b; font-weight: 800; font-size: 18px; border-radius: 4px; padding: 10px 0;">${val}</td>`;
+                        }
+                    });
+                    cardHtml += '</tr>';
+                }
+                cardHtml += `</table></div>`;
+                pdfContent += cardHtml;
+            });
+
+            pdfContent += `</div><div style="margin-top: 40px; text-align: center; color: #cbd5e1; font-size: 10px; font-weight: 700; border-top: 1px dashed #e2e8f0; padding-top: 10px;">CETAKAN DIGITAL VIPER BINGO • TERIMA KASIH TELAH MENGGUNAKAN LAYANAN VIPERCELL</div>`;
+            template.innerHTML = pdfContent;
+
+            const opt = {
+                margin: 0.5,
+                filename: `Bingo_Viper_${book.name.replace(/\s+/g, '_')}.pdf`,
+                image: { type: 'jpeg', quality: 0.98 },
+                html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+                jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
+            };
+
+            try {
+                await html2pdf().set(opt).from(template).save();
+                showToast("PDF Berhasil Diunduh!", "bg-green-600");
+            } catch (error) {
+                showToast("Gagal mengunduh PDF", "bg-red-600");
+                console.error(error);
+            } finally {
+                template.style.display = 'none';
+            }
         }
 
         document.addEventListener('fullscreenchange', () => {
             if (!document.fullscreenElement) {
-                // If exited via ESC key, we don't force warning (browser limitation)
-                // but we clear the session state
                 document.body.classList.remove('is-fullscreen');
                 localStorage.removeItem(SESSION_KEY);
                 currentFullscreenBookId = null;
