@@ -1,6 +1,6 @@
 <!-- 
-  Vipercell Web Update v3.3
-  Feature: Professional PDF Export (Print Ready), A4 Layout Optimization, & PDF Branding
+  Vipercell Web Update v3.4
+  Feature: A4 Print Perfection, Stabilized PDF Layout, & High-Contrast Print Template
   Developer: Senior AI Developer Partner (Vipercell Project)
 -->
 <!DOCTYPE html>
@@ -8,7 +8,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viper Bingo Digital v3.3</title>
+    <title>Viper Bingo Digital v3.4</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap" rel="stylesheet">
     <!-- PDF Library -->
@@ -96,9 +96,7 @@
             overflow-y: auto;
         }
 
-        body.is-fullscreen #fullscreen-overlay {
-            display: block;
-        }
+        body.is-fullscreen #fullscreen-overlay { display: block; }
 
         .tab-btn.active {
             background: var(--viper-blue);
@@ -118,10 +116,7 @@
         }
         .modal.active { display: flex; }
         
-        .modal-content {
-            animation: modalScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
+        .modal-content { animation: modalScale 0.3s cubic-bezier(0.34, 1.56, 0.64, 1); }
         @keyframes modalScale {
             from { opacity: 0; transform: scale(0.9); }
             to { opacity: 1; transform: scale(1); }
@@ -133,20 +128,22 @@
             color: var(--text-main);
         }
 
-        /* Print Template Style (Hidden from UI) */
-        #print-template {
+        /* Print Style Hidden from Screen */
+        #print-container {
             display: none;
-            color: black;
+            position: absolute;
+            left: -9999px;
+            top: 0;
+            width: 750px; /* Fixed width for A4 consistency */
             background: white;
-            width: 800px; /* Base width for A4 calc */
-            padding: 20px;
+            color: black;
         }
     </style>
 </head>
 <body class="p-4 md:p-8">
 
-    <!-- HIDDEN PRINT TEMPLATE -->
-    <div id="print-template"></div>
+    <!-- HIDDEN PRINT CONTAINER -->
+    <div id="print-container"></div>
 
     <!-- MODAL: SIMPAN NAMA BUKU -->
     <div id="modal-save" class="modal px-4">
@@ -155,20 +152,20 @@
             <p class="text-slate-500 dark:text-slate-400 text-sm mb-6">Beri nama untuk paket 4 buku bingo ini.</p>
             <input type="text" id="input-book-name" placeholder="Nama Buku..." class="w-full bg-slate-100 dark:bg-slate-700 border-2 border-slate-200 dark:border-slate-600 p-4 rounded-2xl mb-6 focus:border-blue-500 outline-none font-bold text-slate-700 dark:text-white">
             <div class="flex gap-3">
-                <button onclick="closeModal('modal-save')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl">Batal</button>
-                <button onclick="confirmSave()" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl">Simpan</button>
+                <button onclick="closeModal('modal-save')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl hover:bg-slate-200">Batal</button>
+                <button onclick="confirmSave()" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl shadow-lg">Simpan</button>
             </div>
         </div>
     </div>
 
     <!-- MODAL: KONFIRMASI -->
     <div id="modal-confirm" class="modal px-4">
-        <div class="modal-content bg-white dark:bg-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl">
+        <div class="modal-content bg-white dark:bg-slate-800 w-full max-w-md p-8 rounded-3xl shadow-2xl text-center">
             <div id="confirm-icon" class="w-16 h-16 rounded-full flex items-center justify-center mb-6 mx-auto bg-amber-100 text-amber-600">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/></svg>
             </div>
-            <h3 id="confirm-title" class="text-xl font-extrabold mb-2 text-slate-800 dark:text-white text-center">Konfirmasi</h3>
-            <p id="confirm-msg" class="text-slate-500 dark:text-slate-400 text-sm mb-8 text-center">Apakah Anda yakin?</p>
+            <h3 id="confirm-title" class="text-xl font-extrabold mb-2 text-slate-800 dark:text-white">Konfirmasi</h3>
+            <p id="confirm-msg" class="text-slate-500 dark:text-slate-400 text-sm mb-8">Apakah Anda yakin?</p>
             <div class="flex gap-3">
                 <button onclick="closeModal('modal-confirm')" class="flex-1 py-4 font-bold text-slate-500 bg-slate-100 dark:bg-slate-700 rounded-2xl">Batal</button>
                 <button id="confirm-action-btn" class="flex-1 py-4 font-bold text-white bg-blue-600 rounded-2xl">Lanjutkan</button>
@@ -181,12 +178,8 @@
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 bg-white dark:bg-slate-800 p-4 rounded-2xl shadow-sm border border-slate-200 dark:border-slate-700 gap-4">
             <div class="flex flex-wrap items-center gap-3">
                 <div id="fs-title" class="font-extrabold text-blue-600 text-lg uppercase mr-2">Main Bingo</div>
-                <button onclick="handleClearMarks('fullscreen')" class="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-4 py-2 rounded-xl text-xs font-bold border border-amber-200 dark:border-amber-800 active:scale-95 transition-all">
-                    Bersihkan Tanda
-                </button>
-                <button onclick="downloadPDF(currentFullscreenBookId)" class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-4 py-2 rounded-xl text-xs font-bold border border-blue-200 dark:border-blue-800 active:scale-95 transition-all">
-                    Cetak PDF
-                </button>
+                <button onclick="handleClearMarks('fullscreen')" class="bg-amber-100 text-amber-700 dark:bg-amber-900/30 dark:text-amber-400 px-4 py-2 rounded-xl text-xs font-bold border border-amber-200 dark:border-amber-800 active:scale-95 transition-all">Bersihkan Tanda</button>
+                <button onclick="downloadPDF(currentFullscreenBookId)" class="bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400 px-4 py-2 rounded-xl text-xs font-bold border border-blue-200 dark:border-blue-800 active:scale-95 transition-all">Cetak PDF</button>
             </div>
             <button onclick="handleExitFullscreen()" class="bg-red-500 text-white px-6 py-3 rounded-xl font-bold flex items-center gap-2 active:scale-95 shadow-lg">
                 <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
@@ -203,7 +196,7 @@
                 <h1 class="text-3xl font-extrabold tracking-tighter text-blue-600 leading-none">
                     VIPER <span class="text-slate-800 dark:text-white">BINGO DIGITAL</span>
                 </h1>
-                <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">Vipercell Pro v3.3 • Ambon</p>
+                <p class="text-slate-400 text-[10px] font-black uppercase tracking-[0.2em] mt-2">Vipercell Pro v3.4 • Ambon</p>
             </div>
             
             <div class="flex flex-wrap justify-center items-center gap-4">
@@ -224,7 +217,6 @@
             <div id="saved-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
             <div id="empty-state" class="hidden flex flex-col items-center justify-center py-20 bg-white/30 dark:bg-slate-800/30 border-2 border-dashed border-slate-300 dark:border-slate-700 rounded-3xl text-slate-400 text-center">
                 <p class="font-bold">Belum ada koleksi buku bingo</p>
-                <p class="text-xs">Buku yang disimpan akan muncul di sini.</p>
             </div>
         </section>
 
@@ -236,8 +228,8 @@
                     <button onclick="handleClearMarks('draft')" class="text-blue-600 text-xs font-bold hover:underline">Bersihkan Tanda</button>
                 </div>
                 <div class="flex gap-2">
-                    <button onclick="handleRequestNew()" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl font-bold text-sm">Acak Baru</button>
-                    <button onclick="openSaveModal()" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md">Simpan Koleksi</button>
+                    <button onclick="handleRequestNew()" class="bg-slate-100 dark:bg-slate-700 text-slate-600 dark:text-slate-300 px-4 py-2 rounded-xl font-bold text-sm active:scale-95">Acak Baru</button>
+                    <button onclick="openSaveModal()" class="bg-green-600 text-white px-6 py-2 rounded-xl font-bold text-sm shadow-md active:scale-95">Simpan Koleksi</button>
                 </div>
             </div>
             <div id="new-draft-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"></div>
@@ -245,12 +237,10 @@
     </div>
 
     <!-- Notification Toast -->
-    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 font-black z-[10001] uppercase tracking-widest text-xs">
-        Notifikasi
-    </div>
+    <div id="toast" class="fixed bottom-10 left-1/2 -translate-x-1/2 bg-blue-600 text-white px-8 py-4 rounded-2xl shadow-2xl opacity-0 pointer-events-none transition-all duration-300 font-black z-[10001] uppercase tracking-widest text-xs">Notifikasi</div>
 
     <script>
-        const STORAGE_KEY = 'viper_bingo_v3_3';
+        const STORAGE_KEY = 'viper_bingo_v3_4';
         const THEME_KEY = 'viper_bingo_theme';
         const SESSION_KEY = 'viper_bingo_active_session';
         
@@ -445,8 +435,8 @@
                 item.innerHTML = `
                     <div class="flex justify-between items-start">
                         <div>
-                            <h4 class="font-extrabold text-slate-800 dark:text-white text-lg">${book.name}</h4>
-                            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase">${book.date}</p>
+                            <h4 class="font-extrabold text-slate-800 dark:text-white text-lg leading-tight">${book.name}</h4>
+                            <p class="text-[10px] font-bold text-slate-400 mt-1 uppercase tracking-widest">${book.date}</p>
                         </div>
                         <div class="flex gap-1">
                             <button onclick="downloadPDF('${book.id}')" class="text-slate-300 hover:text-blue-500 p-2 transition-colors">
@@ -457,7 +447,7 @@
                             </button>
                         </div>
                     </div>
-                    <button onclick="playBookFullscreen('${book.id}')" class="bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg active:scale-95">Mainkan</button>
+                    <button onclick="playBookFullscreen('${book.id}')" class="bg-blue-600 text-white font-bold py-3 rounded-xl shadow-lg active:scale-95 transition-all">Mainkan Sekarang</button>
                 `;
                 list.appendChild(item);
             });
@@ -493,82 +483,100 @@
             renderSavedList();
         }
 
-        // --- PDF DOWNLOAD LOGIC ---
+        // --- ENHANCED PDF DOWNLOAD LOGIC ---
         async function downloadPDF(bookId) {
             const book = savedCollection.find(b => b.id === bookId);
             if (!book) return;
 
             showToast("Menyiapkan PDF...", "bg-blue-500");
             
-            const template = document.getElementById('print-template');
-            template.innerHTML = '';
-            template.style.display = 'block';
+            const container = document.getElementById('print-container');
+            container.innerHTML = '';
+            container.style.display = 'block';
 
-            // PDF Header
-            const pdfHeader = `
-                <div style="border-bottom: 4px solid #2563eb; padding-bottom: 10px; margin-bottom: 30px; display: flex; justify-content: space-between; align-items: flex-end;">
-                    <div>
-                        <h1 style="margin: 0; color: #2563eb; font-size: 28px; font-weight: 800; letter-spacing: -1px;">VIPER BINGO DIGITAL</h1>
-                        <p style="margin: 0; color: #64748b; font-size: 12px; font-weight: 700;">KOLEKSI: ${book.name.toUpperCase()}</p>
+            // High Precision Table Structure for PDF
+            let pdfContent = `
+                <div style="padding: 20px; font-family: 'Plus Jakarta Sans', sans-serif;">
+                    <div style="border-bottom: 5px solid #2563eb; padding-bottom: 10px; margin-bottom: 25px; display: flex; justify-content: space-between; align-items: flex-end;">
+                        <div style="width: 70%;">
+                            <h1 style="margin: 0; color: #2563eb; font-size: 30px; font-weight: 800; text-transform: uppercase;">Viper Bingo Digital</h1>
+                            <p style="margin: 0; color: #475569; font-size: 14px; font-weight: 700;">KOLEKSI: ${book.name.toUpperCase()}</p>
+                        </div>
+                        <div style="width: 30%; text-align: right;">
+                            <p style="margin: 0; color: #94a3b8; font-size: 10px; font-weight: 800;">UNDUH: ${book.date}</p>
+                            <p style="margin: 0; color: #2563eb; font-size: 10px; font-weight: 900;">AMBON, MALUKU</p>
+                        </div>
                     </div>
-                    <div style="text-align: right;">
-                        <p style="margin: 0; color: #94a3b8; font-size: 10px; font-weight: 800;">DIUNDUH: ${book.date}</p>
-                        <p style="margin: 0; color: #2563eb; font-size: 10px; font-weight: 800;">ORIGINAL VIPERCELL AMBON</p>
-                    </div>
-                </div>
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+
+                    <table style="width: 100%; border-collapse: separate; border-spacing: 20px;">
+                        <tr>
             `;
 
-            let pdfContent = pdfHeader;
-
             book.cards.forEach((card, idx) => {
-                let cardHtml = `
-                    <div style="border: 1px solid #e2e8f0; border-radius: 15px; padding: 15px; background: white;">
-                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px;">
-                            <span style="font-size: 10px; font-weight: 800; color: #64748b;">KARTU #${idx + 1}</span>
-                            <span style="font-size: 8px; font-weight: 900; color: #2563eb;">VIPER PRO</span>
+                // Logic to split 2 per row
+                if (idx > 0 && idx % 2 === 0) pdfContent += `</tr><tr>`;
+
+                pdfContent += `
+                    <td style="width: 50%; vertical-align: top; border: 2px solid #cbd5e1; border-radius: 20px; padding: 15px; background: white;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 0 5px;">
+                            <span style="font-size: 11px; font-weight: 800; color: #64748b;">KARTU #${idx + 1}</span>
+                            <span style="font-size: 9px; font-weight: 900; color: #2563eb;">VIPERCELL PRO</span>
                         </div>
-                        <table style="width: 100%; border-collapse: separate; border-spacing: 2px;">
-                            <tr>
-                                ${['B','I','N','G','O'].map(h => `<th style="background: #2563eb; color: white; padding: 8px; font-size: 16px; font-weight: 900; border-radius: 4px;">${h}</th>`).join('')}
+                        <table style="width: 100%; border-collapse: collapse; border: 3px solid #1e293b;">
+                            <tr style="background: #2563eb;">
+                                ${['B','I','N','G','O'].map(h => `
+                                    <th style="color: white; padding: 10px; font-size: 18px; font-weight: 900; text-align: center; border: 1.5px solid #1e293b;">${h}</th>
+                                `).join('')}
                             </tr>
                 `;
 
                 for (let row = 0; row < 5; row++) {
-                    cardHtml += '<tr>';
+                    pdfContent += `<tr>`;
                     ['B','I','N','G','O'].forEach(col => {
                         if (col === 'N' && row === 2) {
-                            cardHtml += `<td style="width: 20%; aspect-ratio: 1/1; text-align: center; background: #f59e0b; color: white; font-weight: 900; font-size: 10px; border-radius: 4px; padding: 10px 0;">FREE</td>`;
+                            pdfContent += `<td style="background: #f59e0b; color: white; padding: 12px 0; text-align: center; font-size: 11px; font-weight: 900; border: 1.5px solid #1e293b;">FREE</td>`;
                         } else {
                             const val = card[col][row];
-                            cardHtml += `<td style="width: 20%; aspect-ratio: 1/1; text-align: center; border: 1px solid #f1f5f9; background: #fafafa; color: #1e293b; font-weight: 800; font-size: 18px; border-radius: 4px; padding: 10px 0;">${val}</td>`;
+                            pdfContent += `<td style="padding: 12px 0; text-align: center; font-size: 20px; font-weight: 800; color: #000; background: #fff; border: 1.5px solid #1e293b;">${val}</td>`;
                         }
                     });
-                    cardHtml += '</tr>';
+                    pdfContent += `</tr>`;
                 }
-                cardHtml += `</table></div>`;
-                pdfContent += cardHtml;
+                pdfContent += `</table></td>`;
             });
 
-            pdfContent += `</div><div style="margin-top: 40px; text-align: center; color: #cbd5e1; font-size: 10px; font-weight: 700; border-top: 1px dashed #e2e8f0; padding-top: 10px;">CETAKAN DIGITAL VIPER BINGO • TERIMA KASIH TELAH MENGGUNAKAN LAYANAN VIPERCELL</div>`;
-            template.innerHTML = pdfContent;
+            pdfContent += `
+                        </tr>
+                    </table>
+
+                    <div style="margin-top: 30px; padding-top: 15px; border-top: 1.5px dashed #cbd5e1; text-align: center;">
+                        <p style="color: #94a3b8; font-size: 10px; font-weight: 800; letter-spacing: 1px;">ORIGINAL DIGITAL PRODUCT BY VIPERCELL • TERIMA KASIH TELAH MENCETAK</p>
+                    </div>
+                </div>
+            `;
+
+            container.innerHTML = pdfContent;
 
             const opt = {
-                margin: 0.5,
-                filename: `Bingo_Viper_${book.name.replace(/\s+/g, '_')}.pdf`,
-                image: { type: 'jpeg', quality: 0.98 },
-                html2canvas: { scale: 2, useCORS: true, letterRendering: true },
+                margin: [0.3, 0.3], // Small uniform margin
+                filename: `Viper_Bingo_${book.name.replace(/\s+/g, '_')}.pdf`,
+                image: { type: 'jpeg', quality: 1 },
+                html2canvas: { 
+                    scale: 2, 
+                    useCORS: true,
+                    backgroundColor: '#ffffff'
+                },
                 jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
             };
 
             try {
-                await html2pdf().set(opt).from(template).save();
-                showToast("PDF Berhasil Diunduh!", "bg-green-600");
+                await html2pdf().set(opt).from(container).save();
+                showToast("PDF Siap Dicetak!", "bg-green-600");
             } catch (error) {
                 showToast("Gagal mengunduh PDF", "bg-red-600");
                 console.error(error);
             } finally {
-                template.style.display = 'none';
+                container.style.display = 'none';
             }
         }
 
