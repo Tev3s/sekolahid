@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SmartBell v11.0 - AI Integration Edition</title>
+    <title>SmartBell v12.0 - Panggilan Khusus Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@700;800&display=swap');
@@ -75,7 +75,7 @@
                 </div>
                 <div>
                     <h1 class="text-xl font-extrabold tracking-tight text-slate-800 leading-none">SmartBell</h1>
-                    <p class="text-blue-600 text-[10px] font-bold uppercase tracking-widest mt-1">Light Edition v11.0</p>
+                    <p class="text-blue-600 text-[10px] font-bold uppercase tracking-widest mt-1">Light Edition v12.0</p>
                 </div>
             </div>
             <button onclick="toggleFullScreen()" class="lg:hidden p-3 bg-slate-50 hover:bg-slate-100 rounded-xl text-slate-500 transition border border-slate-200">
@@ -164,18 +164,24 @@
         <div class="col-span-1 lg:col-span-5 flex flex-col h-[800px] lg:h-auto overflow-y-auto pr-1 pb-4 lg:pb-0">
             
             <div class="clean-card p-6 lg:p-8 flex flex-col h-full">
-                <!-- Instant Play Access -->
+                <!-- Instant Play Access & PANGGILAN -->
                 <div class="mb-6 pb-6 border-b border-slate-100">
-                    <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest mb-3 flex items-center gap-2">
-                        <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Mainkan Instan
-                    </h2>
-                    <div class="grid grid-cols-3 gap-2">
-                        <button onclick="playInstantBell('upacara')" class="py-2.5 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1.5 border border-rose-100 shadow-sm">🇲🇨 Upacara</button>
-                        <button onclick="playInstantBell('apel')" class="py-2.5 bg-orange-50 text-orange-600 hover:bg-orange-600 hover:text-white rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1.5 border border-orange-100 shadow-sm">📢 Apel</button>
-                        <button onclick="playInstantBell('masuk')" class="py-2.5 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1.5 border border-blue-100 shadow-sm">🏫 Masuk</button>
-                        <button onclick="playInstantBell('istirahat')" class="py-2.5 bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1.5 border border-amber-100 shadow-sm">☕ Istirahat</button>
-                        <button onclick="playInstantBell('ibadah')" class="py-2.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1.5 border border-emerald-100 shadow-sm">🕌 Ibadah</button>
-                        <button onclick="playInstantBell('pulang')" class="py-2.5 bg-slate-100 text-slate-600 hover:bg-slate-700 hover:text-white rounded-xl text-[10px] font-bold transition flex items-center justify-center gap-1.5 border border-slate-200 shadow-sm">🏠 Pulang</button>
+                    <div class="flex justify-between items-center mb-3">
+                        <h2 class="text-sm font-black text-slate-800 uppercase tracking-widest flex items-center gap-2">
+                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span> Mainkan Instan
+                        </h2>
+                    </div>
+                    
+                    <div class="flex items-center gap-2 overflow-x-auto w-full pb-2 scroll-smooth">
+                        <!-- Tombol Panggilan Khusus (FITUR BARU) -->
+                        <button onclick="openCallModal()" class="shrink-0 px-4 py-2.5 bg-indigo-50 text-indigo-600 hover:bg-indigo-600 hover:text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1.5 border border-indigo-200 shadow-sm mr-2">🎙️ Panggilan Khusus</button>
+                        
+                        <button onclick="playInstantBell('upacara')" class="shrink-0 px-4 py-2.5 bg-rose-50 text-rose-600 hover:bg-rose-600 hover:text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1.5 border border-rose-100 shadow-sm">🇲🇨 Upacara</button>
+                        <button onclick="playInstantBell('apel')" class="shrink-0 px-4 py-2.5 bg-orange-50 text-orange-600 hover:bg-orange-600 hover:text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1.5 border border-orange-100 shadow-sm">📢 Apel</button>
+                        <button onclick="playInstantBell('masuk')" class="shrink-0 px-4 py-2.5 bg-blue-50 text-blue-600 hover:bg-blue-600 hover:text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1.5 border border-blue-100 shadow-sm">🏫 Masuk</button>
+                        <button onclick="playInstantBell('istirahat')" class="shrink-0 px-4 py-2.5 bg-amber-50 text-amber-600 hover:bg-amber-500 hover:text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1.5 border border-amber-100 shadow-sm">☕ Istirahat</button>
+                        <button onclick="playInstantBell('ibadah')" class="shrink-0 px-4 py-2.5 bg-emerald-50 text-emerald-600 hover:bg-emerald-600 hover:text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1.5 border border-emerald-100 shadow-sm">🕌 Ibadah</button>
+                        <button onclick="playInstantBell('pulang')" class="shrink-0 px-4 py-2.5 bg-slate-100 text-slate-600 hover:bg-slate-700 hover:text-white rounded-xl text-[11px] font-bold transition flex items-center justify-center gap-1.5 border border-slate-200 shadow-sm">🏠 Pulang</button>
                     </div>
                 </div>
 
@@ -275,6 +281,52 @@
 
     </main>
 
+    <!-- Modal (Panggilan Khusus / Picket Call) -->
+    <div id="call-modal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
+        <div class="bg-white border border-slate-200 rounded-[2rem] p-8 max-w-md w-full shadow-2xl transform scale-95 transition-transform duration-300">
+            <div class="flex items-center gap-4 mb-6">
+                <div class="w-12 h-12 rounded-2xl bg-indigo-100 text-indigo-600 flex items-center justify-center shadow-inner border border-indigo-200 shrink-0">
+                    <span class="text-2xl">🎙️</span>
+                </div>
+                <div>
+                    <h3 class="text-xl font-black text-slate-900 tracking-tight">Panggilan Khusus</h3>
+                    <p class="text-indigo-600 text-[10px] font-bold uppercase tracking-widest">Siar Raya Pintar</p>
+                </div>
+            </div>
+            
+            <div class="space-y-4 mb-6">
+                <div>
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Panggil Kepada</label>
+                    <div class="flex gap-2">
+                        <select id="call-role" class="bg-slate-50 border border-slate-200 rounded-xl px-3 py-2.5 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none w-[110px] shrink-0">
+                            <option value="siswa">Siswa/i</option>
+                            <option value="guru">Guru</option>
+                            <option value="staf">Staf/TU</option>
+                        </select>
+                        <input type="text" id="call-name" placeholder="Nama Lengkap..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none placeholder-slate-400">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1.5">Menuju Ke Lokasi</label>
+                    <select id="call-location" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 text-xs font-bold text-slate-700 focus:ring-2 focus:ring-blue-500 outline-none">
+                        <option value="Meja Piket">Meja Piket / Pos Jaga</option>
+                        <option value="Ruang Tata Usaha">Ruang Tata Usaha (TU)</option>
+                        <option value="Ruang Kepala Sekolah">Ruang Kepala Sekolah</option>
+                        <option value="Ruang Guru">Ruang Majelis Guru</option>
+                        <option value="Ruang Bimbingan Konseling">Ruang BK</option>
+                        <option value="Perpustakaan">Perpustakaan</option>
+                        <option value="UKS">UKS / Unit Kesehatan</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="flex gap-3 justify-end mt-2">
+                <button onclick="closeCallModal()" class="px-6 py-3 text-[11px] font-bold text-slate-500 bg-slate-100 rounded-xl hover:bg-slate-200 transition uppercase tracking-widest">Batal</button>
+                <button onclick="executeCall()" class="px-6 py-3 text-[11px] font-bold text-white bg-indigo-600 rounded-xl shadow-md shadow-indigo-500/30 hover:bg-indigo-700 transition uppercase tracking-widest flex items-center gap-2">🔊 Panggil</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Modals (Information) -->
     <div id="custom-modal" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-50 flex items-center justify-center opacity-0 pointer-events-none transition-all duration-300 p-4">
         <div class="bg-white border border-slate-200 rounded-[2rem] p-8 max-w-sm w-full shadow-2xl transform scale-95 transition-transform duration-300">
@@ -316,7 +368,7 @@
         const hariIndo = ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jumat", "Sabtu"];
         const hariSingkat = ["MIN", "SEN", "SEL", "RAB", "KAM", "JUM", "SAB"];
         
-        let savedData = localStorage.getItem('SmartBell_V11_AI');
+        let savedData = localStorage.getItem('SmartBell_V12_Panggilan');
         let schedules = savedData ? JSON.parse(savedData) : [
             { id: 1, time: "07:00", textId: "Perhatian, jam pelajaran pertama segera dimulai. Kepada seluruh siswa, silakan masuk ke dalam kelas.", textEn: "Attention please. The first period is about to begin.", days: [1,2,3,4,5] },
             { id: 2, time: "10:00", textId: "Perhatian, waktu istirahat telah tiba. Selamat beristirahat.", textEn: "Attention please. Break time has arrived.", days: [1,2,3,4,5] }
@@ -376,8 +428,8 @@
             const sid = document.getElementById('voice-id-select');
             const sen = document.getElementById('voice-en-select');
             
-            const currId = sid.value || localStorage.getItem('SmartBell_V11_VoiceID');
-            const currEn = sen.value || localStorage.getItem('SmartBell_V11_VoiceEN');
+            const currId = sid.value || localStorage.getItem('SmartBell_V12_VoiceID');
+            const currEn = sen.value || localStorage.getItem('SmartBell_V12_VoiceEN');
 
             sid.innerHTML = ''; sen.innerHTML = '';
 
@@ -429,8 +481,8 @@
                 if(googleEn) sen.value = googleEn.value;
             }
 
-            sid.addEventListener('change', (e) => localStorage.setItem('SmartBell_V11_VoiceID', e.target.value));
-            sen.addEventListener('change', (e) => localStorage.setItem('SmartBell_V11_VoiceEN', e.target.value));
+            sid.addEventListener('change', (e) => localStorage.setItem('SmartBell_V12_VoiceID', e.target.value));
+            sen.addEventListener('change', (e) => localStorage.setItem('SmartBell_V12_VoiceEN', e.target.value));
         }
 
         // --- SISTEM AUDIO (NADA BEL & TTS) ---
@@ -464,18 +516,10 @@
             }
         }
 
-        // FUNGSI NADA LOCENG BARU BERHARMONI (LEBIH SEDAP/REALISTIK)
         function playRichBellNote(baseFreq, start, dur) {
             if(!audioCtx) return;
             
-            // Additive synthesis for a tubular bell effect
-            const harmonics = [
-                [1, 1],       // Fundamental
-                [2, 0.4],     // 2nd harmonic
-                [2.76, 0.2],  // Metallic dissonance
-                [4, 0.1]      // Higher harmonic
-            ];
-
+            const harmonics = [ [1, 1], [2, 0.4], [2.76, 0.2], [4, 0.1] ];
             harmonics.forEach(harmonic => {
                 const osc = audioCtx.createOscillator();
                 const gain = audioCtx.createGain();
@@ -486,8 +530,8 @@
                 const peakVol = 0.5 * masterVolume * harmonic[1];
                 
                 gain.gain.setValueAtTime(0, start);
-                gain.gain.linearRampToValueAtTime(peakVol, start + 0.05); // quick strike
-                gain.gain.exponentialRampToValueAtTime(0.001, start + dur); // long ringing decay
+                gain.gain.linearRampToValueAtTime(peakVol, start + 0.05); 
+                gain.gain.exponentialRampToValueAtTime(0.001, start + dur); 
                 
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
@@ -503,7 +547,6 @@
             if(!audioCtx) { if(callback) callback(); return; }
             
             const now = audioCtx.currentTime;
-            
             let seq = type === 'start' ? 
                 [{f:659.25, t:0}, {f:523.25, t:0.8}, {f:587.33, t:1.6}, {f:392, t:2.4}] :
                 [{f:392, t:0}, {f:587.33, t:0.8}, {f:659.25, t:1.6}, {f:523.25, t:2.4}];
@@ -540,7 +583,6 @@
             else { msg.lang = langType === 'id' ? 'id-ID' : 'en-US'; }
 
             msg.rate = 0.85; msg.pitch = 1; msg.volume = masterVolume;
-            
             let hasRetried = false;
 
             msg.onend = () => { 
@@ -697,10 +739,10 @@
             }
         }
 
-        // --- MAINKAN INSTAN ---
+        // --- MAINKAN INSTAN & PANGGILAN KHUSUS ---
         function playInstantBell(type) {
             let tid = "", ten = "";
-            if(type === 'upacara') { tid = "Perhatian. Upacara bendera akan segera dimulai. Seluruh peserta upacara dimohon segera merapat ke lapangan."; ten = "Attention please. The flag ceremony is about to begin."; }
+            if(type === 'upacara') { tid = "Perhatian. Upacara bendera akan segera dimulai. Seluruh peserta upacara dimohon segera merapat ke lapangan."; ten = "Attention please. The flag ceremony is about to begin. All participants please gather at the field immediately."; }
             else if(type === 'apel') { tid = "Perhatian. Apel rutin akan segera dimulai. Seluruh siswa diharap segera berbaris di lapangan."; ten = "Attention please. The assembly is about to begin."; }
             else if(type === 'masuk') { tid = "Perhatian. Jam pelajaran akan segera dimulai. Seluruh siswa dipersilakan masuk ke ruangan kelas."; ten = "Attention please. The class will begin shortly."; }
             else if(type === 'istirahat') { tid = "Perhatian. Waktu istirahat telah tiba. Selamat beristirahat."; ten = "Attention please. Break time has arrived. Have a good rest."; }
@@ -709,6 +751,52 @@
             
             showModal(`Membunyikan Loceng`, `Membaca: "${tid}"`, true, () => {
                 playAnnouncementSequence(tid, ten);
+            });
+        }
+
+        // PANGGILAN PIKET (KHUSUS)
+        function openCallModal() {
+            const m = document.getElementById('call-modal');
+            m.classList.remove('opacity-0', 'pointer-events-none');
+            m.querySelector('div').classList.remove('scale-95');
+        }
+
+        function closeCallModal() {
+            const m = document.getElementById('call-modal');
+            m.classList.add('opacity-0', 'pointer-events-none');
+            m.querySelector('div').classList.add('scale-95');
+        }
+
+        function executeCall() {
+            const role = document.getElementById('call-role').value;
+            const name = document.getElementById('call-name').value.trim();
+            const location = document.getElementById('call-location').value;
+            
+            if (!name) {
+                showModal("Perhatian", "Silakan masukkan nama yang ingin dipanggil.");
+                return;
+            }
+
+            let idRole = "Siswa"; let enRole = "Student";
+            if (role === "guru") { idRole = "Bapak/Ibu Guru"; enRole = "Teacher"; }
+            if (role === "staf") { idRole = "Staf atau Karyawan"; enRole = "Staff member"; }
+
+            let enLocation = location;
+            if (location === "Meja Piket") enLocation = "the Picket Desk";
+            else if (location === "Ruang Tata Usaha") enLocation = "the Administration Office";
+            else if (location === "Ruang Kepala Sekolah") enLocation = "the Principal's Office";
+            else if (location === "Ruang Guru") enLocation = "the Teacher's Room";
+            else if (location === "Ruang Bimbingan Konseling") enLocation = "the Counseling Room";
+            else if (location === "Perpustakaan") enLocation = "the Library";
+            else if (location === "UKS") enLocation = "the School Clinic";
+
+            const textId = `Perhatian. Panggilan ditujukan kepada ${idRole} atas nama ${name}. Sekali lagi, kepada ${idRole} atas nama ${name}, harap segera menuju ke ${location} sekarang juga. Terima kasih.`;
+            const textEn = `Attention please. Calling for ${enRole}, ${name}. Once again, ${enRole} ${name}, please proceed to ${enLocation} immediately. Thank you.`;
+
+            closeCallModal();
+            
+            showModal(`Menyiarkan Panggilan`, `Membaca: "${textId}"`, true, () => {
+                playAnnouncementSequence(textId, textEn);
             });
         }
 
@@ -760,7 +848,7 @@
                 document.getElementById('input-text-id').value = '';
                 document.getElementById('input-text-en').value = '';
             }
-            localStorage.setItem('SmartBell_V11_AI', JSON.stringify(schedules));
+            localStorage.setItem('SmartBell_V12_Panggilan', JSON.stringify(schedules));
             renderSchedules(); updateNextBellDisplay();
         }
 
@@ -781,7 +869,6 @@
             document.getElementById('btn-save-schedule').classList.replace('shadow-blue-900/50', 'shadow-amber-500/30');
             document.getElementById('btn-cancel-edit').classList.remove('hidden');
             
-            // Scroll ke atas
             document.getElementById('form-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
             renderSchedules();
         }
@@ -799,7 +886,6 @@
             renderSchedules();
         }
 
-        // --- NEW TEMPLATES & AI LOGIC ---
         function useTemplate(type) {
             const h = document.getElementById('hour-select'), m = document.getElementById('minute-select');
             const tid = document.getElementById('input-text-id'), ten = document.getElementById('input-text-en');
@@ -851,8 +937,8 @@
             m.classList.remove('opacity-0', 'pointer-events-none');
         }
 
-        function confirmDelete(id) { showModal("Hapus?", "Data ini akan terhapus.", true, () => { schedules = schedules.filter(x => x.id !== id); localStorage.setItem('SmartBell_V11_AI', JSON.stringify(schedules)); renderSchedules(); updateNextBellDisplay(); }); }
-        function confirmReset() { showModal("Reset?", "Semua jadwal akan dikosongkan.", true, () => { localStorage.removeItem('SmartBell_V11_AI'); location.reload(); }); }
+        function confirmDelete(id) { showModal("Hapus?", "Data ini akan terhapus.", true, () => { schedules = schedules.filter(x => x.id !== id); localStorage.setItem('SmartBell_V12_Panggilan', JSON.stringify(schedules)); renderSchedules(); updateNextBellDisplay(); }); }
+        function confirmReset() { showModal("Reset?", "Semua jadwal akan dikosongkan.", true, () => { localStorage.removeItem('SmartBell_V12_Panggilan'); location.reload(); }); }
         function previewSchedule(id) { 
             const s = schedules.find(x => x.id === id); 
             showModal("Membunyikan Loceng", `Membaca: "${s.textId}"`, true, () => {
@@ -903,10 +989,7 @@
 
         async function generatePantunAnnouncement() {
             const t = document.getElementById('input-text-id').value;
-            if(!t) {
-                showModal("Info", "Sila masukkan pesanan ringkas sebelum ditukar menjadi Pantun.");
-                return;
-            }
+            if(!t) { showModal("Info", "Sila masukkan pesanan ringkas sebelum ditukar menjadi Pantun."); return; }
             document.getElementById('ai-loading-status').classList.remove('hidden');
             const res = await callGemini("Ubah pengumuman/pesanan ini menjadi sebuah PANTUN (terdiri daripada sampiran dan isi) yang sopan dan relevan. Hanya berikan pantunnya sahaja tanpa huraian tambahan.", t);
             if(res) document.getElementById('input-text-id').value = res.trim();
@@ -915,10 +998,7 @@
 
         async function generateBulkSchedule() {
             const prompt = document.getElementById('smart-schedule-prompt').value;
-            if(!prompt) {
-                showModal("Perhatian", "Sila masukkan penerangan jadual anda.");
-                return;
-            }
+            if(!prompt) { showModal("Perhatian", "Sila masukkan penerangan jadual anda."); return; }
 
             document.getElementById('smart-loading').classList.remove('hidden');
             const sysPrompt = `Anda adalah asisten pembuat jadwal bel sekolah pintar.
@@ -949,15 +1029,13 @@ Berikan HANYA JSON array yang valid. Jika pengguna tidak menyebutkan hari spesif
                                 days: ns.days || [1,2,3,4,5]
                             });
                         });
-                        localStorage.setItem('SmartBell_V11_AI', JSON.stringify(schedules));
+                        localStorage.setItem('SmartBell_V12_Panggilan', JSON.stringify(schedules));
                         renderSchedules();
                         updateNextBellDisplay();
                         closeSmartScheduleModal();
                         document.getElementById('smart-schedule-prompt').value = '';
                         showModal("Berjaya!", `Menambahkan ${newSchedules.length} jadual baharu secara automatik melalui AI.`);
-                    } else {
-                        throw new Error("Format JSON tidak sesuai.");
-                    }
+                    } else { throw new Error("Format JSON tidak sesuai."); }
                 } catch(e) {
                     console.error("AI Bulk Generator Error:", e);
                     showModal("Gagal", "Gagal memproses susunan jadual. Pastikan deskripsi anda jelas dan logik.");
