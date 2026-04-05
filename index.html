@@ -3,10 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viperdev Company | Client Portal</title>
+    <title>Viperdev Company | Portal Klien & Admin</title>
     
+    <!-- Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,218 +21,300 @@
             }
         }
     </script>
+    
+    <!-- Custom Styles -->
     <style>
         body { background-color: #f8fafc; color: #334155; scroll-behavior: smooth; overflow-x: hidden; }
         .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 1); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); }
         .text-gradient { background: linear-gradient(to right, #10b981, #2563eb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         
-        /* Chat Scrollbar */
-        .chat-scroll::-webkit-scrollbar { width: 6px; }
-        .chat-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        /* FIX BUG: Sistem Tab yang Anti-Bentrok */
+        .dashboard-tab { display: none; }
+        .dashboard-tab.active-tab { display: flex; flex-direction: column; }
+        .view-section { display: none; }
+        .view-section.active-view { display: block; }
+        .view-section.active-flex { display: flex; }
+
+        /* Scrollbar Halus */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
         
-        /* Loader */
-        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #10b981; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+        /* Animasi Tabel/List */
+        .list-item-enter { animation: fadeUp 0.3s ease-out forwards; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
     </style>
 </head>
 <body class="antialiased font-sans selection:bg-primary selection:text-white">
 
-    <!-- GLOBAL TOAST NOTIFICATION -->
+    <!-- TOAST NOTIFICATION -->
     <div id="global-toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[999] hidden px-6 py-3 rounded-full text-sm font-bold shadow-2xl transition-all border bg-white"></div>
 
     <!-- ========================================== -->
-    <!-- VIEW 1: LANDING PAGE (Terlihat saat belum login) -->
+    <!-- VIEW 1: LANDING PAGE -->
     <!-- ========================================== -->
-    <div id="landing-view" class="block transition-opacity duration-500">
-        <!-- NAVBAR -->
-        <nav class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-gray-200" id="navbar">
+    <div id="landing-view" class="view-section active-view transition-opacity duration-500">
+        <nav class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-gray-200">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div class="flex items-center justify-between h-20">
-                    <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer select-none" onclick="window.scrollTo(0,0)">
+                    <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer" onclick="window.scrollTo(0,0)">
                         <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-code text-primary text-xl"></i></div>
                         <span class="font-bold text-2xl tracking-wider text-slate-800">VIPER<span class="text-primary">DEV</span></span>
                     </div>
-                    
-                    <div class="hidden md:block">
-                        <div class="ml-10 flex items-baseline space-x-8">
-                            <a href="#layanan" class="text-slate-600 hover:text-primary font-semibold text-sm">Layanan</a>
-                            <a href="#portofolio" class="text-slate-600 hover:text-primary font-semibold text-sm">Portofolio</a>
-                            <button onclick="triggerLogin()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg flex items-center gap-2">
-                                <i class="fa-brands fa-google text-red-400"></i> Client Portal
-                            </button>
-                        </div>
+                    <div>
+                        <button onclick="triggerLogin()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-full text-sm font-bold shadow-lg flex items-center gap-2 transition-transform hover:-translate-y-0.5">
+                            <i class="fa-brands fa-google text-red-400"></i> Client Portal
+                        </button>
                     </div>
                 </div>
             </div>
         </nav>
 
-        <!-- HERO SECTION -->
-        <section class="pt-32 pb-20 md:pt-48 md:pb-32 px-4 flex flex-col items-center justify-center min-h-[90vh] text-center relative overflow-hidden bg-slate-50">
+        <section class="pt-32 pb-20 md:pt-48 md:pb-32 px-4 flex flex-col items-center justify-center min-h-screen text-center relative overflow-hidden bg-slate-50">
             <div class="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-[80px] -z-10"></div>
             <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] -z-10"></div>
             
             <div class="max-w-4xl mx-auto z-10">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 text-slate-600 text-xs md:text-sm font-semibold mb-8 shadow-sm">
-                    <span class="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span> Partner Teknologi Digital
+                    <span class="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span> Sistem Portal Terintegrasi
                 </div>
                 <h1 class="text-4xl md:text-7xl font-extrabold mb-6 leading-tight text-slate-900 tracking-tight">
-                    Bangun Bisnis Digital <br /> <span class="text-gradient">Level Selanjutnya</span>
+                    Ekosistem Digital <br /> <span class="text-gradient">Eksklusif</span>
                 </h1>
                 <p class="text-slate-500 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
-                    Viperdev menciptakan aplikasi web dan sistem top-up dengan performa tinggi. Login ke portal kami untuk mulai berdiskusi.
+                    Masuk ke portal Viperdev untuk mengajukan proyek, melacak progress pengembangan web, dan berdiskusi langsung dengan tim ahli kami.
                 </p>
-                <div class="flex justify-center">
-                    <button onclick="triggerLogin()" class="bg-primary hover:bg-emerald-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl shadow-primary/30 hover:-translate-y-1 flex items-center gap-3 text-lg">
-                        <i class="fa-solid fa-right-to-bracket"></i> Login / Daftar Sekarang
-                    </button>
-                </div>
+                <button onclick="triggerLogin()" class="bg-primary hover:bg-emerald-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl shadow-primary/30 hover:-translate-y-1 flex items-center gap-3 text-lg mx-auto">
+                    <i class="fa-solid fa-right-to-bracket"></i> Masuk ke Dashboard
+                </button>
             </div>
         </section>
-
-        <!-- STATISTIK SINGKAT -->
-        <section class="py-12 bg-white border-y border-gray-100">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-100">
-                <div><div class="text-4xl font-extrabold text-slate-800 mb-1">50<span class="text-primary">+</span></div><div class="text-slate-500 text-sm font-medium">Proyek Selesai</div></div>
-                <div><div class="text-4xl font-extrabold text-slate-800 mb-1">30<span class="text-primary">+</span></div><div class="text-slate-500 text-sm font-medium">Klien Bisnis</div></div>
-                <div><div class="text-4xl font-extrabold text-slate-800 mb-1">99<span class="text-primary">%</span></div><div class="text-slate-500 text-sm font-medium">Uptime Sistem</div></div>
-                <div><div class="text-4xl font-extrabold text-slate-800 mb-1">24<span class="text-primary">/7</span></div><div class="text-slate-500 text-sm font-medium">Dukungan Teknis</div></div>
-            </div>
-        </section>
-
-        <!-- LAYANAN KAMI -->
-        <section id="layanan" class="py-24 bg-slate-50">
-            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-                <div class="text-center mb-16">
-                    <h2 class="text-sm font-bold text-primary tracking-widest uppercase mb-2">Spesialisasi</h2>
-                    <h3 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4">Solusi End-to-End</h3>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                    <div class="glass-panel p-8 rounded-3xl bg-white"><div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-primary text-3xl mb-6"><i class="fa-solid fa-code"></i></div><h3 class="text-xl font-bold mb-3 text-slate-800">Web App</h3><p class="text-slate-500 text-sm">Sistem berbasis web kustom dengan CMS terintegrasi.</p></div>
-                    <div class="glass-panel p-8 rounded-3xl bg-white"><div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 text-3xl mb-6"><i class="fa-solid fa-wallet"></i></div><h3 class="text-xl font-bold mb-3 text-slate-800">Top-Up & PPOB</h3><p class="text-slate-500 text-sm">Platform e-commerce digital lengkap dengan API & QRIS.</p></div>
-                    <div class="glass-panel p-8 rounded-3xl bg-white"><div class="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-500 text-3xl mb-6"><i class="fa-solid fa-pen-nib"></i></div><h3 class="text-xl font-bold mb-3 text-slate-800">UI/UX Design</h3><p class="text-slate-500 text-sm">Desain antarmuka intuitif untuk konversi maksimal.</p></div>
-                </div>
-            </div>
-        </section>
-
-        <footer class="bg-slate-950 pt-12 pb-8 text-center text-slate-500 text-sm font-medium">
-            &copy; 2026 Viperdev Company. Built with passion by Teves.
-        </footer>
     </div>
 
-
     <!-- ========================================== -->
-    <!-- VIEW 2: PORTAL DASHBOARD (Terlihat saat login) -->
+    <!-- VIEW 2: PORTAL DASHBOARD -->
     <!-- ========================================== -->
-    <div id="dashboard-view" class="hidden min-h-screen bg-slate-50 flex flex-col md:flex-row">
+    <div id="dashboard-view" class="view-section min-h-screen bg-slate-100 flex-col md:flex-row">
         
         <!-- SIDEBAR -->
-        <aside class="w-full md:w-64 bg-white border-r border-gray-200 flex flex-col md:min-h-screen">
-            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+        <aside class="w-full md:w-64 bg-white border-r border-gray-200 flex flex-col shadow-sm z-20 md:min-h-screen">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center bg-white sticky top-0">
                 <div class="flex items-center gap-2">
                     <div class="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fa-solid fa-code text-primary text-sm"></i></div>
                     <span class="font-bold text-lg text-slate-800">VIPER<span class="text-primary">PORTAL</span></span>
                 </div>
+                <!-- Mobile Toggle -->
+                <button id="mobile-menu-toggle" class="md:hidden text-slate-500 hover:text-primary"><i class="fa-solid fa-bars text-xl"></i></button>
             </div>
             
-            <div class="p-4 flex-1">
+            <div id="sidebar-menu" class="p-4 flex-1 flex flex-col hidden md:flex bg-white">
                 <!-- User Info -->
                 <div class="mb-6 p-4 bg-slate-50 rounded-xl border border-gray-100 flex items-center gap-3">
                     <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full bg-gray-300">
                     <div class="overflow-hidden">
-                        <p id="user-name-display" class="text-sm font-bold text-slate-800 truncate">Nama User</p>
-                        <p id="user-role-display" class="text-xs font-semibold text-primary uppercase">Klien</p>
+                        <p id="user-name-display" class="text-sm font-bold text-slate-800 truncate">Memuat...</p>
+                        <p id="user-role-display" class="text-xs font-semibold text-primary uppercase">...</p>
                     </div>
                 </div>
 
-                <!-- Navigasi Klien -->
-                <nav id="nav-client" class="space-y-2 hidden">
-                    <button onclick="switchTab('client-chat')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-primary/10 text-primary transition-colors hover:bg-primary/20"><i class="fa-solid fa-comments"></i> Chat Viperdev</button>
-                    <button onclick="switchTab('client-project')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-colors"><i class="fa-solid fa-folder-plus"></i> Request Proyek Baru</button>
+                <!-- MENU KLIEN -->
+                <nav id="nav-client" class="space-y-2 hidden flex-1">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Menu Utama</div>
+                    <button onclick="switchTab('client-overview')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-house"></i> Ringkasan</button>
+                    <button onclick="switchTab('client-projects')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-bars-progress"></i> Lacak Proyek</button>
+                    <button onclick="switchTab('client-new-project')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-plus-circle"></i> Buat Proyek Baru</button>
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mt-6 mb-2 px-2">Bantuan</div>
+                    <button onclick="switchTab('client-chat')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-headset"></i> Live Chat</button>
                 </nav>
 
-                <!-- Navigasi Admin -->
-                <nav id="nav-admin" class="space-y-2 hidden">
-                    <button onclick="switchTab('admin-overview')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-primary/10 text-primary transition-colors hover:bg-primary/20"><i class="fa-solid fa-chart-pie"></i> Overview</button>
-                    <button onclick="switchTab('admin-inbox')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-colors"><i class="fa-solid fa-inbox"></i> Inbox Klien</button>
+                <!-- MENU ADMIN -->
+                <nav id="nav-admin" class="space-y-2 hidden flex-1">
+                    <div class="text-xs font-bold text-slate-400 uppercase tracking-wider mb-2 px-2">Manajemen</div>
+                    <button onclick="switchTab('admin-overview')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-chart-pie"></i> Statistik</button>
+                    <button onclick="switchTab('admin-projects')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-layer-group"></i> Kelola Proyek</button>
+                    <button onclick="switchTab('admin-inbox')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-inbox"></i> Pusat Pesan</button>
+                    <button onclick="switchTab('admin-users')" class="nav-btn w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-50 transition-colors"><i class="fa-solid fa-users"></i> Database Klien</button>
                 </nav>
-            </div>
-            
-            <div class="p-4 border-t border-gray-100">
-                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"><i class="fa-solid fa-power-off"></i> Logout</button>
+
+                <!-- Tombol Logout -->
+                <div class="mt-auto pt-4 border-t border-gray-100">
+                    <button onclick="logout()" class="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"><i class="fa-solid fa-power-off"></i> Keluar Portal</button>
+                </div>
             </div>
         </aside>
 
         <!-- KONTEN DASHBOARD -->
-        <main class="flex-1 p-4 md:p-8 overflow-y-auto max-h-screen">
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto max-h-screen relative">
             
-            <!-- TABS KLIEN -->
-            <div id="tab-client-chat" class="dashboard-tab hidden h-full flex flex-col">
-                <div class="bg-white rounded-t-2xl p-4 border-b border-gray-100 flex items-center gap-3 shadow-sm">
-                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white"><i class="fa-solid fa-headset"></i></div>
-                    <div><h3 class="font-bold text-slate-800">Tim Viperdev</h3><p class="text-xs text-primary font-medium">Online - Siap Membantu</p></div>
+            <!-- ===================== KONTEN KLIEN ===================== -->
+            
+            <!-- Client: Overview -->
+            <div id="tab-client-overview" class="dashboard-tab active-tab gap-6">
+                <h2 class="text-2xl font-bold text-slate-800">Ringkasan Dasbor</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 border-l-4 border-l-primary">
+                        <div class="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center text-primary text-xl"><i class="fa-solid fa-rocket"></i></div>
+                        <div><div class="text-slate-500 text-sm font-bold">Proyek Aktif</div><div class="text-2xl font-extrabold text-slate-800" id="client-stat-active">0</div></div>
+                    </div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100 flex items-center gap-4 border-l-4 border-l-blue-500">
+                        <div class="w-12 h-12 bg-blue-500/10 rounded-full flex items-center justify-center text-blue-500 text-xl"><i class="fa-solid fa-check-double"></i></div>
+                        <div><div class="text-slate-500 text-sm font-bold">Proyek Selesai</div><div class="text-2xl font-extrabold text-slate-800" id="client-stat-done">0</div></div>
+                    </div>
                 </div>
-                <!-- Area Chat -->
-                <div id="client-chat-box" class="flex-1 bg-white p-4 overflow-y-auto chat-scroll space-y-4 border-x border-gray-100 min-h-[400px] flex flex-col">
-                    <div class="text-center text-xs text-slate-400 my-4">Koneksi chat diamankan secara end-to-end.</div>
-                </div>
-                <!-- Input Chat -->
-                <div class="bg-white p-4 rounded-b-2xl border-t border-gray-100 shadow-sm flex gap-2">
-                    <input type="text" id="client-msg-input" placeholder="Ketik pesan untuk admin..." class="flex-1 bg-slate-50 border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-primary text-sm">
-                    <button onclick="sendClientMsg()" class="bg-primary hover:bg-emerald-600 text-white w-12 rounded-xl flex items-center justify-center transition-colors"><i class="fa-solid fa-paper-plane"></i></button>
+                
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mt-2">
+                    <h3 class="font-bold text-slate-800 mb-4">Pembaruan Terakhir</h3>
+                    <div class="p-4 bg-slate-50 rounded-xl border border-gray-100 text-sm text-slate-600">
+                        Selamat datang di Viperdev Client Portal! Gunakan menu di sebelah kiri untuk mengelola proyek digital Anda.
+                    </div>
                 </div>
             </div>
 
-            <div id="tab-client-project" class="dashboard-tab hidden">
-                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 max-w-2xl mx-auto">
-                    <h2 class="text-2xl font-bold text-slate-800 mb-6">Formulir Pengajuan Proyek</h2>
+            <!-- Client: List Proyek -->
+            <div id="tab-client-projects" class="dashboard-tab gap-6">
+                <div class="flex justify-between items-center mb-2">
+                    <h2 class="text-2xl font-bold text-slate-800">Lacak Proyek Saya</h2>
+                    <button onclick="switchTab('client-new-project')" class="bg-primary text-white px-4 py-2 rounded-lg text-sm font-bold hover:bg-emerald-600"><i class="fa-solid fa-plus"></i> Proyek Baru</button>
+                </div>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-50 text-slate-500 border-b border-gray-100">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold">Nama/Jenis Proyek</th>
+                                    <th class="px-6 py-4 font-bold">Tanggal Pengajuan</th>
+                                    <th class="px-6 py-4 font-bold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody id="client-projects-list" class="divide-y divide-gray-100 text-slate-700">
+                                <!-- Data Dirender JS -->
+                                <tr><td colspan="3" class="px-6 py-8 text-center text-slate-500">Memuat data proyek...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Client: Buat Proyek Baru -->
+            <div id="tab-client-new-project" class="dashboard-tab">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 max-w-2xl mx-auto mt-4">
+                    <div class="flex items-center gap-4 mb-6 pb-6 border-b border-gray-100">
+                        <div class="w-12 h-12 bg-primary/10 rounded-xl flex items-center justify-center text-primary text-xl"><i class="fa-solid fa-lightbulb"></i></div>
+                        <div>
+                            <h2 class="text-xl font-bold text-slate-800">Pengajuan Proyek Baru</h2>
+                            <p class="text-sm text-slate-500">Ceritakan ide brilian Anda kepada kami.</p>
+                        </div>
+                    </div>
                     <form id="project-form" class="space-y-5">
-                        <div><label class="block text-sm font-bold text-slate-700 mb-2">Jenis Proyek</label>
-                        <select id="proj-type" class="w-full bg-slate-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-sm">
-                            <option value="Landing Page">Landing Page / Company Profile</option>
-                            <option value="Web App / Top-Up">Aplikasi Web / Sistem Top-Up</option>
-                            <option value="Lainnya">Lainnya / Custom</option>
-                        </select></div>
-                        <div><label class="block text-sm font-bold text-slate-700 mb-2">Detail Kebutuhan</label>
-                        <textarea id="proj-desc" rows="4" required class="w-full bg-slate-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-sm" placeholder="Ceritakan fitur apa saja yang Anda butuhkan..."></textarea></div>
-                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-bold transition-colors">Kirim Pengajuan</button>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Kategori Proyek</label>
+                            <select id="proj-type" class="w-full bg-slate-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm transition-all">
+                                <option value="Landing Page Dasar">Landing Page Dasar</option>
+                                <option value="Website Perusahaan">Website Profil Perusahaan (CMS)</option>
+                                <option value="Platform Top-Up Game">Platform Top-Up Game (Otomatis)</option>
+                                <option value="Toko Online (E-Commerce)">Toko Online (E-Commerce)</option>
+                                <option value="Sistem Custom Lainnya">Sistem Custom Lainnya</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label class="block text-sm font-bold text-slate-700 mb-2">Detail Kebutuhan / Deskripsi</label>
+                            <textarea id="proj-desc" rows="5" required class="w-full bg-slate-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm transition-all" placeholder="Jelaskan fitur-fitur yang Anda inginkan, target pasar, atau referensi website lain..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-4 rounded-xl font-bold transition-all shadow-lg flex justify-center items-center gap-2">
+                            <i class="fa-solid fa-paper-plane"></i> Kirim Pengajuan Proyek
+                        </button>
                     </form>
                 </div>
             </div>
 
-            <!-- TABS ADMIN -->
-            <div id="tab-admin-overview" class="dashboard-tab hidden space-y-6">
-                <h2 class="text-2xl font-bold text-slate-800">Admin Overview</h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-500 text-sm font-bold mb-2">Total Klien Terdaftar</div><div class="text-3xl font-extrabold text-slate-800" id="stat-users">...</div></div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-500 text-sm font-bold mb-2">Proyek Menunggu</div><div class="text-3xl font-extrabold text-blue-500" id="stat-projects">...</div></div>
-                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-500 text-sm font-bold mb-2">Pesan Belum Dibaca</div><div class="text-3xl font-extrabold text-primary" id="stat-unread">...</div></div>
-                </div>
-                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
-                    <h3 class="font-bold text-slate-800 mb-4">Pengajuan Proyek Terbaru</h3>
-                    <div id="admin-projects-list" class="space-y-3">
-                        <div class="text-sm text-slate-500 text-center py-4">Belum ada data.</div>
+            <!-- Client: Live Chat -->
+            <div id="tab-client-chat" class="dashboard-tab h-full min-h-[70vh]">
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 flex flex-col h-full overflow-hidden">
+                    <div class="bg-slate-900 p-4 flex items-center gap-3">
+                        <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white shadow-md"><i class="fa-solid fa-headset"></i></div>
+                        <div><h3 class="font-bold text-white">Tim Support Viperdev</h3><p class="text-xs text-primary font-medium flex items-center gap-1"><span class="w-2 h-2 rounded-full bg-primary animate-pulse"></span> Online</p></div>
+                    </div>
+                    <div id="client-chat-box" class="flex-1 p-6 overflow-y-auto bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-slate-50 space-y-4">
+                        <div class="text-center text-xs text-slate-400 my-2 bg-white/60 py-1 px-3 rounded-full w-max mx-auto border border-gray-200">Koneksi chat diamankan secara end-to-end.</div>
+                    </div>
+                    <div class="p-4 bg-white border-t border-gray-100 flex gap-3">
+                        <input type="text" id="client-msg-input" placeholder="Ketik pesan Anda di sini..." class="flex-1 bg-slate-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary text-sm transition-all">
+                        <button onclick="sendClientMsg()" class="bg-primary hover:bg-emerald-600 text-white w-14 rounded-xl flex items-center justify-center transition-transform hover:scale-105 shadow-md shadow-primary/30"><i class="fa-solid fa-paper-plane"></i></button>
                     </div>
                 </div>
             </div>
 
-            <div id="tab-admin-inbox" class="dashboard-tab hidden flex flex-col md:flex-row h-[80vh] gap-4">
-                <!-- List Klien -->
-                <div class="w-full md:w-1/3 bg-white rounded-2xl border border-gray-100 flex flex-col shadow-sm">
-                    <div class="p-4 border-b border-gray-100 font-bold text-slate-800">Daftar Obrolan</div>
-                    <div id="admin-chat-list" class="flex-1 overflow-y-auto chat-scroll p-2 space-y-1">
-                        <!-- List Chat Dirender JS -->
+            <!-- ===================== KONTEN ADMIN ===================== -->
+            
+            <!-- Admin: Overview -->
+            <div id="tab-admin-overview" class="dashboard-tab gap-6">
+                <h2 class="text-2xl font-bold text-slate-800">Statistik Admin</h2>
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-400 text-xs font-bold uppercase mb-1">Total Klien</div><div class="text-3xl font-extrabold text-slate-800" id="admin-stat-users">0</div></div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-400 text-xs font-bold uppercase mb-1">Proyek Masuk</div><div class="text-3xl font-extrabold text-blue-500" id="admin-stat-proj-total">0</div></div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-400 text-xs font-bold uppercase mb-1">Dikerjakan</div><div class="text-3xl font-extrabold text-yellow-500" id="admin-stat-proj-active">0</div></div>
+                    <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-400 text-xs font-bold uppercase mb-1">Selesai</div><div class="text-3xl font-extrabold text-primary" id="admin-stat-proj-done">0</div></div>
+                </div>
+            </div>
+
+            <!-- Admin: Manajemen Proyek -->
+            <div id="tab-admin-projects" class="dashboard-tab gap-6">
+                <h2 class="text-2xl font-bold text-slate-800">Kelola Proyek Klien</h2>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-slate-900 text-white border-b border-gray-100">
+                                <tr>
+                                    <th class="px-6 py-4 font-bold">Klien</th>
+                                    <th class="px-6 py-4 font-bold">Tipe Proyek</th>
+                                    <th class="px-6 py-4 font-bold">Tanggal</th>
+                                    <th class="px-6 py-4 font-bold">Ubah Status</th>
+                                    <th class="px-6 py-4 font-bold text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-projects-list" class="divide-y divide-gray-100 text-slate-700 bg-white">
+                                <tr><td colspan="5" class="px-6 py-8 text-center text-slate-500">Memuat data proyek...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
-                <!-- Ruang Chat Admin -->
-                <div class="w-full md:w-2/3 bg-white rounded-2xl border border-gray-100 flex flex-col shadow-sm hidden" id="admin-chat-room">
-                    <div class="p-4 border-b border-gray-100 font-bold text-slate-800 flex items-center gap-3">
-                        <i class="fa-solid fa-user-circle text-2xl text-gray-400"></i> <span id="admin-chat-name">Pilih Klien</span>
+            </div>
+
+            <!-- Admin: Inbox Chat -->
+            <div id="tab-admin-inbox" class="dashboard-tab h-full min-h-[70vh]">
+                <div class="flex flex-col md:flex-row h-full gap-6">
+                    <!-- List Klien -->
+                    <div class="w-full md:w-1/3 bg-white rounded-2xl border border-gray-100 flex flex-col shadow-sm overflow-hidden">
+                        <div class="p-4 bg-slate-50 border-b border-gray-100 font-bold text-slate-800 flex justify-between items-center">
+                            Daftar Obrolan <span class="bg-primary text-white text-[10px] px-2 py-1 rounded-full" id="unread-badge">0</span>
+                        </div>
+                        <div id="admin-chat-list" class="flex-1 overflow-y-auto p-2 space-y-1 bg-white">
+                            <div class="text-center text-xs text-slate-400 py-4">Belum ada pesan.</div>
+                        </div>
                     </div>
-                    <div id="admin-chat-box" class="flex-1 p-4 overflow-y-auto chat-scroll space-y-4 bg-slate-50"></div>
-                    <div class="p-4 border-t border-gray-100 flex gap-2">
-                        <input type="text" id="admin-msg-input" placeholder="Balas pesan..." class="flex-1 border border-gray-300 rounded-xl px-4 focus:outline-none focus:border-primary text-sm">
-                        <button onclick="sendAdminMsg()" class="bg-primary text-white w-12 h-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-paper-plane"></i></button>
+                    <!-- Ruang Chat Admin -->
+                    <div class="w-full md:w-2/3 bg-white rounded-2xl border border-gray-100 flex-col shadow-sm hidden overflow-hidden" id="admin-chat-room">
+                        <div class="p-4 bg-slate-900 border-b border-slate-800 font-bold text-white flex justify-between items-center">
+                            <div class="flex items-center gap-3">
+                                <i class="fa-solid fa-user-circle text-2xl text-slate-400"></i> <span id="admin-chat-name">Nama Klien</span>
+                            </div>
+                            <button onclick="closeAdminChat()" class="text-slate-400 hover:text-white md:hidden"><i class="fa-solid fa-xmark"></i></button>
+                        </div>
+                        <div id="admin-chat-box" class="flex-1 p-6 overflow-y-auto bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] bg-slate-50 space-y-4"></div>
+                        <div class="p-4 bg-white border-t border-gray-100 flex gap-3">
+                            <input type="text" id="admin-msg-input" placeholder="Balas pesan klien..." class="flex-1 bg-slate-50 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-sm transition-all">
+                            <button onclick="sendAdminMsg()" class="bg-primary hover:bg-emerald-600 text-white w-14 rounded-xl flex items-center justify-center transition-transform hover:scale-105 shadow-md shadow-primary/30"><i class="fa-solid fa-paper-plane"></i></button>
+                        </div>
                     </div>
+                </div>
+            </div>
+
+            <!-- Admin: Database Users -->
+            <div id="tab-admin-users" class="dashboard-tab gap-6">
+                <h2 class="text-2xl font-bold text-slate-800">Database Klien Terdaftar</h2>
+                <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6">
+                    <ul id="admin-users-list" class="divide-y divide-gray-100">
+                        <li class="py-4 text-center text-sm text-slate-500">Memuat database...</li>
+                    </ul>
                 </div>
             </div>
 
@@ -239,10 +324,10 @@
     <!-- SCRIPT LOGIKA UTAMA -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, query, orderBy, where, serverTimestamp, addDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
         import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
-        // Konfigurasi Firebase Anda
+        // Konfigurasi Firebase Teves
         const firebaseConfig = {
             apiKey: "AIzaSyCoR1remXkwNMUy4FKnGnb1LYDiF_iurqM",
             authDomain: "sekolahid-ddec0.firebaseapp.com",
@@ -264,7 +349,7 @@
         let activeAdminChatUid = null;
         let unsubscribeChat = null;
 
-        // UI Helpers
+        // UI HELPERS (Fixing Toggle Logic)
         const showToast = (msg, isSuccess=true) => {
             const t = document.getElementById('global-toast');
             t.textContent = msg;
@@ -274,25 +359,50 @@
         };
 
         window.switchTab = (tabId) => {
-            document.querySelectorAll('.dashboard-tab').forEach(el => el.classList.add('hidden'));
-            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
+            // Sembunyikan semua tab
+            document.querySelectorAll('.dashboard-tab').forEach(el => el.classList.remove('active-tab'));
+            // Tampilkan tab yang dipilih
+            document.getElementById(`tab-${tabId}`).classList.add('active-tab');
             
-            // Highlight button
-            const allBtns = document.querySelectorAll('aside nav button');
-            allBtns.forEach(b => {
+            // Ubah gaya tombol menu (Sidebar)
+            document.querySelectorAll('.nav-btn').forEach(b => {
                 b.classList.remove('bg-primary/10', 'text-primary');
-                b.classList.add('text-slate-600');
+                b.classList.add('text-slate-600', 'hover:bg-slate-50');
             });
-            event.currentTarget.classList.remove('text-slate-600');
-            event.currentTarget.classList.add('bg-primary/10', 'text-primary');
+            if(event && event.currentTarget) {
+                event.currentTarget.classList.remove('text-slate-600', 'hover:bg-slate-50');
+                event.currentTarget.classList.add('bg-primary/10', 'text-primary');
+            }
+
+            // Tutup sidebar di mobile setelah klik
+            if(window.innerWidth < 768) {
+                document.getElementById('sidebar-menu').classList.add('hidden');
+            }
         };
 
-        // --- AUTH & ROUTING LOGIC ---
+        // Mobile Sidebar Toggle
+        document.getElementById('mobile-menu-toggle').addEventListener('click', () => {
+            const menu = document.getElementById('sidebar-menu');
+            menu.classList.toggle('hidden');
+        });
+
+        const formatDate = (timestamp) => {
+            if(!timestamp) return 'Baru saja';
+            const d = timestamp.toDate();
+            return d.toLocaleDateString('id-ID', { day: 'numeric', month: 'short', year: 'numeric' });
+        };
+
+        const getStatusBadge = (status) => {
+            if(status === 'Pending') return `<span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-bold">Pending</span>`;
+            if(status === 'Proses') return `<span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-xs font-bold">Sedang Diproses</span>`;
+            if(status === 'Selesai') return `<span class="bg-emerald-100 text-emerald-700 px-3 py-1 rounded-full text-xs font-bold">Selesai</span>`;
+            return `<span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-xs font-bold">${status}</span>`;
+        };
+
+        // --- AUTH LOGIC ---
         window.triggerLogin = async () => {
             try { await signInWithPopup(auth, provider); } 
-            catch (error) { 
-                if(error.code !== 'auth/popup-closed-by-user') showToast("Gagal Login: Pastikan domain diizinkan di Firebase.", false); 
-            }
+            catch (error) { if(error.code !== 'auth/popup-closed-by-user') showToast("Error: Domain belum diizinkan Firebase.", false); }
         };
 
         window.logout = () => signOut(auth);
@@ -305,158 +415,251 @@
                 currentUser = user;
                 isAdmin = (user.email === ADMIN_EMAIL);
                 
-                // Simpan profil ke DB
+                // Set Profile
                 await setDoc(doc(db, "users", user.uid), {
                     name: user.displayName, email: user.email, photo: user.photoURL, role: isAdmin ? 'admin' : 'client', lastLogin: serverTimestamp()
                 }, { merge: true });
 
-                // Update UI Profile
                 document.getElementById('user-name-display').textContent = user.displayName;
                 document.getElementById('user-avatar').src = user.photoURL;
                 document.getElementById('user-role-display').textContent = isAdmin ? 'Super Admin' : 'Klien VIP';
 
-                // Setup Navigation
+                // Toggling Views (The Bug Fix)
+                landingView.classList.remove('active-view');
+                dashView.classList.add('active-flex'); // Menggunakan display: flex dari class active-flex
+
                 if (isAdmin) {
                     document.getElementById('nav-admin').classList.remove('hidden');
                     document.getElementById('nav-client').classList.add('hidden');
-                    switchTab('admin-overview'); // Set Tab default admin
+                    switchTab('admin-overview'); // Paksa pindah ke tab pertama admin
                     initAdminDashboard();
                 } else {
                     document.getElementById('nav-client').classList.remove('hidden');
                     document.getElementById('nav-admin').classList.add('hidden');
-                    switchTab('client-chat'); // Set Tab default client
-                    initClientChat();
+                    switchTab('client-overview'); // Paksa pindah ke tab pertama klien
+                    initClientDashboard();
                 }
-
-                landingView.classList.add('hidden');
-                dashView.classList.remove('hidden');
                 showToast(`Selamat datang, ${user.displayName}!`);
             } else {
-                currentUser = null;
-                isAdmin = false;
+                currentUser = null; isAdmin = false;
                 if(unsubscribeChat) unsubscribeChat();
-                landingView.classList.remove('hidden');
-                dashView.classList.add('hidden');
+                landingView.classList.add('active-view');
+                dashView.classList.remove('active-flex');
             }
         });
 
         // --- RENDER BUBBLE CHAT ---
         const renderMessage = (msgData, isMe, container) => {
             const div = document.createElement('div');
-            div.className = `flex w-full ${isMe ? 'justify-end' : 'justify-start'}`;
+            div.className = `flex w-full list-item-enter ${isMe ? 'justify-end' : 'justify-start'}`;
             div.innerHTML = `
-                <div class="max-w-[75%] px-4 py-2 rounded-2xl text-sm ${isMe ? 'bg-primary text-white rounded-br-sm' : 'bg-slate-100 text-slate-800 rounded-bl-sm border border-gray-200'} shadow-sm">
+                <div class="max-w-[80%] md:max-w-[60%] px-4 py-3 rounded-2xl text-sm leading-relaxed ${isMe ? 'bg-primary text-white rounded-br-sm shadow-md shadow-primary/20' : 'bg-white text-slate-700 rounded-bl-sm border border-gray-200 shadow-sm'}">
                     ${msgData.text}
+                    <div class="text-[10px] mt-1 text-right ${isMe ? 'text-primary-100 opacity-70' : 'text-slate-400'}">${msgData.createdAt ? new Date(msgData.createdAt.toMillis()).toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'}) : ''}</div>
                 </div>
             `;
             container.appendChild(div);
             container.scrollTop = container.scrollHeight;
         };
 
-        // --- CLIENT LOGIC ---
-        const initClientChat = () => {
+        // ==========================================
+        // FITUR KLIEN
+        // ==========================================
+        const initClientDashboard = () => {
+            // 1. Data Proyek Klien
+            const qProj = query(collection(db, "project_requests"), where("userId", "==", currentUser.uid), orderBy("createdAt", "desc"));
+            onSnapshot(qProj, (snapshot) => {
+                const list = document.getElementById('client-projects-list');
+                let active = 0, done = 0;
+                list.innerHTML = '';
+                
+                if(snapshot.empty) {
+                    list.innerHTML = `<tr><td colspan="3" class="px-6 py-8 text-center text-slate-500">Anda belum memiliki proyek. Silakan buat pengajuan baru.</td></tr>`;
+                } else {
+                    snapshot.forEach(docSnap => {
+                        const data = docSnap.data();
+                        if(data.status === 'Proses' || data.status === 'Pending') active++;
+                        if(data.status === 'Selesai') done++;
+                        
+                        list.innerHTML += `
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-6 py-4">
+                                    <div class="font-bold text-slate-800">${data.type}</div>
+                                    <div class="text-xs text-slate-500 truncate max-w-[200px]">${data.desc}</div>
+                                </td>
+                                <td class="px-6 py-4 text-slate-600">${formatDate(data.createdAt)}</td>
+                                <td class="px-6 py-4">${getStatusBadge(data.status)}</td>
+                            </tr>
+                        `;
+                    });
+                }
+                document.getElementById('client-stat-active').textContent = active;
+                document.getElementById('client-stat-done').textContent = done;
+            });
+
+            // 2. Chat Klien
             const box = document.getElementById('client-chat-box');
+            const qChat = query(collection(db, `chats/${currentUser.uid}/messages`), orderBy('createdAt', 'asc'));
             if(unsubscribeChat) unsubscribeChat();
-            
-            // Listen ke subcollection messages miliknya sendiri
-            const q = query(collection(db, `chats/${currentUser.uid}/messages`), orderBy('createdAt', 'asc'));
-            unsubscribeChat = onSnapshot(q, (snapshot) => {
-                box.innerHTML = '<div class="text-center text-xs text-slate-400 my-4">Koneksi chat diamankan secara end-to-end.</div>';
-                snapshot.forEach(doc => {
-                    const data = doc.data();
-                    renderMessage(data, data.senderId === currentUser.uid, box);
-                });
+            unsubscribeChat = onSnapshot(qChat, (snapshot) => {
+                box.innerHTML = '<div class="text-center text-xs text-slate-400 my-4 bg-white/60 py-1 px-3 rounded-full w-max mx-auto border border-gray-200">Enkripsi End-to-End Aktif</div>';
+                snapshot.forEach(doc => renderMessage(doc.data(), doc.data().senderId === currentUser.uid, box));
             });
         };
+
+        // Kirim Proyek Baru
+        document.getElementById('project-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const ogText = btn.innerHTML;
+            btn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Memproses...`; btn.disabled = true;
+            try {
+                await addDoc(collection(db, "project_requests"), {
+                    userId: currentUser.uid, userName: currentUser.displayName, userEmail: currentUser.email,
+                    type: document.getElementById('proj-type').value,
+                    desc: document.getElementById('proj-desc').value,
+                    createdAt: serverTimestamp(), status: 'Pending' // Pending, Proses, Selesai
+                });
+                showToast("Berhasil! Proyek Anda sedang kami tinjau.", true);
+                e.target.reset();
+                switchTab('client-projects'); // Arahkan ke list proyek
+            } catch(e) { showToast("Gagal menyimpan data. Cek Firestore Rules.", false); }
+            btn.innerHTML = ogText; btn.disabled = false;
+        });
 
         window.sendClientMsg = async () => {
             const input = document.getElementById('client-msg-input');
             const text = input.value.trim();
             if(!text) return;
             input.value = '';
-
             try {
-                // Simpan pesan
-                await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
-                    text: text, senderId: currentUser.uid, createdAt: serverTimestamp()
-                });
-                // Update room meta (untuk admin)
-                await setDoc(doc(db, "chats", currentUser.uid), {
-                    lastMessage: text, userName: currentUser.displayName, updatedAt: serverTimestamp(), unreadAdmin: true
-                }, { merge: true });
-            } catch(e) { showToast("Gagal kirim pesan. Cek Firestore Rules.", false); }
+                await addDoc(collection(db, `chats/${currentUser.uid}/messages`), { text: text, senderId: currentUser.uid, createdAt: serverTimestamp() });
+                await setDoc(doc(db, "chats", currentUser.uid), { lastMessage: text, userName: currentUser.displayName, updatedAt: serverTimestamp(), unreadAdmin: true }, { merge: true });
+            } catch(e) {}
         };
 
-        document.getElementById('project-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const btn = e.target.querySelector('button');
-            btn.textContent = "Mengirim..."; btn.disabled = true;
-            try {
-                await addDoc(collection(db, "project_requests"), {
-                    userId: currentUser.uid, userName: currentUser.displayName,
-                    type: document.getElementById('proj-type').value,
-                    desc: document.getElementById('proj-desc').value,
-                    createdAt: serverTimestamp(), status: 'pending'
-                });
-                showToast("Pengajuan berhasil dikirim! Admin akan segera membalas via Chat.");
-                e.target.reset();
-            } catch(e) { showToast("Gagal mengirim form.", false); }
-            btn.textContent = "Kirim Pengajuan"; btn.disabled = false;
-        });
-
-
-        // --- ADMIN LOGIC ---
+        // ==========================================
+        // FITUR ADMIN (SUPER POWER)
+        // ==========================================
         const initAdminDashboard = () => {
-            // 1. Ambil List Chat Klien
+            // 1. Data User
+            onSnapshot(collection(db, "users"), (snapshot) => {
+                document.getElementById('admin-stat-users').textContent = snapshot.size;
+                const list = document.getElementById('admin-users-list');
+                list.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    list.innerHTML += `
+                        <li class="py-4 flex items-center justify-between">
+                            <div class="flex items-center gap-3">
+                                <img src="${data.photo || 'https://via.placeholder.com/40'}" class="w-10 h-10 rounded-full bg-slate-200">
+                                <div><p class="text-sm font-bold text-slate-800">${data.name}</p><p class="text-xs text-slate-500">${data.email}</p></div>
+                            </div>
+                            <span class="text-xs font-semibold bg-slate-100 text-slate-600 px-2 py-1 rounded">${data.role}</span>
+                        </li>
+                    `;
+                });
+            });
+
+            // 2. Data Proyek (Full Control)
+            const qProj = query(collection(db, "project_requests"), orderBy('createdAt', 'desc'));
+            onSnapshot(qProj, (snapshot) => {
+                const list = document.getElementById('admin-projects-list');
+                list.innerHTML = '';
+                let t = 0, a = 0, d = 0;
+                
+                snapshot.forEach(docSnap => {
+                    t++;
+                    const data = docSnap.data();
+                    const pId = docSnap.id;
+                    if(data.status === 'Proses') a++;
+                    if(data.status === 'Selesai') d++;
+
+                    list.innerHTML += `
+                        <tr class="hover:bg-slate-50">
+                            <td class="px-6 py-4">
+                                <div class="font-bold text-sm text-slate-800">${data.userName}</div>
+                                <div class="text-xs text-slate-500">${data.userEmail}</div>
+                            </td>
+                            <td class="px-6 py-4"><div class="font-bold text-sm">${data.type}</div></td>
+                            <td class="px-6 py-4 text-xs text-slate-500">${formatDate(data.createdAt)}</td>
+                            <td class="px-6 py-4">
+                                <select onchange="updateProjectStatus('${pId}', this.value)" class="bg-white border border-gray-300 text-sm rounded focus:ring-primary focus:border-primary block w-full p-1 cursor-pointer">
+                                    <option value="Pending" ${data.status==='Pending'?'selected':''}>Pending</option>
+                                    <option value="Proses" ${data.status==='Proses'?'selected':''}>Proses</option>
+                                    <option value="Selesai" ${data.status==='Selesai'?'selected':''}>Selesai</option>
+                                </select>
+                            </td>
+                            <td class="px-6 py-4 text-center">
+                                <button onclick="deleteProject('${pId}')" class="text-red-500 hover:text-red-700 bg-red-50 hover:bg-red-100 p-2 rounded-lg transition-colors"><i class="fa-solid fa-trash-can"></i></button>
+                            </td>
+                        </tr>
+                        <tr class="border-b border-gray-100"><td colspan="5" class="px-6 pb-4 pt-1"><div class="p-3 bg-slate-50 rounded-lg text-xs text-slate-600 border border-gray-200"><b>Deskripsi Klien:</b> ${data.desc}</div></td></tr>
+                    `;
+                });
+                
+                document.getElementById('admin-stat-proj-total').textContent = t;
+                document.getElementById('admin-stat-proj-active').textContent = a;
+                document.getElementById('admin-stat-proj-done').textContent = d;
+            });
+
+            // 3. Inbox Admin
             const qChat = query(collection(db, "chats"), orderBy('updatedAt', 'desc'));
             onSnapshot(qChat, (snapshot) => {
                 const list = document.getElementById('admin-chat-list');
                 list.innerHTML = '';
+                let unreadCount = 0;
+
                 snapshot.forEach(docSnap => {
                     const data = docSnap.data();
                     const uid = docSnap.id;
-                    const isUnread = data.unreadAdmin;
+                    if(data.unreadAdmin) unreadCount++;
                     
-                    const btn = document.createElement('div');
-                    btn.className = `p-3 rounded-xl cursor-pointer transition-colors border ${isUnread ? 'bg-emerald-50 border-emerald-100' : 'bg-white border-transparent hover:bg-slate-50'}`;
-                    btn.innerHTML = `
-                        <div class="flex justify-between items-center mb-1">
-                            <span class="font-bold text-sm ${isUnread ? 'text-slate-900' : 'text-slate-700'}">${data.userName}</span>
-                            ${isUnread ? '<span class="w-2 h-2 bg-primary rounded-full"></span>' : ''}
-                        </div>
-                        <div class="text-xs text-slate-500 truncate">${data.lastMessage}</div>
-                    `;
-                    btn.onclick = () => openAdminChat(uid, data.userName);
-                    list.appendChild(btn);
-                });
-            });
-
-            // 2. Ambil List Project & Stats (Simplifikasi)
-            getDocs(collection(db, "users")).then(snap => document.getElementById('stat-users').textContent = snap.size);
-            
-            const qProj = query(collection(db, "project_requests"), orderBy('createdAt', 'desc'));
-            onSnapshot(qProj, (snapshot) => {
-                document.getElementById('stat-projects').textContent = snapshot.size;
-                const pList = document.getElementById('admin-projects-list');
-                pList.innerHTML = '';
-                snapshot.forEach(docSnap => {
-                    const data = docSnap.data();
-                    pList.innerHTML += `
-                        <div class="p-3 bg-slate-50 border border-gray-100 rounded-xl flex justify-between items-center">
-                            <div><div class="font-bold text-sm text-slate-800">${data.type}</div><div class="text-xs text-slate-500">Dari: ${data.userName}</div></div>
-                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">Pending</span>
+                    list.innerHTML += `
+                        <div onclick="openAdminChat('${uid}', '${data.userName}')" class="p-3 rounded-xl cursor-pointer transition-colors border list-item-enter ${data.unreadAdmin ? 'bg-primary/5 border-primary/20' : 'bg-white border-transparent hover:bg-slate-50'}">
+                            <div class="flex justify-between items-center mb-1">
+                                <span class="font-bold text-sm ${data.unreadAdmin ? 'text-slate-900' : 'text-slate-700'}">${data.userName}</span>
+                                ${data.unreadAdmin ? '<span class="w-2 h-2 bg-primary rounded-full animate-pulse"></span>' : ''}
+                            </div>
+                            <div class="text-xs ${data.unreadAdmin ? 'text-slate-800 font-semibold' : 'text-slate-500'} truncate">${data.lastMessage}</div>
                         </div>
                     `;
                 });
+                document.getElementById('unread-badge').textContent = unreadCount;
             });
         };
 
+        // Fungsi Super Admin: Ubah Status Proyek
+        window.updateProjectStatus = async (docId, newStatus) => {
+            try {
+                await updateDoc(doc(db, "project_requests", docId), { status: newStatus });
+                showToast(`Status diperbarui menjadi: ${newStatus}`);
+            } catch(e) { showToast("Gagal memperbarui status.", false); }
+        };
+
+        // Fungsi Super Admin: Hapus Proyek
+        window.deleteProject = async (docId) => {
+            if(confirm("Yakin ingin menghapus data proyek ini secara permanen?")) {
+                try { await deleteDoc(doc(db, "project_requests", docId)); showToast("Data dihapus."); } 
+                catch(e) { showToast("Gagal menghapus.", false); }
+            }
+        };
+
+        // Logic Chat Admin
         window.openAdminChat = async (uid, name) => {
             activeAdminChatUid = uid;
-            document.getElementById('admin-chat-room').classList.remove('hidden');
-            document.getElementById('admin-chat-name').textContent = name;
             
-            // Hilangkan badge unread
+            // Tampilkan Ruangan UI
+            const room = document.getElementById('admin-chat-room');
+            room.classList.remove('hidden');
+            room.classList.add('flex');
+            
+            // Sembunyikan list di mobile
+            if(window.innerWidth < 768) {
+                document.getElementById('admin-chat-list').parentElement.classList.add('hidden');
+            }
+
+            document.getElementById('admin-chat-name').textContent = name;
             await setDoc(doc(db, "chats", uid), { unreadAdmin: false }, { merge: true });
 
             const box = document.getElementById('admin-chat-box');
@@ -472,24 +675,26 @@
             });
         };
 
+        window.closeAdminChat = () => {
+            document.getElementById('admin-chat-room').classList.add('hidden');
+            document.getElementById('admin-chat-room').classList.remove('flex');
+            document.getElementById('admin-chat-list').parentElement.classList.remove('hidden');
+            activeAdminChatUid = null;
+        }
+
         window.sendAdminMsg = async () => {
             if(!activeAdminChatUid) return;
             const input = document.getElementById('admin-msg-input');
             const text = input.value.trim();
             if(!text) return;
             input.value = '';
-
             try {
-                await addDoc(collection(db, `chats/${activeAdminChatUid}/messages`), {
-                    text: text, senderId: currentUser.uid, createdAt: serverTimestamp()
-                });
-                await setDoc(doc(db, "chats", activeAdminChatUid), {
-                    lastMessage: text, updatedAt: serverTimestamp() // Admin balas, tidak buat unread ke admin
-                }, { merge: true });
-            } catch(e) { showToast("Gagal kirim pesan", false); }
+                await addDoc(collection(db, `chats/${activeAdminChatUid}/messages`), { text: text, senderId: currentUser.uid, createdAt: serverTimestamp() });
+                await setDoc(doc(db, "chats", activeAdminChatUid), { lastMessage: text, updatedAt: serverTimestamp(), unreadAdmin: false }, { merge: true });
+            } catch(e) {}
         };
 
-        // Trigger send on Enter key
+        // Enter keys
         document.getElementById('client-msg-input')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendClientMsg(); });
         document.getElementById('admin-msg-input')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendAdminMsg(); });
     </script>
