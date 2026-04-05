@@ -3,279 +3,246 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Viperdev Company | Digital Solutions</title>
+    <title>Viperdev Company | Client Portal</title>
     
-    <!-- Google Fonts: Poppins untuk tampilan modern -->
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome untuk Ikon -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- Tailwind CSS untuk styling responsif dan cepat -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Konfigurasi Tema Warna Kustom
         tailwind.config = {
             theme: {
                 extend: {
-                    fontFamily: {
-                        sans: ['Poppins', 'sans-serif'],
-                    },
-                    colors: {
-                        dark: '#0f172a',      
-                        darker: '#020617',    
-                        primary: '#10b981',   
-                        secondary: '#3b82f6', 
-                    }
+                    fontFamily: { sans: ['Poppins', 'sans-serif'] },
+                    colors: { primary: '#10b981', secondary: '#3b82f6', dark: '#1e293b' }
                 }
             }
         }
     </script>
-
-    <!-- Custom CSS untuk efek tambahan -->
     <style>
-        body {
-            background-color: #020617;
-            color: #f8fafc;
-            scroll-behavior: smooth;
-        }
-        .glass-panel {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-        }
-        .text-gradient {
-            background: linear-gradient(to right, #10b981, #3b82f6);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .animate-on-scroll {
-            opacity: 0;
-            transform: translateY(30px);
-            transition: all 0.8s ease-out;
-        }
-        .animate-on-scroll.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .btn-glow:hover {
-            box-shadow: 0 0 15px rgba(16, 185, 129, 0.5);
-        }
+        body { background-color: #f8fafc; color: #334155; scroll-behavior: smooth; overflow-x: hidden; }
+        .glass-panel { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 1); box-shadow: 0 10px 40px -10px rgba(0,0,0,0.08); }
+        .text-gradient { background: linear-gradient(to right, #10b981, #2563eb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        
+        /* Chat Scrollbar */
+        .chat-scroll::-webkit-scrollbar { width: 6px; }
+        .chat-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        
+        /* Loader */
+        .loader { border: 3px solid #f3f3f3; border-top: 3px solid #10b981; border-radius: 50%; width: 24px; height: 24px; animation: spin 1s linear infinite; }
+        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="antialiased font-sans selection:bg-primary selection:text-white">
 
-    <!-- NAVBAR -->
-    <nav class="fixed w-full z-50 glass-panel border-b-0 transition-all duration-300" id="navbar">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-20">
-                <!-- Logo & PINTU RAHASIA ADMIN (Tap 3x di sini) -->
-                <div id="secret-trigger" class="flex-shrink-0 flex items-center gap-2 cursor-pointer select-none">
-                    <i class="fa-solid fa-code text-primary text-2xl"></i>
-                    <span class="font-bold text-2xl tracking-wider text-white">VIPER<span class="text-primary">DEV</span></span>
-                </div>
-                
-                <!-- Menu Desktop -->
-                <div class="hidden md:block">
-                    <div class="ml-10 flex items-baseline space-x-8">
-                        <a href="#beranda" class="text-gray-300 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Beranda</a>
-                        <a href="#layanan" class="text-gray-300 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Layanan</a>
-                        <a href="#portofolio" class="text-gray-300 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Portofolio</a>
-                        <a href="#statistik" class="text-gray-300 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Statistik</a>
-                        <a href="#kontak" class="bg-primary hover:bg-emerald-600 text-white px-5 py-2 rounded-full text-sm font-medium transition-all btn-glow">Hubungi Kami</a>
+    <!-- GLOBAL TOAST NOTIFICATION -->
+    <div id="global-toast" class="fixed top-6 left-1/2 -translate-x-1/2 z-[999] hidden px-6 py-3 rounded-full text-sm font-bold shadow-2xl transition-all border bg-white"></div>
+
+    <!-- ========================================== -->
+    <!-- VIEW 1: LANDING PAGE (Terlihat saat belum login) -->
+    <!-- ========================================== -->
+    <div id="landing-view" class="block transition-opacity duration-500">
+        <!-- NAVBAR -->
+        <nav class="fixed w-full z-50 transition-all duration-300 bg-white/80 backdrop-blur-md border-b border-gray-200" id="navbar">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="flex items-center justify-between h-20">
+                    <div class="flex-shrink-0 flex items-center gap-2 cursor-pointer select-none" onclick="window.scrollTo(0,0)">
+                        <div class="w-10 h-10 bg-primary/10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-code text-primary text-xl"></i></div>
+                        <span class="font-bold text-2xl tracking-wider text-slate-800">VIPER<span class="text-primary">DEV</span></span>
+                    </div>
+                    
+                    <div class="hidden md:block">
+                        <div class="ml-10 flex items-baseline space-x-8">
+                            <a href="#layanan" class="text-slate-600 hover:text-primary font-semibold text-sm">Layanan</a>
+                            <a href="#portofolio" class="text-slate-600 hover:text-primary font-semibold text-sm">Portofolio</a>
+                            <button onclick="triggerLogin()" class="bg-slate-900 hover:bg-slate-800 text-white px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg flex items-center gap-2">
+                                <i class="fa-brands fa-google text-red-400"></i> Client Portal
+                            </button>
+                        </div>
                     </div>
                 </div>
+            </div>
+        </nav>
 
-                <!-- Tombol Mobile Menu -->
-                <div class="-mr-2 flex md:hidden">
-                    <button type="button" id="mobile-menu-btn" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-white/10 focus:outline-none">
-                        <i class="fa-solid fa-bars text-xl"></i>
+        <!-- HERO SECTION -->
+        <section class="pt-32 pb-20 md:pt-48 md:pb-32 px-4 flex flex-col items-center justify-center min-h-[90vh] text-center relative overflow-hidden bg-slate-50">
+            <div class="absolute top-20 left-10 w-72 h-72 bg-primary/20 rounded-full blur-[80px] -z-10"></div>
+            <div class="absolute bottom-10 right-10 w-96 h-96 bg-blue-500/10 rounded-full blur-[100px] -z-10"></div>
+            
+            <div class="max-w-4xl mx-auto z-10">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-gray-200 text-slate-600 text-xs md:text-sm font-semibold mb-8 shadow-sm">
+                    <span class="flex h-2 w-2 rounded-full bg-primary animate-pulse"></span> Partner Teknologi Digital
+                </div>
+                <h1 class="text-4xl md:text-7xl font-extrabold mb-6 leading-tight text-slate-900 tracking-tight">
+                    Bangun Bisnis Digital <br /> <span class="text-gradient">Level Selanjutnya</span>
+                </h1>
+                <p class="text-slate-500 text-lg md:text-xl mb-10 max-w-2xl mx-auto leading-relaxed">
+                    Viperdev menciptakan aplikasi web dan sistem top-up dengan performa tinggi. Login ke portal kami untuk mulai berdiskusi.
+                </p>
+                <div class="flex justify-center">
+                    <button onclick="triggerLogin()" class="bg-primary hover:bg-emerald-600 text-white px-8 py-4 rounded-full font-bold transition-all shadow-xl shadow-primary/30 hover:-translate-y-1 flex items-center gap-3 text-lg">
+                        <i class="fa-solid fa-right-to-bracket"></i> Login / Daftar Sekarang
                     </button>
                 </div>
             </div>
-        </div>
+        </section>
 
-        <!-- Mobile Menu (Tersembunyi secara default) -->
-        <div class="md:hidden hidden bg-darker/95 backdrop-blur-md absolute w-full border-b border-white/10" id="mobile-menu">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-                <a href="#beranda" class="text-gray-300 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Beranda</a>
-                <a href="#layanan" class="text-gray-300 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Layanan</a>
-                <a href="#portofolio" class="text-gray-300 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Portofolio</a>
-                <a href="#statistik" class="text-gray-300 hover:text-primary block px-3 py-2 rounded-md text-base font-medium">Statistik</a>
-                <a href="#kontak" class="text-primary block px-3 py-2 rounded-md text-base font-medium font-bold">Hubungi Kami</a>
+        <!-- STATISTIK SINGKAT -->
+        <section class="py-12 bg-white border-y border-gray-100">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid grid-cols-2 md:grid-cols-4 gap-8 text-center divide-x divide-gray-100">
+                <div><div class="text-4xl font-extrabold text-slate-800 mb-1">50<span class="text-primary">+</span></div><div class="text-slate-500 text-sm font-medium">Proyek Selesai</div></div>
+                <div><div class="text-4xl font-extrabold text-slate-800 mb-1">30<span class="text-primary">+</span></div><div class="text-slate-500 text-sm font-medium">Klien Bisnis</div></div>
+                <div><div class="text-4xl font-extrabold text-slate-800 mb-1">99<span class="text-primary">%</span></div><div class="text-slate-500 text-sm font-medium">Uptime Sistem</div></div>
+                <div><div class="text-4xl font-extrabold text-slate-800 mb-1">24<span class="text-primary">/7</span></div><div class="text-slate-500 text-sm font-medium">Dukungan Teknis</div></div>
             </div>
-        </div>
-    </nav>
+        </section>
 
-    <!-- ADMIN LOGIN MODAL (TERSEMBUNYI, MUNCUL JIKA KETUK LOGO 3X) -->
-    <div id="admin-login-modal" class="fixed inset-0 z-[100] flex items-center justify-center hidden bg-black/80 backdrop-blur-sm transition-opacity">
-        <div class="glass-panel w-full max-w-sm p-8 rounded-3xl text-center transform scale-95 transition-transform duration-300 shadow-2xl shadow-primary/20">
-            <div class="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4 text-primary text-2xl">
-                <i class="fa-solid fa-user-shield"></i>
+        <!-- LAYANAN KAMI -->
+        <section id="layanan" class="py-24 bg-slate-50">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mb-16">
+                    <h2 class="text-sm font-bold text-primary tracking-widest uppercase mb-2">Spesialisasi</h2>
+                    <h3 class="text-3xl md:text-5xl font-extrabold text-slate-900 mb-4">Solusi End-to-End</h3>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <div class="glass-panel p-8 rounded-3xl bg-white"><div class="w-16 h-16 bg-emerald-50 rounded-2xl flex items-center justify-center text-primary text-3xl mb-6"><i class="fa-solid fa-code"></i></div><h3 class="text-xl font-bold mb-3 text-slate-800">Web App</h3><p class="text-slate-500 text-sm">Sistem berbasis web kustom dengan CMS terintegrasi.</p></div>
+                    <div class="glass-panel p-8 rounded-3xl bg-white"><div class="w-16 h-16 bg-blue-50 rounded-2xl flex items-center justify-center text-blue-500 text-3xl mb-6"><i class="fa-solid fa-wallet"></i></div><h3 class="text-xl font-bold mb-3 text-slate-800">Top-Up & PPOB</h3><p class="text-slate-500 text-sm">Platform e-commerce digital lengkap dengan API & QRIS.</p></div>
+                    <div class="glass-panel p-8 rounded-3xl bg-white"><div class="w-16 h-16 bg-purple-50 rounded-2xl flex items-center justify-center text-purple-500 text-3xl mb-6"><i class="fa-solid fa-pen-nib"></i></div><h3 class="text-xl font-bold mb-3 text-slate-800">UI/UX Design</h3><p class="text-slate-500 text-sm">Desain antarmuka intuitif untuk konversi maksimal.</p></div>
+                </div>
             </div>
-            <h3 class="text-2xl font-bold text-white mb-2">Login Admin</h3>
-            <p class="text-gray-400 text-sm mb-6">Akses khusus untuk pengelola sistem Viperdev.</p>
-            
-            <button id="btn-google-login" class="w-full bg-white text-gray-900 hover:bg-gray-100 font-semibold py-3 px-4 rounded-xl flex items-center justify-center gap-3 transition-colors mb-4">
-                <i class="fa-brands fa-google text-red-500"></i>
-                Login dengan Google
-            </button>
-            <button id="btn-close-modal" class="text-gray-500 hover:text-white text-sm font-medium transition-colors">Batal</button>
-        </div>
+        </section>
+
+        <footer class="bg-slate-950 pt-12 pb-8 text-center text-slate-500 text-sm font-medium">
+            &copy; 2026 Viperdev Company. Built with passion by Teves.
+        </footer>
     </div>
 
-    <!-- TOAST NOTIFICATION UMUM -->
-    <div id="global-toast" class="fixed top-24 left-1/2 -translate-x-1/2 z-[110] hidden px-6 py-3 rounded-full text-sm font-medium shadow-lg transition-all"></div>
 
-    <!-- HERO SECTION -->
-    <section id="beranda" class="pt-32 pb-20 md:pt-40 md:pb-28 px-4 flex flex-col items-center justify-center min-h-screen text-center relative overflow-hidden">
-        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-primary/20 rounded-full blur-[100px] -z-10"></div>
-        <div class="animate-on-scroll max-w-4xl mx-auto">
-            <div class="inline-block px-4 py-1.5 rounded-full border border-primary/30 bg-primary/10 text-primary text-xs md:text-sm font-semibold mb-6">
-                🚀 Transforming Ideas into Digital Reality
-            </div>
-            <h1 class="text-4xl md:text-6xl font-bold mb-6 leading-tight">
-                Membangun Solusi Digital <br />
-                <span class="text-gradient">Masa Depan</span>
-            </h1>
-            <p class="text-gray-400 text-lg md:text-xl mb-10 max-w-2xl mx-auto">
-                Viperdev adalah mitra teknologi Anda dalam membangun platform web, aplikasi mobile, dan sistem digital cerdas berkualitas tinggi.
-            </p>
-            <div class="flex flex-col sm:flex-row gap-4 justify-center">
-                <a href="#kontak" class="bg-primary hover:bg-emerald-600 text-white px-8 py-3.5 rounded-full font-semibold transition-all btn-glow shadow-lg shadow-primary/30">Mulai Proyek Anda</a>
-                <a href="#portofolio" class="glass-panel hover:bg-white/10 text-white px-8 py-3.5 rounded-full font-semibold transition-all">Lihat Karya Kami</a>
-            </div>
-        </div>
-    </section>
-
-    <!-- LAYANAN KAMI -->
-    <section id="layanan" class="py-20 bg-dark relative border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 animate-on-scroll">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Layanan <span class="text-primary">Kami</span></h2>
-                <p class="text-gray-400 max-w-2xl mx-auto">Kami menyediakan solusi teknologi end-to-end yang disesuaikan dengan kebutuhan bisnis Anda.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                <!-- Card 1 -->
-                <div class="glass-panel p-8 rounded-2xl animate-on-scroll hover:-translate-y-2 transition-transform duration-300">
-                    <div class="w-14 h-14 bg-primary/10 rounded-xl flex items-center justify-center text-primary text-2xl mb-6"><i class="fa-solid fa-laptop-code"></i></div>
-                    <h3 class="text-xl font-bold mb-3">Web Development</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Pengembangan website modern, responsif, dan super cepat. Dari landing page hingga web app kompleks.</p>
-                </div>
-                <!-- Card 2 -->
-                <div class="glass-panel p-8 rounded-2xl animate-on-scroll hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 100ms;">
-                    <div class="w-14 h-14 bg-blue-500/10 rounded-xl flex items-center justify-center text-blue-500 text-2xl mb-6"><i class="fa-solid fa-mobile-screen-button"></i></div>
-                    <h3 class="text-xl font-bold mb-3">Sistem Top-Up & Payment</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Integrasi sistem pembayaran cerdas, otomatisasi transaksi digital, dan manajemen dasbor keuangan.</p>
-                </div>
-                <!-- Card 3 -->
-                <div class="glass-panel p-8 rounded-2xl animate-on-scroll hover:-translate-y-2 transition-transform duration-300" style="transition-delay: 200ms;">
-                    <div class="w-14 h-14 bg-purple-500/10 rounded-xl flex items-center justify-center text-purple-500 text-2xl mb-6"><i class="fa-solid fa-pen-nib"></i></div>
-                    <h3 class="text-xl font-bold mb-3">UI/UX Design</h3>
-                    <p class="text-gray-400 text-sm leading-relaxed">Desain antarmuka yang indah, intuitif, dan mobile-friendly untuk memberikan pengalaman pengguna terbaik.</p>
+    <!-- ========================================== -->
+    <!-- VIEW 2: PORTAL DASHBOARD (Terlihat saat login) -->
+    <!-- ========================================== -->
+    <div id="dashboard-view" class="hidden min-h-screen bg-slate-50 flex flex-col md:flex-row">
+        
+        <!-- SIDEBAR -->
+        <aside class="w-full md:w-64 bg-white border-r border-gray-200 flex flex-col md:min-h-screen">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center">
+                <div class="flex items-center gap-2">
+                    <div class="w-8 h-8 bg-primary/10 rounded-lg flex items-center justify-center"><i class="fa-solid fa-code text-primary text-sm"></i></div>
+                    <span class="font-bold text-lg text-slate-800">VIPER<span class="text-primary">PORTAL</span></span>
                 </div>
             </div>
-        </div>
-    </section>
-
-    <!-- PORTOFOLIO -->
-    <section id="portofolio" class="py-20 bg-darker relative">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center mb-16 animate-on-scroll">
-                <h2 class="text-3xl md:text-4xl font-bold mb-4">Karya <span class="text-primary">Unggulan</span></h2>
-            </div>
-            <div class="glass-panel rounded-3xl overflow-hidden animate-on-scroll">
-                <div class="grid grid-cols-1 md:grid-cols-2">
-                    <div class="bg-gradient-to-br from-dark to-slate-800 p-8 flex items-center justify-center min-h-[300px] relative overflow-hidden">
-                        <div class="w-full max-w-sm glass-panel rounded-2xl p-4 shadow-2xl relative z-10 border border-white/10">
-                            <div class="flex justify-between items-center mb-4">
-                                <div class="font-bold text-lg">Vipercell <span class="text-primary">App</span></div>
-                                <div class="bg-primary/20 text-primary text-xs px-2 py-1 rounded">Live</div>
-                            </div>
-                            <div class="space-y-3">
-                                <div class="h-20 bg-white/5 rounded-xl animate-pulse"></div>
-                                <div class="grid grid-cols-2 gap-3">
-                                    <div class="h-16 bg-white/5 rounded-xl animate-pulse"></div>
-                                    <div class="h-16 bg-white/5 rounded-xl animate-pulse"></div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="absolute -bottom-10 -right-10 w-40 h-40 bg-primary/30 blur-[50px] rounded-full"></div>
+            
+            <div class="p-4 flex-1">
+                <!-- User Info -->
+                <div class="mb-6 p-4 bg-slate-50 rounded-xl border border-gray-100 flex items-center gap-3">
+                    <img id="user-avatar" src="" alt="Avatar" class="w-10 h-10 rounded-full bg-gray-300">
+                    <div class="overflow-hidden">
+                        <p id="user-name-display" class="text-sm font-bold text-slate-800 truncate">Nama User</p>
+                        <p id="user-role-display" class="text-xs font-semibold text-primary uppercase">Klien</p>
                     </div>
-                    <div class="p-8 md:p-12 flex flex-col justify-center">
-                        <div class="text-primary text-sm font-semibold mb-2">Platform Transaksi Digital</div>
-                        <h3 class="text-3xl font-bold mb-4">Vipercell Top-Up Platform</h3>
-                        <p class="text-gray-400 mb-6 leading-relaxed">Sebuah platform ekosistem top-up game dan layanan digital terintegrasi. Menampilkan dashboard pintar, sistem pembayaran otomatis, dan manajemen saldo.</p>
-                        <div class="flex flex-wrap gap-2 mb-8">
-                            <span class="bg-white/5 border border-white/10 px-3 py-1 rounded-full text-xs text-gray-300">HTML5 & Tailwind</span>
-                            <span class="bg-white/5 border border-white/10 px-3 py-1 rounded-full text-xs text-gray-300">Firebase</span>
-                            <span class="bg-white/5 border border-white/10 px-3 py-1 rounded-full text-xs text-gray-300">API Integration</span>
-                        </div>
+                </div>
+
+                <!-- Navigasi Klien -->
+                <nav id="nav-client" class="space-y-2 hidden">
+                    <button onclick="switchTab('client-chat')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-primary/10 text-primary transition-colors hover:bg-primary/20"><i class="fa-solid fa-comments"></i> Chat Viperdev</button>
+                    <button onclick="switchTab('client-project')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-colors"><i class="fa-solid fa-folder-plus"></i> Request Proyek Baru</button>
+                </nav>
+
+                <!-- Navigasi Admin -->
+                <nav id="nav-admin" class="space-y-2 hidden">
+                    <button onclick="switchTab('admin-overview')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold bg-primary/10 text-primary transition-colors hover:bg-primary/20"><i class="fa-solid fa-chart-pie"></i> Overview</button>
+                    <button onclick="switchTab('admin-inbox')" class="w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-bold text-slate-600 hover:bg-slate-100 transition-colors"><i class="fa-solid fa-inbox"></i> Inbox Klien</button>
+                </nav>
+            </div>
+            
+            <div class="p-4 border-t border-gray-100">
+                <button onclick="logout()" class="w-full flex items-center justify-center gap-2 px-4 py-2 rounded-xl text-sm font-bold text-red-500 hover:bg-red-50 transition-colors"><i class="fa-solid fa-power-off"></i> Logout</button>
+            </div>
+        </aside>
+
+        <!-- KONTEN DASHBOARD -->
+        <main class="flex-1 p-4 md:p-8 overflow-y-auto max-h-screen">
+            
+            <!-- TABS KLIEN -->
+            <div id="tab-client-chat" class="dashboard-tab hidden h-full flex flex-col">
+                <div class="bg-white rounded-t-2xl p-4 border-b border-gray-100 flex items-center gap-3 shadow-sm">
+                    <div class="w-10 h-10 bg-primary rounded-full flex items-center justify-center text-white"><i class="fa-solid fa-headset"></i></div>
+                    <div><h3 class="font-bold text-slate-800">Tim Viperdev</h3><p class="text-xs text-primary font-medium">Online - Siap Membantu</p></div>
+                </div>
+                <!-- Area Chat -->
+                <div id="client-chat-box" class="flex-1 bg-white p-4 overflow-y-auto chat-scroll space-y-4 border-x border-gray-100 min-h-[400px] flex flex-col">
+                    <div class="text-center text-xs text-slate-400 my-4">Koneksi chat diamankan secara end-to-end.</div>
+                </div>
+                <!-- Input Chat -->
+                <div class="bg-white p-4 rounded-b-2xl border-t border-gray-100 shadow-sm flex gap-2">
+                    <input type="text" id="client-msg-input" placeholder="Ketik pesan untuk admin..." class="flex-1 bg-slate-50 border border-gray-200 rounded-xl px-4 py-2 focus:outline-none focus:border-primary text-sm">
+                    <button onclick="sendClientMsg()" class="bg-primary hover:bg-emerald-600 text-white w-12 rounded-xl flex items-center justify-center transition-colors"><i class="fa-solid fa-paper-plane"></i></button>
+                </div>
+            </div>
+
+            <div id="tab-client-project" class="dashboard-tab hidden">
+                <div class="bg-white p-8 rounded-3xl shadow-sm border border-gray-100 max-w-2xl mx-auto">
+                    <h2 class="text-2xl font-bold text-slate-800 mb-6">Formulir Pengajuan Proyek</h2>
+                    <form id="project-form" class="space-y-5">
+                        <div><label class="block text-sm font-bold text-slate-700 mb-2">Jenis Proyek</label>
+                        <select id="proj-type" class="w-full bg-slate-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-sm">
+                            <option value="Landing Page">Landing Page / Company Profile</option>
+                            <option value="Web App / Top-Up">Aplikasi Web / Sistem Top-Up</option>
+                            <option value="Lainnya">Lainnya / Custom</option>
+                        </select></div>
+                        <div><label class="block text-sm font-bold text-slate-700 mb-2">Detail Kebutuhan</label>
+                        <textarea id="proj-desc" rows="4" required class="w-full bg-slate-50 border border-gray-300 rounded-xl px-4 py-3 focus:outline-none focus:border-primary text-sm" placeholder="Ceritakan fitur apa saja yang Anda butuhkan..."></textarea></div>
+                        <button type="submit" class="w-full bg-slate-900 hover:bg-slate-800 text-white py-3 rounded-xl font-bold transition-colors">Kirim Pengajuan</button>
+                    </form>
+                </div>
+            </div>
+
+            <!-- TABS ADMIN -->
+            <div id="tab-admin-overview" class="dashboard-tab hidden space-y-6">
+                <h2 class="text-2xl font-bold text-slate-800">Admin Overview</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-500 text-sm font-bold mb-2">Total Klien Terdaftar</div><div class="text-3xl font-extrabold text-slate-800" id="stat-users">...</div></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-500 text-sm font-bold mb-2">Proyek Menunggu</div><div class="text-3xl font-extrabold text-blue-500" id="stat-projects">...</div></div>
+                    <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100"><div class="text-slate-500 text-sm font-bold mb-2">Pesan Belum Dibaca</div><div class="text-3xl font-extrabold text-primary" id="stat-unread">...</div></div>
+                </div>
+                <div class="bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="font-bold text-slate-800 mb-4">Pengajuan Proyek Terbaru</h3>
+                    <div id="admin-projects-list" class="space-y-3">
+                        <div class="text-sm text-slate-500 text-center py-4">Belum ada data.</div>
                     </div>
                 </div>
             </div>
-        </div>
-    </section>
 
-    <!-- STATISTIK -->
-    <section id="statistik" class="py-20 bg-dark relative border-t border-white/5">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-                <div class="glass-panel p-6 rounded-2xl animate-on-scroll"><div class="text-4xl font-bold text-primary mb-2">50+</div><div class="text-gray-400 text-sm">Proyek Selesai</div></div>
-                <div class="glass-panel p-6 rounded-2xl animate-on-scroll"><div class="text-4xl font-bold text-blue-500 mb-2">30+</div><div class="text-gray-400 text-sm">Klien Bisnis</div></div>
-                <div class="glass-panel p-6 rounded-2xl animate-on-scroll"><div class="text-4xl font-bold text-purple-500 mb-2">99%</div><div class="text-gray-400 text-sm">Uptime Sistem</div></div>
-                <div class="glass-panel p-6 rounded-2xl animate-on-scroll"><div class="text-4xl font-bold text-yellow-500 mb-2">24/7</div><div class="text-gray-400 text-sm">Dukungan Teknis</div></div>
-            </div>
-        </div>
-    </section>
-
-    <!-- KONTAK & FORM -->
-    <section id="kontak" class="py-24 bg-darker relative border-t border-white/5 overflow-hidden">
-        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-3/4 h-1/2 bg-primary/10 rounded-full blur-[120px] -z-10 pointer-events-none"></div>
-        <div class="max-w-4xl mx-auto px-4 animate-on-scroll text-center mb-12">
-            <h2 class="text-3xl md:text-5xl font-bold mb-6">Siap Membangun Platform Anda?</h2>
-        </div>
-        <div class="max-w-2xl mx-auto px-4 animate-on-scroll">
-            <div class="glass-panel p-8 rounded-3xl relative z-10 border border-white/10">
-                <form id="contact-form" class="space-y-6">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-2">Nama Lengkap</label>
-                            <input type="text" id="name" required class="w-full bg-dark border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary">
-                        </div>
-                        <div>
-                            <label class="block text-sm font-medium text-gray-400 mb-2">Email / No. WhatsApp</label>
-                            <input type="text" id="contact-info" required class="w-full bg-dark border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary">
-                        </div>
+            <div id="tab-admin-inbox" class="dashboard-tab hidden flex flex-col md:flex-row h-[80vh] gap-4">
+                <!-- List Klien -->
+                <div class="w-full md:w-1/3 bg-white rounded-2xl border border-gray-100 flex flex-col shadow-sm">
+                    <div class="p-4 border-b border-gray-100 font-bold text-slate-800">Daftar Obrolan</div>
+                    <div id="admin-chat-list" class="flex-1 overflow-y-auto chat-scroll p-2 space-y-1">
+                        <!-- List Chat Dirender JS -->
                     </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-400 mb-2">Detail Kebutuhan Proyek</label>
-                        <textarea id="message" rows="4" required class="w-full bg-dark border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-primary"></textarea>
+                </div>
+                <!-- Ruang Chat Admin -->
+                <div class="w-full md:w-2/3 bg-white rounded-2xl border border-gray-100 flex flex-col shadow-sm hidden" id="admin-chat-room">
+                    <div class="p-4 border-b border-gray-100 font-bold text-slate-800 flex items-center gap-3">
+                        <i class="fa-solid fa-user-circle text-2xl text-gray-400"></i> <span id="admin-chat-name">Pilih Klien</span>
                     </div>
-                    <button type="submit" id="submit-btn" class="w-full bg-primary hover:bg-emerald-600 text-white px-8 py-4 rounded-xl font-bold text-lg transition-all btn-glow flex items-center justify-center gap-3">
-                        <span>Kirim Pesan ke Viperdev</span><i class="fa-solid fa-paper-plane"></i>
-                    </button>
-                </form>
-                <div id="toast" class="hidden mt-6 p-4 rounded-xl text-center text-sm font-medium transition-all"></div>
+                    <div id="admin-chat-box" class="flex-1 p-4 overflow-y-auto chat-scroll space-y-4 bg-slate-50"></div>
+                    <div class="p-4 border-t border-gray-100 flex gap-2">
+                        <input type="text" id="admin-msg-input" placeholder="Balas pesan..." class="flex-1 border border-gray-300 rounded-xl px-4 focus:outline-none focus:border-primary text-sm">
+                        <button onclick="sendAdminMsg()" class="bg-primary text-white w-12 h-10 rounded-xl flex items-center justify-center"><i class="fa-solid fa-paper-plane"></i></button>
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
 
-    <!-- FOOTER -->
-    <footer class="bg-darker border-t border-white/10 pt-16 pb-8">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
-            &copy; <span id="year"></span> Viperdev Company. Hak cipta dilindungi.
-        </div>
-    </footer>
+        </main>
+    </div>
 
-    <!-- JAVASCRIPT LOGIC DENGAN FIREBASE MODULE -->
+    <!-- SCRIPT LOGIKA UTAMA -->
     <script type="module">
-        // Import Firebase DB dan Auth dari CDN
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-app.js";
-        import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
-        import { getAuth, signInWithPopup, GoogleAuthProvider, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
+        import { getFirestore, collection, doc, setDoc, getDoc, getDocs, onSnapshot, query, orderBy, serverTimestamp, addDoc } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-firestore.js";
+        import { getAuth, signInWithPopup, GoogleAuthProvider, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.8.1/firebase-auth.js";
 
+        // Konfigurasi Firebase Anda
         const firebaseConfig = {
             apiKey: "AIzaSyCoR1remXkwNMUy4FKnGnb1LYDiF_iurqM",
             authDomain: "sekolahid-ddec0.firebaseapp.com",
@@ -289,140 +256,242 @@
         const app = initializeApp(firebaseConfig);
         const db = getFirestore(app);
         const auth = getAuth(app);
-        const googleProvider = new GoogleAuthProvider();
+        const provider = new GoogleAuthProvider();
 
-        // UI Basic Scripts
-        document.getElementById('year').textContent = new Date().getFullYear();
-        const observer = new IntersectionObserver((entries, obs) => {
-            entries.forEach(entry => { if (entry.isIntersecting) { entry.target.classList.add('visible'); obs.unobserve(entry.target); }});
-        }, { threshold: 0.15 });
-        document.querySelectorAll('.animate-on-scroll').forEach(el => observer.observe(el));
+        const ADMIN_EMAIL = 'millerstoreid@gmail.com';
+        let currentUser = null;
+        let isAdmin = false;
+        let activeAdminChatUid = null;
+        let unsubscribeChat = null;
 
-        // --- SISTEM PINTU RAHASIA (SECRET ADMIN DOOR) ---
-        const secretTrigger = document.getElementById('secret-trigger');
-        const adminModal = document.getElementById('admin-login-modal');
-        const btnCloseModal = document.getElementById('btn-close-modal');
-        const btnGoogleLogin = document.getElementById('btn-google-login');
-        const globalToast = document.getElementById('global-toast');
-        
-        let tapCount = 0;
-        let tapTimer;
+        // UI Helpers
+        const showToast = (msg, isSuccess=true) => {
+            const t = document.getElementById('global-toast');
+            t.textContent = msg;
+            t.className = `fixed top-6 left-1/2 -translate-x-1/2 z-[999] px-6 py-3 rounded-full text-sm font-bold shadow-2xl transition-all border ${isSuccess ? 'bg-emerald-50 text-emerald-600 border-emerald-200' : 'bg-red-50 text-red-600 border-red-200'}`;
+            t.classList.remove('hidden');
+            setTimeout(() => t.classList.add('hidden'), 4000);
+        };
 
-        // Fungsi Menampilkan Notifikasi Melayang (Toast)
-        function showGlobalToast(msg, type) {
-            globalToast.textContent = msg;
-            globalToast.className = `fixed top-24 left-1/2 -translate-x-1/2 z-[110] px-6 py-3 rounded-full text-sm font-bold shadow-2xl transition-all border ${type === 'success' ? 'bg-primary text-dark border-emerald-400' : 'bg-red-500 text-white border-red-300'}`;
-            globalToast.classList.remove('hidden');
-            setTimeout(() => globalToast.classList.add('hidden'), 4000);
-        }
-
-        // Logika Ketuk 3 Kali
-        secretTrigger.addEventListener('click', () => {
-            tapCount++;
-            clearTimeout(tapTimer);
+        window.switchTab = (tabId) => {
+            document.querySelectorAll('.dashboard-tab').forEach(el => el.classList.add('hidden'));
+            document.getElementById(`tab-${tabId}`).classList.remove('hidden');
             
-            if (tapCount === 3) {
-                // Tampilkan Modal Login
-                adminModal.classList.remove('hidden');
-                adminModal.classList.add('flex');
-                setTimeout(() => adminModal.querySelector('.glass-panel').classList.remove('scale-95'), 50);
-                tapCount = 0; // Reset
-            } else {
-                tapTimer = setTimeout(() => tapCount = 0, 1000); // Reset jika jeda lebih dari 1 detik
+            // Highlight button
+            const allBtns = document.querySelectorAll('aside nav button');
+            allBtns.forEach(b => {
+                b.classList.remove('bg-primary/10', 'text-primary');
+                b.classList.add('text-slate-600');
+            });
+            event.currentTarget.classList.remove('text-slate-600');
+            event.currentTarget.classList.add('bg-primary/10', 'text-primary');
+        };
+
+        // --- AUTH & ROUTING LOGIC ---
+        window.triggerLogin = async () => {
+            try { await signInWithPopup(auth, provider); } 
+            catch (error) { 
+                if(error.code !== 'auth/popup-closed-by-user') showToast("Gagal Login: Pastikan domain diizinkan di Firebase.", false); 
             }
-        });
+        };
 
-        // Tutup Modal
-        btnCloseModal.addEventListener('click', () => {
-            adminModal.querySelector('.glass-panel').classList.add('scale-95');
-            setTimeout(() => {
-                adminModal.classList.add('hidden');
-                adminModal.classList.remove('flex');
-            }, 200);
-        });
+        window.logout = () => signOut(auth);
 
-        // Logika Login Google dengan Filter Email
-        btnGoogleLogin.addEventListener('click', async () => {
-            const originalText = btnGoogleLogin.innerHTML;
-            btnGoogleLogin.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Memverifikasi...';
-            btnGoogleLogin.disabled = true;
-
-            try {
-                const result = await signInWithPopup(auth, googleProvider);
-                const user = result.user;
-
-                // PENGECEKAN KASTA (Hanya millerstoreid@gmail.com yang diizinkan)
-                if (user.email === 'millerstoreid@gmail.com') {
-                    showGlobalToast(`Login Berhasil! Selamat datang Admin Teves.`, 'success');
-                    adminModal.classList.add('hidden');
-                    
-                    // TODO: Di sinilah nanti kita akan memunculkan Panel Admin
-                    console.log("Admin Mode Aktif. UID:", user.uid);
-                    
-                } else {
-                    // Jika email bukan punya Anda, langsung tendang keluar
-                    await signOut(auth);
-                    showGlobalToast(`Akses Ditolak: Email ${user.email} tidak memiliki izin Admin.`, 'error');
-                }
-            } catch (error) {
-                console.error("Gagal Login:", error);
+        onAuthStateChanged(auth, async (user) => {
+            const landingView = document.getElementById('landing-view');
+            const dashView = document.getElementById('dashboard-view');
+            
+            if (user) {
+                currentUser = user;
+                isAdmin = (user.email === ADMIN_EMAIL);
                 
-                // Penanganan Khusus Error Domain Tidak Dikenal
-                if (error.code === 'auth/unauthorized-domain') {
-                    const domain = window.location.hostname || "domain saat ini";
-                    showGlobalToast(`Akses Diblokir Firebase: Domain belum diizinkan.`, 'error');
-                    
-                    // Tampilkan instruksi langkah-demi-langkah langsung di bawah tombol login
-                    const existingInstruction = document.getElementById('domain-instruction');
-                    if (!existingInstruction) {
-                        btnGoogleLogin.insertAdjacentHTML('afterend', `
-                            <div id="domain-instruction" class="mt-4 p-4 bg-red-500/10 border border-red-500/30 rounded-xl text-left text-xs text-red-200 leading-relaxed">
-                                <strong class="text-red-400 text-sm block mb-1">⚠️ Tindakan Diperlukan:</strong>
-                                Firebase memblokir login. Anda wajib mendaftarkan alamat web ini ke sistem keamanan Firebase Anda.<br><br>
-                                1. Buka <b>Firebase Console</b>.<br>
-                                2. Masuk ke menu <b>Authentication</b> > <b>Settings</b>.<br>
-                                3. Klik menu <b>Authorized domains</b>.<br>
-                                4. Klik "Add domain" dan masukkan teks (copy) di bawah ini:<br>
-                                <code class="text-white bg-black/60 px-2 py-1.5 rounded mt-2 block font-mono text-center select-all">${domain}</code>
-                            </div>
-                        `);
-                    }
-                } else if(error.code !== 'auth/popup-closed-by-user') {
-                    showGlobalToast(`Terjadi kesalahan sistem: ${error.message}`, 'error');
+                // Simpan profil ke DB
+                await setDoc(doc(db, "users", user.uid), {
+                    name: user.displayName, email: user.email, photo: user.photoURL, role: isAdmin ? 'admin' : 'client', lastLogin: serverTimestamp()
+                }, { merge: true });
+
+                // Update UI Profile
+                document.getElementById('user-name-display').textContent = user.displayName;
+                document.getElementById('user-avatar').src = user.photoURL;
+                document.getElementById('user-role-display').textContent = isAdmin ? 'Super Admin' : 'Klien VIP';
+
+                // Setup Navigation
+                if (isAdmin) {
+                    document.getElementById('nav-admin').classList.remove('hidden');
+                    document.getElementById('nav-client').classList.add('hidden');
+                    switchTab('admin-overview'); // Set Tab default admin
+                    initAdminDashboard();
+                } else {
+                    document.getElementById('nav-client').classList.remove('hidden');
+                    document.getElementById('nav-admin').classList.add('hidden');
+                    switchTab('client-chat'); // Set Tab default client
+                    initClientChat();
                 }
-            } finally {
-                btnGoogleLogin.innerHTML = originalText;
-                btnGoogleLogin.disabled = false;
+
+                landingView.classList.add('hidden');
+                dashView.classList.remove('hidden');
+                showToast(`Selamat datang, ${user.displayName}!`);
+            } else {
+                currentUser = null;
+                isAdmin = false;
+                if(unsubscribeChat) unsubscribeChat();
+                landingView.classList.remove('hidden');
+                dashView.classList.add('hidden');
             }
         });
 
-        // --- Logika Form Kontak Firebase (Sama seperti v2.0) ---
-        const contactForm = document.getElementById('contact-form');
-        const submitBtn = document.getElementById('submit-btn');
-        const toast = document.getElementById('toast');
+        // --- RENDER BUBBLE CHAT ---
+        const renderMessage = (msgData, isMe, container) => {
+            const div = document.createElement('div');
+            div.className = `flex w-full ${isMe ? 'justify-end' : 'justify-start'}`;
+            div.innerHTML = `
+                <div class="max-w-[75%] px-4 py-2 rounded-2xl text-sm ${isMe ? 'bg-primary text-white rounded-br-sm' : 'bg-slate-100 text-slate-800 rounded-bl-sm border border-gray-200'} shadow-sm">
+                    ${msgData.text}
+                </div>
+            `;
+            container.appendChild(div);
+            container.scrollTop = container.scrollHeight;
+        };
 
-        contactForm.addEventListener('submit', async (e) => {
-            e.preventDefault();
-            submitBtn.innerHTML = `<i class="fa-solid fa-spinner fa-spin"></i> Mengirim...`;
-            try {
-                await addDoc(collection(db, "messages"), {
-                    name: document.getElementById('name').value,
-                    contact: document.getElementById('contact-info').value,
-                    message: document.getElementById('message').value,
-                    timestamp: serverTimestamp(),
-                    status: 'unread'
+        // --- CLIENT LOGIC ---
+        const initClientChat = () => {
+            const box = document.getElementById('client-chat-box');
+            if(unsubscribeChat) unsubscribeChat();
+            
+            // Listen ke subcollection messages miliknya sendiri
+            const q = query(collection(db, `chats/${currentUser.uid}/messages`), orderBy('createdAt', 'asc'));
+            unsubscribeChat = onSnapshot(q, (snapshot) => {
+                box.innerHTML = '<div class="text-center text-xs text-slate-400 my-4">Koneksi chat diamankan secara end-to-end.</div>';
+                snapshot.forEach(doc => {
+                    const data = doc.data();
+                    renderMessage(data, data.senderId === currentUser.uid, box);
                 });
-                toast.textContent = "Pesan berhasil dikirim!";
-                toast.className = "mt-6 p-4 rounded-xl text-center text-sm font-medium bg-primary/20 text-primary block";
-                contactForm.reset();
-            } catch (error) {
-                toast.textContent = "Gagal mengirim pesan.";
-                toast.className = "mt-6 p-4 rounded-xl text-center text-sm font-medium bg-red-500/20 text-red-500 block";
-            } finally {
-                submitBtn.innerHTML = `<span>Kirim Pesan</span><i class="fa-solid fa-paper-plane"></i>`;
-                setTimeout(() => toast.classList.add('hidden'), 5000);
-            }
+            });
+        };
+
+        window.sendClientMsg = async () => {
+            const input = document.getElementById('client-msg-input');
+            const text = input.value.trim();
+            if(!text) return;
+            input.value = '';
+
+            try {
+                // Simpan pesan
+                await addDoc(collection(db, `chats/${currentUser.uid}/messages`), {
+                    text: text, senderId: currentUser.uid, createdAt: serverTimestamp()
+                });
+                // Update room meta (untuk admin)
+                await setDoc(doc(db, "chats", currentUser.uid), {
+                    lastMessage: text, userName: currentUser.displayName, updatedAt: serverTimestamp(), unreadAdmin: true
+                }, { merge: true });
+            } catch(e) { showToast("Gagal kirim pesan. Cek Firestore Rules.", false); }
+        };
+
+        document.getElementById('project-form').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            btn.textContent = "Mengirim..."; btn.disabled = true;
+            try {
+                await addDoc(collection(db, "project_requests"), {
+                    userId: currentUser.uid, userName: currentUser.displayName,
+                    type: document.getElementById('proj-type').value,
+                    desc: document.getElementById('proj-desc').value,
+                    createdAt: serverTimestamp(), status: 'pending'
+                });
+                showToast("Pengajuan berhasil dikirim! Admin akan segera membalas via Chat.");
+                e.target.reset();
+            } catch(e) { showToast("Gagal mengirim form.", false); }
+            btn.textContent = "Kirim Pengajuan"; btn.disabled = false;
         });
+
+
+        // --- ADMIN LOGIC ---
+        const initAdminDashboard = () => {
+            // 1. Ambil List Chat Klien
+            const qChat = query(collection(db, "chats"), orderBy('updatedAt', 'desc'));
+            onSnapshot(qChat, (snapshot) => {
+                const list = document.getElementById('admin-chat-list');
+                list.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    const uid = docSnap.id;
+                    const isUnread = data.unreadAdmin;
+                    
+                    const btn = document.createElement('div');
+                    btn.className = `p-3 rounded-xl cursor-pointer transition-colors border ${isUnread ? 'bg-emerald-50 border-emerald-100' : 'bg-white border-transparent hover:bg-slate-50'}`;
+                    btn.innerHTML = `
+                        <div class="flex justify-between items-center mb-1">
+                            <span class="font-bold text-sm ${isUnread ? 'text-slate-900' : 'text-slate-700'}">${data.userName}</span>
+                            ${isUnread ? '<span class="w-2 h-2 bg-primary rounded-full"></span>' : ''}
+                        </div>
+                        <div class="text-xs text-slate-500 truncate">${data.lastMessage}</div>
+                    `;
+                    btn.onclick = () => openAdminChat(uid, data.userName);
+                    list.appendChild(btn);
+                });
+            });
+
+            // 2. Ambil List Project & Stats (Simplifikasi)
+            getDocs(collection(db, "users")).then(snap => document.getElementById('stat-users').textContent = snap.size);
+            
+            const qProj = query(collection(db, "project_requests"), orderBy('createdAt', 'desc'));
+            onSnapshot(qProj, (snapshot) => {
+                document.getElementById('stat-projects').textContent = snapshot.size;
+                const pList = document.getElementById('admin-projects-list');
+                pList.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    pList.innerHTML += `
+                        <div class="p-3 bg-slate-50 border border-gray-100 rounded-xl flex justify-between items-center">
+                            <div><div class="font-bold text-sm text-slate-800">${data.type}</div><div class="text-xs text-slate-500">Dari: ${data.userName}</div></div>
+                            <span class="px-2 py-1 bg-yellow-100 text-yellow-700 text-xs font-bold rounded">Pending</span>
+                        </div>
+                    `;
+                });
+            });
+        };
+
+        window.openAdminChat = async (uid, name) => {
+            activeAdminChatUid = uid;
+            document.getElementById('admin-chat-room').classList.remove('hidden');
+            document.getElementById('admin-chat-name').textContent = name;
+            
+            // Hilangkan badge unread
+            await setDoc(doc(db, "chats", uid), { unreadAdmin: false }, { merge: true });
+
+            const box = document.getElementById('admin-chat-box');
+            if(unsubscribeChat) unsubscribeChat();
+            
+            const q = query(collection(db, `chats/${uid}/messages`), orderBy('createdAt', 'asc'));
+            unsubscribeChat = onSnapshot(q, (snapshot) => {
+                box.innerHTML = '';
+                snapshot.forEach(docSnap => {
+                    const data = docSnap.data();
+                    renderMessage(data, data.senderId === currentUser.uid, box);
+                });
+            });
+        };
+
+        window.sendAdminMsg = async () => {
+            if(!activeAdminChatUid) return;
+            const input = document.getElementById('admin-msg-input');
+            const text = input.value.trim();
+            if(!text) return;
+            input.value = '';
+
+            try {
+                await addDoc(collection(db, `chats/${activeAdminChatUid}/messages`), {
+                    text: text, senderId: currentUser.uid, createdAt: serverTimestamp()
+                });
+                await setDoc(doc(db, "chats", activeAdminChatUid), {
+                    lastMessage: text, updatedAt: serverTimestamp() // Admin balas, tidak buat unread ke admin
+                }, { merge: true });
+            } catch(e) { showToast("Gagal kirim pesan", false); }
+        };
+
+        // Trigger send on Enter key
+        document.getElementById('client-msg-input')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendClientMsg(); });
+        document.getElementById('admin-msg-input')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') sendAdminMsg(); });
     </script>
 </body>
 </html>
